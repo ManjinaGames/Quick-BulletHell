@@ -1,0 +1,59 @@
+key,en-US,es-AR,pt-BR,ja-JP
+titleMenu_title,Salamanca of Syncretism,Salamanca del Sincretismo,Salamanca do Sincretismo,シンクレティズムのサラマンカ
+titleMenu_button0,Start,Empezar,Começar,始める
+titleMenu_button1,Options,Opciones,Opções,オプション
+titleMenu_button2,Exit,Salir,Sair,外出
+optionMenu_title,Option Menu,Menú de Opciones,Menu de opções,オプションメニュー
+optionMenu_idiome,Idiome,Idioma,Linguagem,言語
+optionMenu_resolution,Resolution,Resolución,Resolução,解決
+optionMenu_fullScreen,Full Screen,Pantalla Completa,Tela completa,全画面表示
+optionMenu_vSync,Vertical Synchronization,sincronización Vertical,Sincronização vertical,垂直同期
+optionMenu_master,Master,Maestro,Professor,教師
+optionMenu_sfx,SFX,SFX,efeitos sonoros,特撮
+optionMenu_bgm,BGM,BGM,Música musical,BGM
+optionMenu_back,Back,Volver,Retornar,戻る
+saveMenu_title,Save Menu,Menú de Guardado,Salvar Menu,保存メニュー
+saveMenu_save,Save Data,Archivo de Guardado,Salvar Arquivo,ファイルを保存
+saveMenu_empty,Empty,Vacio,Vazio,空の
+saveMenu2_Title,What do you want to do?,Que quieres hacer?,O que você quer fazer?,あなたは何をしたいですか？
+saveMenu2_button0,Load,Cargar,Carregar,運ぶ
+saveMenu2_button1,Delete,Eliminar,Eliminar,なくす
+deleteMenu_title,Do you want to delete this save?,Quieres eliminar este archivo,Você deseja excluir este arquivo,このファイルを削除しますか?
+deleteMenu_button0,Yes,Si,Sim,うん
+deleteMenu_button1,No,No,Não,いいえ
+mainMenu_button0,Start,Comenzar,Começar,始める
+mainMenu_button1,Player,Personaje,Personagem,キャラクター
+mainMenu_button2,Difficulty,Dificultad,Dificuldade,困難
+mainMenu_button3,Options,Opciones,Opções,オプション
+mainMenu_button4,Go to Title Menu,Volver al Título,Voltar ao título,タイトルに戻る
+playerMenu_button0,Player 1,Personaje 1,Personagem 1,キャラクター1
+playerMenu_button1,Player 2,Personaje 2,Personagem 2,キャラクター2
+playerMenu_back,Back,Volver,Retornar,戻る
+difficultyMenu_button0,Easy,Facil,Fácil,簡単
+difficultyMenu_button1,Normal,Normal,Normal,普通
+difficultyMenu_button2,Hard,Dificil,Difícil,難しい
+difficultyMenu_button3,Lunatic,Lunático,Lunático,狂人
+difficultyMenu_back,Back,Volver,Retornar,戻る
+stageMenu_button0,Stage 1,Nivel 1,Nível 1,レベル1
+stageMenu_button1,Stage 2,Nivel 2,Nível 2,レベル2
+stageMenu_button2,Stage 3,Nivel 3,Nível 3,レベル3
+stageMenu_button3,Stage 4,Nivel 4,Nível 4,レベル4
+stageMenu_button4,Stage 5,Nivel 5,Nível 5,レベル5
+stageMenu_button5,Stage Final,Nivel Final,Nível Final,最終レベル
+stageMenu_button6,Stage Extra,Nivel Extra,Nível Extra,エクストラレベル
+stageMenu_button7,Legacy Mode,Modo Legado,Modo legado,レガシーモード
+stageMenu_button8,Boss-Rush Mode,Modo Avalancha de Jefes,Modo Avalanche de Chefes,ボスアバランチモード
+stageMenu_back,Back,Volver,Retornar,戻る
+startMenu_button0,Start,Comenzar,Começar,始める
+startMenu_button1,Info,Información,Informação,情報
+startMenu_button2,Back,Volver,Retornar,戻る
+pauseMenu_title,Pause,Pausa,Pausa,一時停止
+pauseMenu_button0,Continue,Continuar,Continuar,続く
+pauseMenu_button1,Retry,Reintentar,Tentar novamente,リトライ
+pauseMenu_button2,Options,Opciones,Opções,オプション
+pauseMenu_button3,Go to Main Menu,Volver al Menu Principal,Voltar ao menu principal,メインメニューに戻る
+pauseMenu_button4,Quit Game,Salir del Juego,Sair do jogo,ゲームを終了する
+gameUI_lives,Lives,Vidas,Vidas,生きる
+gameUI_power,Power,Poder,Pode,できる
+gameUI_maxScore,Max-Score,Máx.Puntuación,Pontuação máxima,最大スコア
+gameUI_score,Score,Puntuación,Pontuação,句読点

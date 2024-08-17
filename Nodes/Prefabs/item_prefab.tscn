@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://b2r2t7rrfwiys"]
+
+[ext_resource type="Texture2D" uid="uid://db00buwxk3mf2" path="res://Assets/Sprites/Enemy Bullet 1.png" id="1_jq0p1"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Item_Script.gd" id="2_88yrc"]
+
+[node name="Item_Prefab" type="Sprite2D"]
+z_index = 9
+scale = Vector2(2, 2)
+texture = ExtResource("1_jq0p1")
+hframes = 16
+frame = 11
+script = ExtResource("2_88yrc")

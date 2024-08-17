@@ -1,0 +1,581 @@
+[gd_scene load_steps=22 format=3 uid="uid://qpw70cvfh5bf"]
+
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
+[ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
+[ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
+[ext_resource type="PackedScene" uid="uid://cspvg8uimw0jt" path="res://Nodes/Prefabs/bullet_prefab.tscn" id="3_5om1x"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Player_Script.gd" id="3_f2cm2"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Collider_Script.gd" id="4_1isya"]
+[ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
+[ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
+[ext_resource type="Texture2D" uid="uid://ddvohhy7603be" path="res://Assets/Sprites/Sprite-0001.png" id="6_hk4sg"]
+[ext_resource type="Texture2D" uid="uid://dqbugw3tefi1c" path="res://Assets/Sprites/Hitbox.png" id="7_sglw3"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
+[ext_resource type="Theme" uid="uid://ds1rgnmlophl4" path="res://Themes/List_Button_Theme.tres" id="13_cjfll"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aoj2f"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_f5lym"]
+sky_material = SubResource("ProceduralSkyMaterial_aoj2f")
+
+[sub_resource type="Environment" id="Environment_q1y1w"]
+background_mode = 2
+sky = SubResource("Sky_f5lym")
+tonemap_mode = 2
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_jmjr4"]
+color = Color(1, 1, 1, 1)
+grow_begin = -25.0
+grow_end = -25.0
+thickness = 3
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_6jl8c"]
+viewport_path = NodePath("World3D/SubViewport")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cfppq"]
+radius = 128.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qurjd"]
+radius = 64.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
+radius = 8.24621
+
+[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "marketMenu", "window", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
+script = ExtResource("1_143dr")
+currentLayer = NodePath("CanvasLayer")
+pauseMenu = NodePath("CanvasLayer/Window_MarginContainer/Pause_Menu")
+marketMenu = NodePath("CanvasLayer/Window_MarginContainer/Market_Menu")
+window = NodePath("CanvasLayer/Window_MarginContainer")
+timerLabel = NodePath("CanvasLayer/Window_MarginContainer/Label")
+content = NodePath("CanvasLayer/Window_MarginContainer/Content")
+player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player")
+enemy_Prefab = ExtResource("2_acyb6")
+enemyBullet_Prefab = ExtResource("3_5om1x")
+item_Prefab = ExtResource("4_7dwg7")
+maxScoreLabel_title = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel")
+maxScoreLabel_Num = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel2")
+scoreLabel_title = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/RichTextLabel")
+scoreLabel_Num = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/RichTextLabel2")
+powerLabel_title = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/RichTextLabel")
+powerLabel_Num = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/RichTextLabel2")
+livesLabel_title = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel")
+livesLabel_Num = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel2")
+moneyLabel_title = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer/RichTextLabel")
+moneyLabel_Num = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer/RichTextLabel2")
+maxMoneyLabel_Num = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer/RichTextLabel3")
+leftLabel = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/MarginContainer/RichTextLabel")
+completedPanel = NodePath("CanvasLayer/Window_MarginContainer/PanelContainer")
+completedLabel = NodePath("CanvasLayer/Window_MarginContainer/PanelContainer/MarginContainer/Label")
+playerLayer = 1
+grazeLayer = 4
+magnetLayer = 8
+enemyLayer = 2
+
+[node name="World3D" type="Node3D" parent="."]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World3D"]
+environment = SubResource("Environment_q1y1w")
+
+[node name="SubViewport" type="SubViewport" parent="World3D"]
+
+[node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_6rmrd")
+expand_mode = 1
+
+[node name="LeftUI_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 252.0
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="LeftUI_VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LeftUI_MarginContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[u]Max-Score:[/u]"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]999,999,999[/center]"
+fit_content = true
+
+[node name="PanelContainer2" type="PanelContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer2/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[u]Score:[/u]"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]000,000,000[/center]"
+fit_content = true
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "aaaaaaaa."
+fit_content = true
+
+[node name="RightUI_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -252.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="RightUI_VBoxContainer" type="VBoxContainer" parent="CanvasLayer/RightUI_MarginContainer"]
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[u]Lives:[/u]"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center]04 / 04[/center]"
+fit_content = true
+
+[node name="PanelContainer2" type="PanelContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer2/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[u]Power:[/u]"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "[center]04 / 04[/center]"
+fit_content = true
+
+[node name="PanelContainer3" type="PanelContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[u]Money:[/u]"
+fit_content = true
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]000,000,000 G[/center]"
+fit_content = true
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_jmjr4")
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]000,000,000 G[/center]"
+fit_content = true
+
+[node name="Window_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(648, 648)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -324.0
+offset_top = -324.0
+offset_right = 324.0
+offset_bottom = 324.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer"]
+layout_mode = 2
+texture = SubResource("ViewportTexture_6jl8c")
+expand_mode = 1
+
+[node name="Content" type="Control" parent="CanvasLayer/Window_MarginContainer"]
+clip_contents = true
+layout_mode = 2
+
+[node name="Player" type="Node2D" parent="CanvasLayer/Window_MarginContainer/Content" node_paths=PackedStringArray("hitBox", "graze", "magnet")]
+position = Vector2(300, 563)
+script = ExtResource("3_f2cm2")
+hitBox = NodePath("Magnet_PlayerCollision")
+graze = NodePath("Graze_PlayerCollision2")
+magnet = NodePath("Hitbox_PlayerCollision3")
+
+[node name="Magnet_PlayerCollision" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player" node_paths=PackedStringArray("player", "sprite", "shape")]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("4_1isya")
+player = NodePath("..")
+sprite = NodePath("Magnet_Sprite2D")
+shape = NodePath("Magnet_CollisionShape2D")
+
+[node name="Magnet_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player/Magnet_PlayerCollision"]
+shape = SubResource("CircleShape2D_cfppq")
+
+[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player/Magnet_PlayerCollision"]
+self_modulate = Color(0, 0, 0, 0.411765)
+texture = ExtResource("5_0qyn6")
+
+[node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player" node_paths=PackedStringArray("player", "sprite", "shape")]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("4_1isya")
+player = NodePath("..")
+sprite = NodePath("Graze_Sprite2D")
+shape = NodePath("Graze_CollisionShape2D")
+
+[node name="Graze_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player/Graze_PlayerCollision2"]
+shape = SubResource("CircleShape2D_qurjd")
+
+[node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player/Graze_PlayerCollision2"]
+self_modulate = Color(0, 0, 0, 0.411765)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_0qyn6")
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
+z_index = 10
+texture = ExtResource("6_hk4sg")
+offset = Vector2(-1, 11)
+
+[node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player" node_paths=PackedStringArray("player", "sprite", "shape")]
+collision_mask = 0
+script = ExtResource("4_1isya")
+player = NodePath("..")
+sprite = NodePath("Hitbox_Sprite2D")
+shape = NodePath("Hitbox_CollisionShape2D")
+
+[node name="Hitbox_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player/Hitbox_PlayerCollision3"]
+shape = SubResource("CircleShape2D_c4em7")
+
+[node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player/Hitbox_PlayerCollision3"]
+z_index = 25
+scale = Vector2(2, 2)
+texture = ExtResource("7_sglw3")
+
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]
+z_index = 30
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 60
+text = "60s / 60s"
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Window_MarginContainer"]
+z_index = 30
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 30
+text = "Stage Completed"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pause_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "title", "continuar", "retry", "options", "goToTitle", "quitGame")]
+process_mode = 2
+visible = false
+z_index = 30
+layout_mode = 2
+script = ExtResource("8_q0g70")
+gameScene = NodePath("../../..")
+title = NodePath("VBoxContainer2/Label")
+continuar = NodePath("VBoxContainer2/VBoxContainer/Button")
+retry = NodePath("VBoxContainer2/VBoxContainer/Button2")
+options = NodePath("VBoxContainer2/VBoxContainer/Button3")
+goToTitle = NodePath("VBoxContainer2/VBoxContainer/Button4")
+quitGame = NodePath("VBoxContainer2/VBoxContainer/Button5")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Pause_Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -47.5
+offset_right = 20.0
+offset_bottom = 47.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "PAUSE"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Continue"
+
+[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Retry"
+
+[node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Options"
+
+[node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Go to Main Menu"
+
+[node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Quit Game"
+
+[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "scrollContainer", "close")]
+z_index = 30
+layout_mode = 2
+script = ExtResource("9_3u2qh")
+gameScene = NodePath("../../..")
+scrollContainer = NodePath("VBoxContainer/MarginContainer/ScrollContainer")
+close = NodePath("VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer/Button")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 50
+text = "Flea Market"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer"]
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 250)
+layout_mode = 2
+theme = ExtResource("13_cjfll")
+text = "asd
+"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][font_size=35]Name of the Card[/font_size][font_size=20]
+Description of the Card
+Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla.
+[/font_size]
+[/center]"
+fit_content = true

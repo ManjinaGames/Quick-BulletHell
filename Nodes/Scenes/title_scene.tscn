@@ -1,0 +1,305 @@
+[gd_scene load_steps=7 format=3 uid="uid://5271js7mt3af"]
+
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Title_Scene.gd" id="1_i05x6"]
+[ext_resource type="Texture2D" uid="uid://72241fs1cgsf" path="res://Assets/Images/1.jpg" id="2_4v45b"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Title_Scene/Title_Menu.gd" id="2_ctd5h"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Title_Scene/Save_Menu.gd" id="3_g1pxl"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Title_Scene/Save_Menu2.gd" id="4_k54io"]
+[ext_resource type="Theme" uid="uid://ds1rgnmlophl4" path="res://Themes/List_Button_Theme.tres" id="5_hecyw"]
+
+[node name="Title_Scene" type="Control" node_paths=PackedStringArray("titleMenu", "saveMenu", "saveMenu2")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i05x6")
+titleMenu = NodePath("MarginContainer/Title_Menu")
+saveMenu = NodePath("MarginContainer/Save_Menu")
+saveMenu2 = NodePath("MarginContainer/Save_Menu2")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4v45b")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Title_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "title", "button")]
+layout_mode = 2
+script = ExtResource("2_ctd5h")
+titleScene = NodePath("../..")
+title = NodePath("VBoxContainer/Label")
+button = [NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button2"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button3")]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Title_Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -472.5
+offset_top = -186.5
+offset_right = 472.5
+offset_bottom = 186.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="MarginContainer/Title_Menu/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 80
+text = "Salamanca of Sincretism"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Title_Menu/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Start"
+
+[node name="Button2" type="Button" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Options"
+
+[node name="Button3" type="Button" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "Quit"
+
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/Title_Menu"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -95.0
+offset_right = 377.0
+grow_vertical = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Title_Menu/PanelContainer2"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="MarginContainer/Title_Menu/PanelContainer2/MarginContainer"]
+layout_mode = 2
+text = "Assets:
+* Fantasy Towns Music Pack by Chris Logsdon.
+* Interface sfx pack 1 by ObsydianX"
+
+[node name="Save_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "scrollContainer", "vBoxContainer", "back")]
+visible = false
+layout_mode = 2
+script = ExtResource("3_g1pxl")
+titleScene = NodePath("../..")
+buttonTheme = ExtResource("5_hecyw")
+scrollContainer = NodePath("VBoxContainer/PanelContainer/MarginContainer/ScrollContainer")
+vBoxContainer = NodePath("VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/VBoxContainer")
+back = NodePath("VBoxContainer/Button")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Save_Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -214.0
+offset_top = -262.0
+offset_right = 214.0
+offset_bottom = 262.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Save_Menu/VBoxContainer"]
+custom_minimum_size = Vector2(428, 470)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Button" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 2
+
+[node name="Button2" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 2
+
+[node name="Button3" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 30
+text = "Back
+"
+
+[node name="Save_Menu2" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "title", "saveLavel", "whatToDo_Menu", "start", "delete", "back", "confirm_Menu", "yes", "no")]
+visible = false
+layout_mode = 2
+script = ExtResource("4_k54io")
+titleScene = NodePath("../..")
+title = NodePath("VBoxContainer/PanelContainer/MarginContainer/Label")
+saveLavel = NodePath("VBoxContainer/Panel/Label")
+whatToDo_Menu = NodePath("VBoxContainer/What To Do")
+start = NodePath("VBoxContainer/What To Do/MarginContainer/VBoxContainer/Button")
+delete = NodePath("VBoxContainer/What To Do/MarginContainer/VBoxContainer/Button2")
+back = NodePath("VBoxContainer/What To Do/MarginContainer/VBoxContainer/Button3")
+confirm_Menu = NodePath("VBoxContainer/Confirm Deletion")
+yes = NodePath("VBoxContainer/Confirm Deletion/MarginContainer/HBoxContainer/Button")
+no = NodePath("VBoxContainer/Confirm Deletion/MarginContainer/HBoxContainer/Button2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Save_Menu2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -245.0
+offset_right = 200.0
+offset_bottom = 245.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Panel" type="Panel" parent="MarginContainer/Save_Menu2/VBoxContainer"]
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/Save_Menu2/VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Save_Menu2/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Save_Menu2/VBoxContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="Label" parent="MarginContainer/Save_Menu2/VBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "What Do you Want to Do?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="What To Do" type="PanelContainer" parent="MarginContainer/Save_Menu2/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Load"
+
+[node name="Button2" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Delete"
+
+[node name="Button3" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Back"
+
+[node name="Confirm Deletion" type="PanelContainer" parent="MarginContainer/Save_Menu2/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Button" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Yes"
+
+[node name="Button2" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "No"

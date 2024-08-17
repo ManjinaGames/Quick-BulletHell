@@ -1,0 +1,255 @@
+[gd_scene load_steps=12 format=3 uid="uid://6uqyy262fely"]
+
+[ext_resource type="Script" path="res://Scripts/Game_Variables.gd" id="1_2qyiw"]
+[ext_resource type="AudioStream" uid="uid://cbxbj0pf2ut1w" path="res://Assets/BGMs/01. The Collector's Melancholy Afternoon.mp3" id="2_d7ofp"]
+[ext_resource type="AudioStream" uid="uid://cfexljxn73ret" path="res://Assets/BGMs/02. An Exciting and Familiar Gensokyo.mp3" id="3_eidd5"]
+[ext_resource type="AudioStream" uid="uid://bxjr1vi13d7xu" path="res://Assets/inteface_sfx_pack_1_wav/cursor_style_1.wav" id="4_0p315"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Option_Menu.gd" id="4_t0wof"]
+[ext_resource type="AudioStream" uid="uid://dxdi78sj6m86i" path="res://Assets/inteface_sfx_pack_1_wav/confirm_style_1_001.wav" id="5_espkf"]
+[ext_resource type="Texture2D" uid="uid://cnsdrqp6jqw32" path="res://Assets/Images/3.jpg" id="5_rpjx0"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Option_Menu/Option_OptionButton.gd" id="6_3w7te"]
+[ext_resource type="AudioStream" uid="uid://b68hg8jb8jisx" path="res://Assets/inteface_sfx_pack_1_wav/error_style_1_001.wav" id="6_ojqir"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Option_Menu/Option_CheckButton.gd" id="7_xklla"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Option_Menu/Option_Slider.gd" id="8_p8ele"]
+
+[node name="Game_Variables" type="Node" node_paths=PackedStringArray("optionMenu", "sfx_Selected", "sfx_Submited", "sfx_Canceled", "bgmPlayer", "fps")]
+process_mode = 3
+script = ExtResource("1_2qyiw")
+optionMenu = NodePath("CanvasLayer/Option_Menu")
+sfx_Selected = NodePath("sfx_Selected")
+sfx_Submited = NodePath("sfx_Submited")
+sfx_Canceled = NodePath("sfx_Canceled")
+bgmPlayer = NodePath("bgm_Player")
+bgmStage1 = ExtResource("3_eidd5")
+bgmTitle = ExtResource("2_d7ofp")
+fps = NodePath("CanvasLayer/fps_MarginContainer/fps_Label")
+
+[node name="sfx_Selected" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_0p315")
+bus = &"sfx"
+
+[node name="sfx_Submited" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_espkf")
+bus = &"sfx"
+
+[node name="sfx_Canceled" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ojqir")
+bus = &"sfx"
+
+[node name="bgm_Player" type="AudioStreamPlayer" parent="."]
+bus = &"bgm"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="fps_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="fps_Label" type="Label" parent="CanvasLayer/fps_MarginContainer"]
+z_index = 30
+layout_mode = 2
+size_flags_vertical = 1
+text = "60fps"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="Option_Menu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("gameVariables", "title", "idiome", "resolution", "vsync", "master", "sfx", "bgm", "back")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_t0wof")
+gameVariables = NodePath("../..")
+title = NodePath("MarginContainer/Label")
+idiome = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/idiome")
+resolution = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/resolution")
+vsync = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/vsync")
+master = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master")
+sfx = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx")
+bgm = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm")
+back = NodePath("MarginContainer/Button")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Option_Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_rpjx0")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Option_Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 100
+text = "Options
+"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Option_Menu/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="idiome" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "optionButton")]
+layout_mode = 2
+script = ExtResource("6_3w7te")
+title = NodePath("idiome_Label")
+optionButton = NodePath("idiome_OptionButton")
+
+[node name="idiome_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/idiome"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Idiome"
+
+[node name="idiome_OptionButton" type="OptionButton" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/idiome"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+allow_reselect = true
+
+[node name="resolution" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "optionButton")]
+layout_mode = 2
+script = ExtResource("6_3w7te")
+title = NodePath("resolution_Label")
+optionButton = NodePath("resolution_OptionButton")
+
+[node name="resolution_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/resolution"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Resolution"
+
+[node name="resolution_OptionButton" type="OptionButton" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/resolution"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+allow_reselect = true
+
+[node name="vsync" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "checkButton")]
+layout_mode = 2
+script = ExtResource("7_xklla")
+title = NodePath("vsync_Label")
+checkButton = NodePath("vsync_CheckButton")
+
+[node name="vsync_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/vsync"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Vsync"
+
+[node name="vsync_CheckButton" type="CheckButton" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/vsync"]
+layout_mode = 2
+
+[node name="master" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
+layout_mode = 2
+script = ExtResource("8_p8ele")
+title = NodePath("master_Label")
+slider = NodePath("master_HSlider")
+number = NodePath("master_Label2")
+
+[node name="master_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Master"
+
+[node name="master_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
+custom_minimum_size = Vector2(300, 50)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+
+[node name="master_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "100%"
+
+[node name="sfx" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
+layout_mode = 2
+script = ExtResource("8_p8ele")
+title = NodePath("sfx_Label")
+slider = NodePath("sfx_HSlider")
+number = NodePath("sfx_Label2")
+
+[node name="sfx_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "SFX"
+
+[node name="sfx_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
+custom_minimum_size = Vector2(300, 50)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+
+[node name="sfx_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "100%"
+
+[node name="bgm" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
+layout_mode = 2
+script = ExtResource("8_p8ele")
+title = NodePath("bgm_Label")
+slider = NodePath("bgm_HSlider")
+number = NodePath("bgm_Label2")
+
+[node name="bgm_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "BGM"
+
+[node name="bgm_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
+custom_minimum_size = Vector2(300, 50)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+
+[node name="bgm_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "100%"
+
+[node name="Button" type="Button" parent="CanvasLayer/Option_Menu/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 50
+text = "Back"
