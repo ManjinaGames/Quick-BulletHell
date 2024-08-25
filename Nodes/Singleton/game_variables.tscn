@@ -70,14 +70,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_t0wof")
 gameVariables = NodePath("../..")
-title = NodePath("MarginContainer/Label")
-idiome = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/idiome")
-resolution = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/resolution")
-vsync = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/vsync")
-master = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master")
-sfx = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx")
-bgm = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm")
-back = NodePath("MarginContainer/Button")
+title = NodePath("MarginContainer/VBoxContainer/Label")
+idiome = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/idiome")
+resolution = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/resolution")
+vsync = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/vsync")
+master = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/master")
+sfx = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/sfx")
+bgm = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/bgm")
+back = NodePath("MarginContainer/VBoxContainer/Button")
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Option_Menu"]
 layout_mode = 1
@@ -101,155 +101,159 @@ theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 0
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 100
 text = "Options
 "
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Option_Menu/MarginContainer"]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="idiome" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "optionButton")]
+[node name="idiome" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "optionButton")]
 layout_mode = 2
 script = ExtResource("6_3w7te")
 title = NodePath("idiome_Label")
 optionButton = NodePath("idiome_OptionButton")
 
-[node name="idiome_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/idiome"]
+[node name="idiome_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/idiome"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Idiome"
 
-[node name="idiome_OptionButton" type="OptionButton" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/idiome"]
+[node name="idiome_OptionButton" type="OptionButton" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/idiome"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 allow_reselect = true
 
-[node name="resolution" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "optionButton")]
+[node name="resolution" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "optionButton")]
 layout_mode = 2
 script = ExtResource("6_3w7te")
 title = NodePath("resolution_Label")
 optionButton = NodePath("resolution_OptionButton")
 
-[node name="resolution_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/resolution"]
+[node name="resolution_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/resolution"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Resolution"
 
-[node name="resolution_OptionButton" type="OptionButton" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/resolution"]
+[node name="resolution_OptionButton" type="OptionButton" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/resolution"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 allow_reselect = true
 
-[node name="vsync" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "checkButton")]
+[node name="vsync" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "checkButton")]
 layout_mode = 2
 script = ExtResource("7_xklla")
 title = NodePath("vsync_Label")
 checkButton = NodePath("vsync_CheckButton")
 
-[node name="vsync_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/vsync"]
+[node name="vsync_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/vsync"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Vsync"
 
-[node name="vsync_CheckButton" type="CheckButton" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/vsync"]
+[node name="vsync_CheckButton" type="CheckButton" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/vsync"]
 layout_mode = 2
 
-[node name="master" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
+[node name="master" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
 layout_mode = 2
 script = ExtResource("8_p8ele")
 title = NodePath("master_Label")
 slider = NodePath("master_HSlider")
 number = NodePath("master_Label2")
 
-[node name="master_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
+[node name="master_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Master"
 
-[node name="master_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
+[node name="master_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
 custom_minimum_size = Vector2(300, 50)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
 
-[node name="master_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
+[node name="master_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "100%"
 
-[node name="sfx" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
+[node name="sfx" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
 layout_mode = 2
 script = ExtResource("8_p8ele")
 title = NodePath("sfx_Label")
 slider = NodePath("sfx_HSlider")
 number = NodePath("sfx_Label2")
 
-[node name="sfx_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
+[node name="sfx_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "SFX"
 
-[node name="sfx_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
+[node name="sfx_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
 custom_minimum_size = Vector2(300, 50)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
 
-[node name="sfx_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
+[node name="sfx_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "100%"
 
-[node name="bgm" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
+[node name="bgm" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "slider", "number")]
 layout_mode = 2
 script = ExtResource("8_p8ele")
 title = NodePath("bgm_Label")
 slider = NodePath("bgm_HSlider")
 number = NodePath("bgm_Label2")
 
-[node name="bgm_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
+[node name="bgm_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "BGM"
 
-[node name="bgm_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
+[node name="bgm_HSlider" type="HSlider" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
 custom_minimum_size = Vector2(300, 50)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
 
-[node name="bgm_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
+[node name="bgm_Label2" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "100%"
 
-[node name="Button" type="Button" parent="CanvasLayer/Option_Menu/MarginContainer"]
+[node name="Button" type="Button" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 8
+size_flags_vertical = 4
 theme_override_font_sizes/font_size = 50
 text = "Back"

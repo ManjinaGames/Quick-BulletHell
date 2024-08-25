@@ -13,7 +13,6 @@ var inPause: bool = false
 @export var pauseMenu: Pause_Menu
 @export var marketMenu: Market_Menu
 #-------------------------------------------------------------------------------
-@export var window: Control
 @export var timerLabel: Label
 var timer: int
 @export var content: Control
@@ -53,14 +52,22 @@ var itemsDisabled: Array[Item]
 #-------------------------------------------------------------------------------
 var height: float
 var unitY: float
+#-------------------------------------------------------------------------------
 var width: float
 var unitX: float
+#-------------------------------------------------------------------------------
 var centerX: float
 var maxX: float
 var minX: float
+#-------------------------------------------------------------------------------
 var centerY: float
 var maxY: float
 var minY: float
+#-------------------------------------------------------------------------------
+var playerMaxX: float
+var playerMinX: float
+var playerMaxY: float
+var playerMinY: float
 #-------------------------------------------------------------------------------
 var lifePoints: int
 var powerPoints: int
@@ -77,7 +84,7 @@ signal endMoment
 func _ready():
 	gameVariables = get_node("/root/GameVariables")
 	#-------------------------------------------------------------------------------
-	_direct_space_state = window.get_world_2d().direct_space_state
+	_direct_space_state = content.get_world_2d().direct_space_state
 	#-------------------------------------------------------------------------------
 	pauseMenu.Start()
 	marketMenu.Start()
@@ -108,8 +115,8 @@ func PlayerMovement() -> void:
 			myPosition += input_dir * player.focusSpeed
 		else:
 			myPosition += input_dir * player.normalSpeed
-		myPosition.x = clampf(myPosition.x, minX, maxX)
-		myPosition.y = clampf(myPosition.y, minY, maxY)
+		myPosition.x = clampf(myPosition.x, playerMinX, playerMaxX)
+		myPosition.y = clampf(myPosition.y, playerMinY, playerMaxY)
 		player.position = myPosition
 #endregion
 #-------------------------------------------------------------------------------
@@ -210,16 +217,27 @@ func ShootedEnemy(_target:StaticBody2D) -> void:
 #-------------------------------------------------------------------------------
 #region UI FINCTIONS
 func SetGameLimits() -> void:
-	height = window.size.y
+	await content.resized
+	#-------------------------------------------------------------------------------
+	height = content.size.y
 	unitY = height/10
-	width = window.size.x
+	#-------------------------------------------------------------------------------
+	width = content.size.x
 	unitX = width/10
+	#-------------------------------------------------------------------------------
 	centerX = width/2.0
 	maxX = centerX+width/2.0
 	minX = centerX-width/2.0
+	#-------------------------------------------------------------------------------
 	centerY = height/2.0
 	maxY = height
 	minY = 0.0
+	#-------------------------------------------------------------------------------
+	var _offSet: float = 10
+	playerMinX = minX+_offSet
+	playerMaxX = maxX-_offSet
+	playerMinY = minY+_offSet
+	playerMaxY = maxY-_offSet
 #-------------------------------------------------------------------------------
 func CenterX(_f:float) -> float:
 	var _x: float = centerX+centerX*_f

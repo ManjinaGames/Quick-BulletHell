@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=26 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -8,10 +8,10 @@
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Collider_Script.gd" id="4_1isya"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
-[ext_resource type="Texture2D" uid="uid://ddvohhy7603be" path="res://Assets/Sprites/Sprite-0001.png" id="6_hk4sg"]
 [ext_resource type="Texture2D" uid="uid://dqbugw3tefi1c" path="res://Assets/Sprites/Hitbox.png" id="7_sglw3"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
+[ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="9_7l1bi"]
 [ext_resource type="Theme" uid="uid://ds1rgnmlophl4" path="res://Themes/List_Button_Theme.tres" id="13_cjfll"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aoj2f"]
@@ -44,12 +44,53 @@ radius = 64.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
 radius = 8.24621
 
-[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "marketMenu", "window", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
+[sub_resource type="Animation" id="Animation_5vfsn"]
+resource_name = "Idle"
+length = 0.70001
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 4, 5, 6, 7]
+}
+
+[sub_resource type="Animation" id="Animation_b24pp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bp8cq"]
+_data = {
+"Idle": SubResource("Animation_5vfsn"),
+"RESET": SubResource("Animation_b24pp")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q7mad"]
+animation = &"Idle"
+
+[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "marketMenu", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
 currentLayer = NodePath("CanvasLayer")
 pauseMenu = NodePath("CanvasLayer/Window_MarginContainer/Pause_Menu")
 marketMenu = NodePath("CanvasLayer/Window_MarginContainer/Market_Menu")
-window = NodePath("CanvasLayer/Window_MarginContainer")
 timerLabel = NodePath("CanvasLayer/Window_MarginContainer/Label")
 content = NodePath("CanvasLayer/Window_MarginContainer/Content")
 player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player")
@@ -85,8 +126,12 @@ shadow_enabled = true
 environment = SubResource("Environment_q1y1w")
 
 [node name="SubViewport" type="SubViewport" parent="World3D"]
+size = Vector2i(2048, 2048)
 
 [node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.17336, 5.23121)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World3D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -311,6 +356,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer"]
 layout_mode = 2
@@ -361,8 +410,11 @@ texture = ExtResource("5_0qyn6")
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
 z_index = 10
-texture = ExtResource("6_hk4sg")
-offset = Vector2(-1, 11)
+scale = Vector2(2, 2)
+texture = ExtResource("9_7l1bi")
+offset = Vector2(-0.5, -1)
+hframes = 8
+vframes = 3
 
 [node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player" node_paths=PackedStringArray("player", "sprite", "shape")]
 collision_mask = 0
@@ -379,11 +431,21 @@ z_index = 25
 scale = Vector2(2, 2)
 texture = ExtResource("7_sglw3")
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
+libraries = {
+"": SubResource("AnimationLibrary_bp8cq")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
+tree_root = SubResource("AnimationNodeAnimation_q7mad")
+anim_player = NodePath("../AnimationPlayer")
+
 [node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]
 z_index = 30
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 60
 text = "60s / 60s"
 horizontal_alignment = 1
@@ -410,7 +472,6 @@ vertical_alignment = 1
 
 [node name="Pause_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "title", "continuar", "retry", "options", "goToTitle", "quitGame")]
 process_mode = 2
-visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("8_q0g70")
@@ -478,7 +539,7 @@ layout_mode = 2
 script = ExtResource("9_3u2qh")
 gameScene = NodePath("../../..")
 scrollContainer = NodePath("VBoxContainer/MarginContainer/ScrollContainer")
-close = NodePath("VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer/Button")
+close = NodePath("VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer/Button")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu"]
 layout_mode = 1
@@ -492,6 +553,7 @@ grow_vertical = 2
 custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 50
 text = "Flea Market"
 horizontal_alignment = 1
@@ -500,9 +562,7 @@ vertical_alignment = 2
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
 
 [node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer"]
 layout_mode = 2
@@ -510,67 +570,76 @@ follow_focus = true
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/margin_bottom = 15
 
-[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/HBoxContainer"]
+[node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 theme = ExtResource("13_cjfll")
 text = "asd
 "
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer2"]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][font_size=35]Name of the Card[/font_size][font_size=20]

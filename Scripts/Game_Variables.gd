@@ -27,10 +27,12 @@ const gameScene_Path: StringName = "res://Nodes/Scenes/game_scene.tscn"
 @export var fps: Label
 #-------------------------------------------------------------------------------
 var maxSave: int = 9
+var isSlowMotion: bool = false
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOBEHAVIOUR
 func _ready():
+	NormalMotion()
 	optionMenu.Start()
 #-------------------------------------------------------------------------------
 func _process(_delta:float):
@@ -38,6 +40,7 @@ func _process(_delta:float):
 	#Set_Vsync()
 	#Set_MouseMode()
 	#ResetGame()
+	Set_SlowMotion()
 	fps.text = PlayerInfo()
 #endregion
 #-------------------------------------------------------------------------------
@@ -68,6 +71,7 @@ func Get_SaveDataPath(_i:int) -> String:
 #region UI FUNCTIONS
 func PlayerInfo() -> String:
 	var _s: String = str(Engine.get_frames_per_second()) + " fps.\n"
+	_s += "Slow Motion: " + str(isSlowMotion)
 	return _s
 #endregion
 #-------------------------------------------------------------------------------
@@ -159,6 +163,18 @@ func Set_MouseMode() -> void:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		elif(_mm == Input.MOUSE_MODE_CAPTURED):
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+#-------------------------------------------------------------------------------
+func Set_SlowMotion() -> void:
+	if(Input.is_action_just_pressed("Debug_SlowMotion")):
+		if(isSlowMotion):
+			NormalMotion()
+		else:
+			Engine.time_scale = 0.3
+			isSlowMotion = true
+#-------------------------------------------------------------------------------
+func NormalMotion():
+	Engine.time_scale = 1.0
+	isSlowMotion = false
 #-------------------------------------------------------------------------------
 func ResetGame() -> void:
 	if(Input.is_action_just_pressed("debug_Reset")):
