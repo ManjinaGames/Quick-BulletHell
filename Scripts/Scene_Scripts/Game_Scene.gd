@@ -75,6 +75,7 @@ var moneyPoints: int
 var scorePoints: int
 #-------------------------------------------------------------------------------
 var _direct_space_state :PhysicsDirectSpaceState2D
+var deltaTimeScale: float = 1
 #-------------------------------------------------------------------------------
 signal frame
 signal endMoment
@@ -97,6 +98,7 @@ func _ready():
 	BeginGame()
 #-------------------------------------------------------------------------------
 func _physics_process(_delta:float) -> void:
+	deltaTimeScale = _delta * 60
 	PlayerMovement()
 	PauseGame()
 	frame.emit()
@@ -112,9 +114,9 @@ func PlayerMovement() -> void:
 		input_dir.normalized()
 		var myPosition: Vector2 = player.position
 		if(Input.is_action_pressed("input_Focus")):
-			myPosition += input_dir * player.focusSpeed
+			myPosition += input_dir * player.focusSpeed * deltaTimeScale
 		else:
-			myPosition += input_dir * player.normalSpeed
+			myPosition += input_dir * player.normalSpeed * deltaTimeScale
 		myPosition.x = clampf(myPosition.x, playerMinX, playerMaxX)
 		myPosition.y = clampf(myPosition.y, playerMinY, playerMaxY)
 		player.position = myPosition
@@ -168,7 +170,7 @@ func PlayerShoot1(_x:float, _y:float, _vel:float, _dir:float) -> void:
 					DestroyPlayerBullet(_bullet)
 					break
 				var _dir2: float = deg_to_rad(_bullet.dir)
-				_bullet.position += Vector2(_bullet.vel*cos(_dir2), _bullet.vel*sin(_dir2))
+				_bullet.position += Vector2(_bullet.vel*cos(_dir2), _bullet.vel*sin(_dir2)) * deltaTimeScale
 				await frame
 			else:
 				DestroyPlayerBullet(_bullet)
@@ -304,7 +306,7 @@ func SpawnItem(_x:float, _y:float) -> void:
 					if(_result or myPLAY_STATE != PLAY_STATE.IN_GAME):
 						_item.myITEM_STATE = ITEM_STATE.IMANTED
 					else:
-						_item.position.y += _item.velY
+						_item.position.y += _item.velY * deltaTimeScale
 				else:
 					DestroyItem(_item)
 					break
@@ -314,7 +316,7 @@ func SpawnItem(_x:float, _y:float) -> void:
 					#_item.position += _vel * 0.1
 					var _dir = atan2(_vel.y, _vel.x)
 					var _vel2 = Vector2(_magnetVel * cos(_dir), _magnetVel * sin(_dir))
-					_item.position += _vel2
+					_item.position += _vel2 * deltaTimeScale
 				else:
 					scorePoints += 10
 					moneyPoints += 1
@@ -474,9 +476,9 @@ func Stage1_Enemy3(_x:float, _y:float, _mirror:float) -> void:
 	var _x2: float = 0
 	while(_enemy != null):
 		if(_y < maxY and myPLAY_STATE == PLAY_STATE.IN_GAME):
-			_rotX += 4
+			_rotX += 4 * deltaTimeScale
 			_x2 = _x+_radX*sin(deg_to_rad(_rotX))
-			_y += 1
+			_y += 1 * deltaTimeScale
 			_enemy.position = Vector2(_x2, _y)
 		else:
 			DestroyEnemy(_enemy)
@@ -630,7 +632,7 @@ func CommonEnemyBulletFunction(_bullet) -> void:
 						DestroyEnemyBullet(_bullet)
 						break
 					var _dir2: float = deg_to_rad(_bullet.dir)
-					_bullet.position += Vector2(_bullet.vel*cos(_dir2), _bullet.vel*sin(_dir2))
+					_bullet.position += Vector2(_bullet.vel*cos(_dir2), _bullet.vel*sin(_dir2)) * deltaTimeScale
 					await frame
 				else:
 					DestroyEnemyBullet(_bullet)
@@ -655,15 +657,17 @@ func ShootedPlayer(_target:StaticBody2D) -> void:
 #endregion
 #-------------------------------------------------------------------------------
 #region MOVEMENT FUNCTIONS
-func MoveTowards(_enemy, _x:float, _y:float,_timer:int) -> void:
+func MoveTowards(_enemy, _x:float, _y:float,_maxTimer:int) -> void:
 	if(_enemy == null or myPLAY_STATE!= PLAY_STATE.IN_GAME):
 		return
-	var _dx: float = (_x-_enemy.position.x)/float(_timer)
-	var _dy: float = (_y-_enemy.position.y)/float(_timer)
-	for _i in _timer:
+	var _dx: float = (_x-_enemy.position.x)/float(_maxTimer)
+	var _dy: float = (_y-_enemy.position.y)/float(_maxTimer)
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		_timer += deltaTimeScale
 		if(_enemy == null or myPLAY_STATE!= PLAY_STATE.IN_GAME):
 			return
-		_enemy.position += Vector2(_dx, _dy)
+		_enemy.position += Vector2(_dx, _dy) * deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
 func Set_VDir(_enemy, _vel:float, _dir:float) -> void:
@@ -673,11 +677,13 @@ func Set_VDir(_enemy, _vel:float, _dir:float) -> void:
 	_enemy.dir = _dir
 	Common_VDir(_enemy)
 #-------------------------------------------------------------------------------
-func Move_VDir(_enemy, _timer:int) -> void:
-	for _i in _timer:
+func Move_VDir(_enemy, _maxTimer:int) -> void:
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		_timer += deltaTimeScale
 		if(_enemy == null):
 			break
-		_enemy.position += Vector2(_enemy.velX, _enemy.velY)
+		_enemy.position += Vector2(_enemy.velX, _enemy.velY) * deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
 func Move_V_Des(_enemy, _velDess:float, _velMin:float) -> void:
@@ -690,7 +696,7 @@ func Move_V_Des(_enemy, _velDess:float, _velMin:float) -> void:
 		else:
 			_enemy.vel -= abs(_velDess)
 			Common_VDir(_enemy)
-			_enemy.position += Vector2(_enemy.velX, _enemy.velY)
+			_enemy.position += Vector2(_enemy.velX, _enemy.velY) * deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
 func Move_V_Acc(_enemy, _velAccel:float, _velMax:float) -> void:
@@ -703,16 +709,18 @@ func Move_V_Acc(_enemy, _velAccel:float, _velMax:float) -> void:
 		else:
 			_enemy.vel += abs(_velAccel)
 			Common_VDir(_enemy)
-			_enemy.position += Vector2(_enemy.velX, _enemy.velY)
+			_enemy.position += Vector2(_enemy.velX, _enemy.velY) * deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
-func Move_Dir_Rot(_enemy, _dirAccel:float, _timer:int) -> void:
-	for _i in _timer:
+func Move_Dir_Rot(_enemy, _dirAccel:float, _maxTimer:int) -> void:
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		_timer += deltaTimeScale
 		if(_enemy == null):
 			break
 		_enemy.dir += _dirAccel
 		Common_VDir(_enemy)
-		_enemy.position += Vector2(_enemy.velX, _enemy.velY)
+		_enemy.position += Vector2(_enemy.velX, _enemy.velY) * deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
 func Common_VDir(_enemy) -> void:
@@ -745,12 +753,16 @@ func Colliding(_sprite:Sprite2D, _layer) -> Array[Dictionary]:
 	PhysicsServer2D.free_rid(_shape_rid)
 	return _result
 #-------------------------------------------------------------------------------
-func Frame(_timer:int) -> void:
-	for _i in _timer:
+func Frame(_maxTimer:int) -> void:
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		_timer += deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
-func Frame2(_timer:int) -> void:
-	for _i in _timer:
+func Frame2(_maxTimer:int) -> void:
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		_timer += deltaTimeScale
 		if(myPLAY_STATE != PLAY_STATE.IN_GAME):
 			return
 		await frame

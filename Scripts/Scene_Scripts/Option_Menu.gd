@@ -8,6 +8,8 @@ class_name Option_Menu
 @export var idiome : Option_OptionButton
 signal idiomeChange
 @export var resolution : Option_OptionButton
+@export var fullscreen : Option_CheckButton
+@export var borderless : Option_CheckButton
 @export var vsync : Option_CheckButton
 @export var master : Option_Slider
 @export var sfx : Option_Slider
@@ -41,6 +43,8 @@ func Start() -> void:
 	#-------------------------------------------------------------------------------
 	SetResolution_Start()
 	SetIdiome_Start()
+	SetFullScreen_Start()
+	SetBorderless_Start()
 	SetVsync_Start()
 	#-------------------------------------------------------------------------------
 	SetValume_Start(master.slider, master.number, MasterSlider_Submit, bus_master_Index, optionSaveData.masterVolumen)
@@ -82,7 +86,6 @@ func SetResolution_Start():
 #-------------------------------------------------------------------------------
 func AddResolutionOptions(_ob:OptionButton, _dictionary:Dictionary) -> void:
 	_ob.clear()
-	_ob.add_item(tr("optionMenu_fullScreen"))
 	for i in _dictionary:
 		_ob.add_item(i)
 #-------------------------------------------------------------------------------
@@ -93,13 +96,9 @@ func ResolutionButton_Submited(_index:int) -> void:
 #-------------------------------------------------------------------------------
 func SetResolution(_index:int) -> void:
 	_index = clamp(_index, 0, resolution_dictionary.size())
-	if(_index == 0):
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
-	else:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		DisplayServer.window_set_size(resolution_dictionary.values()[_index-1])
-		var _center: Vector2i = (DisplayServer.screen_get_size()-DisplayServer.window_get_size())/2
-		DisplayServer.window_set_position(_center)
+	DisplayServer.window_set_size(resolution_dictionary.values()[_index])
+	if(DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED):
+		CenterScreem()
 #endregion
 #-------------------------------------------------------------------------------
 #region IDIOME SETTINGS
@@ -124,20 +123,66 @@ func SetIdiome(_index:int):
 	var _idiomes:PackedStringArray = TranslationServer.get_loaded_locales()
 	TranslationServer.set_locale(_idiomes[_index])
 	#-------------------------------------------------------------------------------
-	AddResolutionOptions(resolution.optionButton, resolution_dictionary)
-	resolution.optionButton.select(optionSaveData.resolutionIndex)
-	#-------------------------------------------------------------------------------
 	title.text = tr("optionMenu_title")
+	#-------------------------------------------------------------------------------
 	idiome.title.text = tr("optionMenu_idiome")
+	#-------------------------------------------------------------------------------
 	resolution.title.text = tr("optionMenu_resolution")
+	fullscreen.title.text = tr("optionMenu_fullScreen")
+	borderless.title.text = tr("optionMenu_borderless")
+	#-------------------------------------------------------------------------------
+	vsync.title.text = tr("optionMenu_vSync")
+	#-------------------------------------------------------------------------------
 	master.title.text = tr("optionMenu_master")
+	sfx.title.text = tr("optionMenu_sfx")
+	bgm.title.text = tr("optionMenu_bgm")
+	#-------------------------------------------------------------------------------
 	back.text = tr("optionMenu_back")
+#endregion
+#-------------------------------------------------------------------------------
+#region FULLSCREEN SETTINGS
+func SetFullScreen_Start():
+	var _b: bool = optionSaveData.fullscreen
+	SetFullScreen(_b)
+	fullscreen.checkButton.button_pressed = _b
+	gameVariables.SetCheckButton(fullscreen.checkButton, gameVariables.CommonSelected, FullScreenButton_Submited, AnyButton_Cancel)
+#-------------------------------------------------------------------------------
+func FullScreenButton_Submited(_b:bool):
+	gameVariables.CommonSubmited()
+	optionSaveData.fullscreen = _b
+	SetFullScreen(_b)
+#-------------------------------------------------------------------------------
+func SetFullScreen(_b: bool):
+	if(_b):
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	else:
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		SetResolution(optionSaveData.resolutionIndex)
+		CenterScreem()
+#endregion
+#-------------------------------------------------------------------------------
+#region BORDERLESS SETTINGS
+func SetBorderless_Start():
+	var _b: bool = optionSaveData.borderless
+	SetBorderless(_b)
+	borderless.checkButton.button_pressed = _b
+	gameVariables.SetCheckButton(borderless.checkButton, gameVariables.CommonSelected, BorderlessButton_Submited, AnyButton_Cancel)
+#-------------------------------------------------------------------------------
+func BorderlessButton_Submited(_b:bool):
+	gameVariables.CommonSubmited()
+	optionSaveData.borderless = _b
+	SetBorderless(_b)
+#-------------------------------------------------------------------------------
+func SetBorderless(_b: bool):
+	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, _b)
+	SetResolution(optionSaveData.resolutionIndex)
 #endregion
 #-------------------------------------------------------------------------------
 #region VSYNC SETTINGS
 func SetVsync_Start():
-	SetVsync(optionSaveData.vsync)
-	vsync.checkButton.button_pressed = optionSaveData.vsync
+	var _b: bool = optionSaveData.vsync
+	SetVsync(_b)
+	vsync.checkButton.button_pressed = _b
 	gameVariables.SetCheckButton(vsync.checkButton, gameVariables.CommonSelected, VsyncButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func VsyncButton_Submited(_b:bool) -> void:
@@ -184,6 +229,10 @@ func AnyButton_Cancel(_event:InputEvent) -> void:
 	if(_event.is_action_pressed(gameVariables.cancelInput)):
 		gameVariables.MoveToButton(back)
 		gameVariables.CommonCanceled()
+#-------------------------------------------------------------------------------
+func CenterScreem():
+	var _center: Vector2i = (DisplayServer.screen_get_size()-DisplayServer.window_get_size())/2
+	DisplayServer.window_set_position(_center)
 #endregion
 #-------------------------------------------------------------------------------
 #region MISC

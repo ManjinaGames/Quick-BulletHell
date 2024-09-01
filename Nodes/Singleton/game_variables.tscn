@@ -61,7 +61,7 @@ text = "60fps"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="Option_Menu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("gameVariables", "title", "idiome", "resolution", "vsync", "master", "sfx", "bgm", "back")]
+[node name="Option_Menu" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("gameVariables", "title", "idiome", "resolution", "fullscreen", "borderless", "vsync", "master", "sfx", "bgm", "back")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -73,6 +73,8 @@ gameVariables = NodePath("../..")
 title = NodePath("MarginContainer/VBoxContainer/Label")
 idiome = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/idiome")
 resolution = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/resolution")
+fullscreen = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/fullscreen")
+borderless = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/borderless")
 vsync = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/vsync")
 master = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/master")
 sfx = NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/sfx")
@@ -137,7 +139,7 @@ title = NodePath("idiome_Label")
 optionButton = NodePath("idiome_OptionButton")
 
 [node name="idiome_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/idiome"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Idiome"
@@ -154,7 +156,7 @@ title = NodePath("resolution_Label")
 optionButton = NodePath("resolution_OptionButton")
 
 [node name="resolution_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/resolution"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Resolution"
@@ -164,6 +166,36 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 allow_reselect = true
 
+[node name="fullscreen" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "checkButton")]
+layout_mode = 2
+script = ExtResource("7_xklla")
+title = NodePath("Label")
+checkButton = NodePath("CheckButton")
+
+[node name="Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/fullscreen"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "FullScreen"
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/fullscreen"]
+layout_mode = 2
+
+[node name="borderless" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "checkButton")]
+layout_mode = 2
+script = ExtResource("7_xklla")
+title = NodePath("Label")
+checkButton = NodePath("CheckButton")
+
+[node name="Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/borderless"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Borderless"
+
+[node name="CheckButton" type="CheckButton" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/borderless"]
+layout_mode = 2
+
 [node name="vsync" type="HBoxContainer" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer" node_paths=PackedStringArray("title", "checkButton")]
 layout_mode = 2
 script = ExtResource("7_xklla")
@@ -171,7 +203,7 @@ title = NodePath("vsync_Label")
 checkButton = NodePath("vsync_CheckButton")
 
 [node name="vsync_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/vsync"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Vsync"
@@ -187,7 +219,7 @@ slider = NodePath("master_HSlider")
 number = NodePath("master_Label2")
 
 [node name="master_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/master"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Master"
@@ -211,7 +243,7 @@ slider = NodePath("sfx_HSlider")
 number = NodePath("sfx_Label2")
 
 [node name="sfx_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/sfx"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "SFX"
@@ -235,7 +267,7 @@ slider = NodePath("bgm_HSlider")
 number = NodePath("bgm_Label2")
 
 [node name="bgm_Label" type="Label" parent="CanvasLayer/Option_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/bgm"]
-custom_minimum_size = Vector2(180, 0)
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "BGM"

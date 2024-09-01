@@ -648,3 +648,7 @@ Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 [/font_size]
 [/center]"
 fit_content = true
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.001
+autostart = true
