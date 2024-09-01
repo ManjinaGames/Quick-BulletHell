@@ -4,8 +4,6 @@ class_name Save_Menu
 @export var titleScene: Title_Scene
 var gameVariables: Game_Variables
 #-------------------------------------------------------------------------------
-@export var buttonTheme: Theme
-#-------------------------------------------------------------------------------
 @export var scrollContainer: ScrollContainer
 @export var vBoxContainer: VBoxContainer
 @export var button: Array[Button]
@@ -30,7 +28,6 @@ func CreateSaveButtons() ->void:
 	for _i in gameVariables.maxSave:
 		var _b : Button = Button.new()
 		_b.custom_minimum_size = buttonSize
-		_b.theme = buttonTheme
 		gameVariables.SetButton(_b, gameVariables.CommonSelected, func():SaveButton_Subited(_i), AnyButton_Canceled)
 		vBoxContainer.add_child(_b)
 		button.append(_b)
