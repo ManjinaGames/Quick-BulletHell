@@ -98,7 +98,7 @@ func _ready():
 	BeginGame()
 #-------------------------------------------------------------------------------
 func _physics_process(_delta:float) -> void:
-	deltaTimeScale = _delta * 60
+	deltaTimeScale = Engine.time_scale
 	PlayerMovement()
 	PauseGame()
 	frame.emit()
