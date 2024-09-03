@@ -29,7 +29,9 @@ func StartButton_Subited() -> void:
 	titleScene.saveMenu.show()
 	gameVariables.MoveToButton(titleScene.saveMenu.button[_index])
 	#NOTA: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
+	#NOTA2: Necesita arreglarse para que entre en la posicion correcta.
 	titleScene.saveMenu.scrollContainer.scroll_vertical = int(titleScene.saveMenu.buttonSize.y * _index)
+	#titleScene.saveMenu.scrollContainer.scroll_vertical = 0
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
 func OptionsButton_Subited() -> void:

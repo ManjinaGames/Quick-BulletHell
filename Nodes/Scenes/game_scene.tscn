@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=26 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="9_7l1bi"]
+[ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="13_fug2n"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aoj2f"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -512,35 +513,40 @@ size_flags_vertical = 4
 [node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Continue"
 
 [node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Retry"
 
 [node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Options"
 
 [node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Go to Main Menu"
 
 [node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Quit Game"
 
-[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "scrollContainer", "close")]
+[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "scrollContainer", "hBoxContainer")]
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
 gameScene = NodePath("../../..")
 scrollContainer = NodePath("VBoxContainer/MarginContainer/ClipContent/ScrollContainer")
-close = NodePath("VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer/Button")
+hBoxContainer = NodePath("VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu"]
 layout_mode = 1
@@ -656,3 +662,10 @@ Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 [/font_size]
 [/center]"
 fit_content = true
+
+[node name="TouchScreenButton" type="TouchScreenButton" parent="CanvasLayer"]
+process_mode = 3
+position = Vector2(961, 392)
+texture_normal = ExtResource("13_fug2n")
+texture_pressed = ExtResource("13_fug2n")
+action = "input_Pause"

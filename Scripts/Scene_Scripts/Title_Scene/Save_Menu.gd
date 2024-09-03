@@ -8,7 +8,7 @@ var gameVariables: Game_Variables
 @export var vBoxContainer: VBoxContainer
 @export var button: Array[Button]
 @export var back: Button
-var buttonSize: Vector2 = Vector2(400, 150)
+const buttonSize: Vector2 = Vector2(400, 150)
 #endregion
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
@@ -22,9 +22,7 @@ func Start() -> void:
 #-------------------------------------------------------------------------------
 #region SAVE BUTTON FUNCTIONS
 func CreateSaveButtons() ->void:
-	for _child in vBoxContainer.get_children():
-		_child.queue_free()
-	#-------------------------------------------------------------------------------
+	ClearContainer()
 	for _i in gameVariables.maxSave:
 		var _b : Button = Button.new()
 		_b.custom_minimum_size = buttonSize
@@ -37,6 +35,11 @@ func DeleteSaveButtons() -> void:
 	for _b in button:
 		_b.queue_free()
 	button.clear()
+	ClearContainer()
+#-------------------------------------------------------------------------------
+func ClearContainer():
+	for _child in vBoxContainer.get_children():
+		_child.queue_free()
 #endregion
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS

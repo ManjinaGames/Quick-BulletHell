@@ -157,6 +157,9 @@ func MoveToButton(_b:Button) -> void:
 func MoveToLastButton(_b:Array[Button]) -> void:
 	MoveToButton(_b[_b.size()-1])
 #-------------------------------------------------------------------------------
+func MoveToFirstButton(_b:Array[Button]) -> void:
+	MoveToButton(_b[0])
+#-------------------------------------------------------------------------------
 func PlayBGM(_bgm:AudioStreamMP3) -> void:
 	bgmPlayer.stream = _bgm
 	bgmPlayer.play()
