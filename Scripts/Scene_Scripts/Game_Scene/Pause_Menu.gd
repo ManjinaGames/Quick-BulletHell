@@ -61,10 +61,9 @@ func QuitGameButton_Subited() -> void:
 	gameVariables.CommonSubmited()
 	get_tree().quit()
 #-------------------------------------------------------------------------------
-func AnyButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(quitGame)
-		gameVariables.CommonCanceled()
+func AnyButton_Canceled() -> void:
+	gameVariables.MoveToButton(quitGame)
+	gameVariables.CommonCanceled()
 #endregion
 #-------------------------------------------------------------------------------
 #region OPTION MENU BACK BUTTON
@@ -76,10 +75,9 @@ func OptionMenu_BackButton_Subited() -> void:
 	OptionMenu_BackButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func OptionMenu_BackButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		OptionMenu_BackButton_Common()
-		gameVariables.CommonCanceled()
+func OptionMenu_BackButton_Canceled() -> void:
+	OptionMenu_BackButton_Common()
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func OptionMenu_BackButton_Common() -> void:
 	gameVariables.optionMenu.Save_OptionSaveData(gameVariables.optionMenu.optionSaveData)

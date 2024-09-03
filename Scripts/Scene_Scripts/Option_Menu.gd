@@ -225,10 +225,9 @@ func SetValume(_label: Label, _index:int, _value:float):
 #endregion
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS
-func AnyButton_Cancel(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(back)
-		gameVariables.CommonCanceled()
+func AnyButton_Cancel() -> void:
+	gameVariables.MoveToButton(back)
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func CenterScreem():
 	var _center: Vector2i = (DisplayServer.screen_get_size()-DisplayServer.window_get_size())/2

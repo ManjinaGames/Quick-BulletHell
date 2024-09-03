@@ -28,6 +28,7 @@ func CreateSaveButtons() ->void:
 	for _i in gameVariables.maxSave:
 		var _b : Button = Button.new()
 		_b.custom_minimum_size = buttonSize
+		_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		gameVariables.SetButton(_b, gameVariables.CommonSelected, func():SaveButton_Subited(_i), AnyButton_Canceled)
 		vBoxContainer.add_child(_b)
 		button.append(_b)
@@ -49,19 +50,17 @@ func SaveButton_Subited(_i:int) -> void:
 	gameVariables.MoveToButton(titleScene.saveMenu2.start)
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func AnyButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(back)
-		gameVariables.CommonCanceled()
+func AnyButton_Canceled() -> void:
+	gameVariables.MoveToButton(back)
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Subited() -> void:
 	BackButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func BackButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		BackButton_Common()
-		gameVariables.CommonCanceled()
+func BackButton_Canceled() -> void:
+	BackButton_Common()
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()

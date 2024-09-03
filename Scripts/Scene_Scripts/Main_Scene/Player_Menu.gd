@@ -29,19 +29,17 @@ func PlayerButton_Subited(_i:int) -> void:
 	BackButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func AnyButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(back)
-		gameVariables.CommonCanceled()
+func AnyButton_Canceled() -> void:
+	gameVariables.MoveToButton(back)
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Subited() -> void:
 	BackButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func BackButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		BackButton_Common()
-		gameVariables.CommonCanceled()
+func BackButton_Canceled() -> void:
+	BackButton_Common()
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()

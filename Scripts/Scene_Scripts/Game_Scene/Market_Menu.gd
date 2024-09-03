@@ -26,9 +26,8 @@ func CloseButton_Subited() -> void:
 	gameScene.PlayerShoot()
 	gameScene.endMoment.emit()
 #-------------------------------------------------------------------------------
-func AnyButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(close)
-		gameVariables.CommonCanceled()
+func AnyButton_Canceled() -> void:
+	gameVariables.MoveToButton(close)
+	gameVariables.CommonCanceled()
 #endregion
 #-------------------------------------------------------------------------------

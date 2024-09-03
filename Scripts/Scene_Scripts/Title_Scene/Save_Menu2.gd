@@ -36,7 +36,7 @@ func Set_SaveMenu2(_index:int):
 	gameVariables.DisconnectButton(back)
 	gameVariables.SetButton(start, gameVariables.CommonSelected, func():StartButton_Subited(_index), StartButton_Canceled)
 	gameVariables.SetButton(delete, gameVariables.CommonSelected, DeleteButton_Subited, StartButton_Canceled)
-	gameVariables.SetButton(back, gameVariables.CommonSelected, func():CancelButton_Subited(_index), func(_event:InputEvent):CancelButton_Canceled(_event, _index))
+	gameVariables.SetButton(back, gameVariables.CommonSelected, func():CancelButton_Subited(_index), func():CancelButton_Canceled(_index))
 	#-------------------------------------------------------------------------------
 	gameVariables.DisconnectButton(yes)
 	gameVariables.DisconnectButton(no)
@@ -55,10 +55,9 @@ func StartButton_Subited(_index:int) -> void:
 	gameVariables.CommonSubmited()
 	get_tree().change_scene_to_file(gameVariables.mainScene_Path)
 #-------------------------------------------------------------------------------
-func StartButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(back)
-		gameVariables.CommonCanceled()
+func StartButton_Canceled() -> void:
+	gameVariables.MoveToButton(back)
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func DeleteButton_Subited() -> void:
 	title.text = tr("deleteMenu_title")
@@ -71,10 +70,9 @@ func CancelButton_Subited(_index:int) -> void:
 	CancelButton_Common(_index)
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func CancelButton_Canceled(_event:InputEvent, _index:int) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		CancelButton_Common(_index)
-		gameVariables.CommonCanceled()
+func CancelButton_Canceled(_index:int) -> void:
+	CancelButton_Common(_index)
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func CancelButton_Common(_index:int) -> void:
 	GoBackToSaveMenu1(_index)
@@ -89,19 +87,17 @@ func YesButton_Subited(_index:int) -> void:
 	GoBackToSaveMenu1(_index)
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func YesButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(no)
-		gameVariables.CommonCanceled()
+func YesButton_Canceled() -> void:
+	gameVariables.MoveToButton(no)
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func NoButton_Subited() -> void:
 	NoButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func NoButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		NoButton_Common()
-		gameVariables.CommonCanceled()
+func NoButton_Canceled() -> void:
+	NoButton_Common()
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func NoButton_Common() -> void:
 	SetWhatToDoText()

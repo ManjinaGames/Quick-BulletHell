@@ -589,48 +589,56 @@ layout_mode = 2
 [node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 
 [node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 
 [node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 
 [node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 
 [node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 
 [node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 
 [node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 
 [node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
+action_mode = 0
 text = "asd
 "
 

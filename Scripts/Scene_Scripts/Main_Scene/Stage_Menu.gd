@@ -28,31 +28,35 @@ func UpdateStageButtons():
 	for _i in 9:
 		match(gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE):
 			StageSaveData.STAGE_STATE.DISABLED:
-				button[_i].disabled = true
+				button[_i].text = "[Locked]"
 			_:
-				button[_i].disabled = false
+				SetButtonIdiome(button[_i], _i)
 #-------------------------------------------------------------------------------
 func StageButton_Subited(_i:int) -> void:
-	hide()
-	gameVariables.currentSaveData.stageIndex = _i
-	mainScene.mainMenu.SetGameInfo()
-	gameVariables.MoveToButton(mainScene.startMenu.start)
-	mainScene.startMenu.show()
-	gameVariables.CommonSubmited()
+	var _player: int = gameVariables.currentSaveData.playerIndex
+	var _difficulty: int = gameVariables.currentSaveData.difficultyIndex
+	match(gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE):
+		StageSaveData.STAGE_STATE.DISABLED:
+			gameVariables.CommonCanceled()
+		_:
+			hide()
+			gameVariables.currentSaveData.stageIndex = _i
+			mainScene.mainMenu.SetGameInfo()
+			gameVariables.MoveToButton(mainScene.startMenu.start)
+			mainScene.startMenu.show()
+			gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func AnyButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		gameVariables.MoveToButton(back)
-		gameVariables.CommonCanceled()
+func AnyButton_Canceled() -> void:
+	gameVariables.MoveToButton(back)
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Subited() -> void:
 	BackButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
-func BackButton_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(gameVariables.cancelInput)):
-		BackButton_Common()
-		gameVariables.CommonCanceled()
+func BackButton_Canceled() -> void:
+	BackButton_Common()
+	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()
@@ -64,6 +68,9 @@ func BackButton_Common() -> void:
 func SetIdiome():
 	back.text = tr("optionMenu_back")
 	for _i in button.size():
-		button[_i].text = tr("stageMenu_button"+str(_i))
+		SetButtonIdiome(button[_i], _i)
+#-------------------------------------------------------------------------------
+func SetButtonIdiome(_b:Button, _i:int):
+	_b.text = tr("stageMenu_button"+str(_i))
 #endregion
 #-------------------------------------------------------------------------------

@@ -13,12 +13,14 @@ var playPosition: float = 0.0
 @export var bgmStage1 : AudioStreamMP3
 @export var bgmTitle : AudioStreamMP3
 #-------------------------------------------------------------------------------
+const submitInput: String = "ui_accept"
 const cancelInput: String = "ui_cancel"
 #-------------------------------------------------------------------------------
 const saveData_name : String = "Save"
 const saveData_ext : String = ".tres"
 const saveData_path : String = "user://Save/"
 var currentSaveData : SaveData;
+var currentFocus: Control
 #-------------------------------------------------------------------------------
 const titleScene_Path: StringName = "res://Nodes/Scenes/title_scene.tscn"
 const mainScene_Path: StringName = "res://Nodes/Scenes/main_scene.tscn"
@@ -78,13 +80,25 @@ func PlayerInfo() -> String:
 #region SET THE BUTTONS SIGNALS
 func SetButton(_b:Button, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
 	_b.focus_entered.connect(_selected)
-	_b.pressed.connect(_submited)
-	_b.gui_input.connect(_canceled)
-	#_b.mouse_entered.connect(func():_b.grab_focus())
+	_b.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+			elif(_event.is_action_pressed(submitInput)):
+				currentFocus = _b
+				await _b.pressed
+				_submited.call()
+			elif(_event is InputEventMouseButton):
+				await _b.pressed
+				if(_event.button_index==1 and _event.is_pressed()):
+					if(currentFocus == _b):
+						_submited.call()
+					else:
+						currentFocus = _b
+	)
 #-------------------------------------------------------------------------------
 func DisconnectButton(_b:Button) -> void:
 	DisconnectAll(_b.focus_entered)
-	DisconnectAll(_b.pressed)
 	DisconnectAll(_b.gui_input)
 #-------------------------------------------------------------------------------
 func DisconnectAll(_signal:Signal):
@@ -93,33 +107,55 @@ func DisconnectAll(_signal:Signal):
 		_signal.disconnect(_dictionary["callable"])
 #-------------------------------------------------------------------------------
 func SetOptionButtons(_ob:OptionButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
-	_ob.focus_entered.connect(_selected)
+	_ob.focus_entered.connect(
+		func():
+			currentFocus = _ob
+			_selected.call()
+	)
 	_ob.item_selected.connect(_submited)
-	_ob.gui_input.connect(_canceled)
-	#_ob.mouse_entered.connect(func():_ob.grab_focus())
+	_ob.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+	)
 #-------------------------------------------------------------------------------
 func OptionButtons_AddSubmited(_ob:OptionButton, _submited:Callable):
 	_ob.item_selected.connect(_submited)
 #-------------------------------------------------------------------------------
 func SetCheckButton(_cb:CheckButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
-	_cb.focus_entered.connect(_selected)
+	_cb.focus_entered.connect(
+		func():
+			currentFocus = _cb
+			_selected.call()
+	)
 	_cb.toggled.connect(_submited)
-	_cb.gui_input.connect(_canceled)
-	#_cb.mouse_entered.connect(func():_cb.grab_focus())
+	_cb.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+	)
 #-------------------------------------------------------------------------------
 func SetSlider(_sl:Slider,  _selected:Callable,  _submited:Callable,  _canceled:Callable) -> void:
-	_sl.focus_entered.connect(_selected)
+	_sl.focus_entered.connect(
+		func():
+			currentFocus = _sl
+			_selected.call()
+	)
 	_sl.value_changed.connect(_submited)
-	_sl.gui_input.connect(_canceled)
-	#_sl.mouse_entered.connect(func():_sl.grab_focus())
+	_sl.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+	)
 #endregion
 #-------------------------------------------------------------------------------
 #region UI COMMON FUNCTIONALITY
 func MoveToButton(_b:Button) -> void:
+	currentFocus = _b
 	_b.grab_focus()
 #-------------------------------------------------------------------------------
 func MoveToLastButton(_b:Array[Button]) -> void:
-	_b[_b.size()-1].grab_focus()
+	MoveToButton(_b[_b.size()-1])
 #-------------------------------------------------------------------------------
 func PlayBGM(_bgm:AudioStreamMP3) -> void:
 	bgmPlayer.stream = _bgm
@@ -133,10 +169,6 @@ func CommonSubmited() -> void:
 #-------------------------------------------------------------------------------
 func CommonCanceled() -> void:
 	sfx_Canceled.play()
-#-------------------------------------------------------------------------------
-func AnyControl_Canceled(_event:InputEvent) -> void:
-	if(_event.is_action_pressed(cancelInput)):
-		CommonCanceled()
 #endregion
 #-------------------------------------------------------------------------------
 #region DEBUG INPUTS

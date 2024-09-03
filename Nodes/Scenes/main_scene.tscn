@@ -86,26 +86,31 @@ layout_mode = 2
 [node name="Button" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Start"
 
 [node name="Button2" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Player"
 
 [node name="Button3" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Difficulty"
 
 [node name="Button4" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Options"
 
 [node name="Button5" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Go to Title"
 
 [node name="Player_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
@@ -149,12 +154,14 @@ layout_mode = 2
 custom_minimum_size = Vector2(500, 450)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Player 1"
 
 [node name="Button2" type="Button" parent="MarginContainer/Player_Menu/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(500, 450)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Player 2"
 
 [node name="Button" type="Button" parent="MarginContainer/Player_Menu/VBoxContainer"]
@@ -162,6 +169,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Back
 "
 
@@ -204,30 +212,35 @@ layout_mode = 2
 custom_minimum_size = Vector2(400, 100)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Easy"
 
 [node name="Button2" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 100)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Normal"
 
 [node name="Button3" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 100)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Hard"
 
 [node name="Button4" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 100)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Lunatic"
 
 [node name="Button" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer"]
 custom_minimum_size = Vector2(300, 70)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
+action_mode = 0
 text = "Back"
 
 [node name="Stage_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
@@ -265,60 +278,70 @@ layout_mode = 2
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Stage 1"
 
 [node name="Button2" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Stage 2"
 
 [node name="Button3" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Stage 3"
 
 [node name="Button4" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Stage 4"
 
 [node name="Button5" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Stage 5"
 
 [node name="Button6" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Stage Final"
 
 [node name="Button7" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Stage Extra"
 
 [node name="Button8" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Rogue-Like Mode"
 
 [node name="Button9" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Boss-Rush Mode"
 
 [node name="Button" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Back"
 
 [node name="Start_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "start", "back")]
@@ -351,14 +374,17 @@ layout_mode = 2
 [node name="Button" type="Button" parent="MarginContainer/Start_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Start"
 
 [node name="Button2" type="Button" parent="MarginContainer/Start_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Info"
 
 [node name="Button3" type="Button" parent="MarginContainer/Start_Menu/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
+action_mode = 0
 text = "Back"
