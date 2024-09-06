@@ -46,7 +46,7 @@ func ClearContainer():
 func SaveButton_Subited(_i:int) -> void:
 	hide()
 	#-------------------------------------------------------------------------------
-	titleScene.saveMenu2.saveLavel.text = SetSaveText(_i)
+	titleScene.saveMenu2.saveLabel.text = SetSaveText(_i)
 	titleScene.saveMenu2.Set_SaveMenu2(_i)
 	titleScene.saveMenu2.show()
 	titleScene.saveMenu2.whatToDo_Menu.show()

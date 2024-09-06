@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3 uid="uid://c4upbg36ku38m"]
+
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_4vntj"]
+
+[resource]
+script = ExtResource("1_4vntj")
+title = "Card 2"
+description = "22222222222222222222222222222222222"
+price = 0
+maxHold = 0

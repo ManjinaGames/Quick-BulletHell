@@ -41,6 +41,7 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
 [node name="Title_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "title", "button")]
+visible = false
 layout_mode = 2
 script = ExtResource("2_ctd5h")
 titleScene = NodePath("../..")
@@ -122,7 +123,8 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 text = "Assets:
 * Fantasy Towns Music Pack by Chris Logsdon.
-* Interface sfx pack 1 by ObsydianX"
+* Interface sfx pack 1 by ObsydianX.
+* 1-Bit Input Prompts Pixel 16× (1.0) by Kenney."
 
 [node name="Save_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "scrollContainer", "vBoxContainer", "back")]
 visible = false
@@ -215,13 +217,12 @@ action_mode = 0
 text = "Back
 "
 
-[node name="Save_Menu2" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "title", "saveLavel", "whatToDo_Menu", "start", "delete", "back", "confirm_Menu", "yes", "no")]
-visible = false
+[node name="Save_Menu2" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "title", "saveLabel", "whatToDo_Menu", "start", "delete", "back", "confirm_Menu", "yes", "no")]
 layout_mode = 2
 script = ExtResource("4_k54io")
 titleScene = NodePath("../..")
 title = NodePath("VBoxContainer/PanelContainer/MarginContainer/Label")
-saveLavel = NodePath("VBoxContainer/Panel/Label")
+saveLabel = NodePath("VBoxContainer/Panel/Label")
 whatToDo_Menu = NodePath("VBoxContainer/What To Do")
 start = NodePath("VBoxContainer/What To Do/MarginContainer/VBoxContainer/Button")
 delete = NodePath("VBoxContainer/What To Do/MarginContainer/VBoxContainer/Button2")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=35 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -12,7 +12,16 @@
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="9_7l1bi"]
-[ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="13_fug2n"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="13_x786h"]
+[ext_resource type="Resource" uid="uid://qd50ywh4rm84" path="res://Resources/Cards/00.tres" id="14_4qbfb"]
+[ext_resource type="Resource" uid="uid://djt1b5rhqntqr" path="res://Resources/Cards/01.tres" id="15_k2dx3"]
+[ext_resource type="Resource" uid="uid://c4upbg36ku38m" path="res://Resources/Cards/02.tres" id="16_hovb2"]
+[ext_resource type="Resource" uid="uid://dbdg5uol4v182" path="res://Resources/Cards/03.tres" id="17_dadln"]
+[ext_resource type="Resource" uid="uid://d1cw7163jesar" path="res://Resources/Cards/04.tres" id="18_chr6o"]
+[ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
+[ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
+[ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
+[ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aoj2f"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -129,9 +138,59 @@ environment = SubResource("Environment_q1y1w")
 size = Vector2i(2048, 2048)
 
 [node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.17336, 5.23121)
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 2.5, 4)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="World3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -1.75)
+size = Vector3(7, 0.5, 17.5)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, 2.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, 0.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -1.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D4" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -3.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D5" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -5.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D6" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -7.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D7" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, 2.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D8" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, 0.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D9" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -1.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D10" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -3.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D11" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -5.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+
+[node name="CSGPolygon3D12" type="CSGPolygon3D" parent="World3D"]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -7.5)
+polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -540,21 +599,27 @@ theme_override_font_sizes/font_size = 30
 action_mode = 0
 text = "Quit Game"
 
-[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "scrollContainer", "hBoxContainer")]
+[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCardLabel", "confirmMenu", "yesButton", "noButton")]
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
 gameScene = NodePath("../../..")
-scrollContainer = NodePath("VBoxContainer/MarginContainer/ClipContent/ScrollContainer")
-hBoxContainer = NodePath("VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer")
+buyMenu = NodePath("VBoxContainer/Buy_Menu")
+scrollContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer")
+cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer")
+cardCatalogue = Array[ExtResource("13_x786h")]([ExtResource("14_4qbfb"), ExtResource("15_k2dx3"), ExtResource("16_hovb2"), ExtResource("17_dadln"), ExtResource("18_chr6o")])
+description = NodePath("VBoxContainer/Buy_Menu/MarginContainer2/RichTextLabel")
+confirmCardLabel = NodePath("VBoxContainer/Confirm_Menu/MarginContainer/Panel/Label")
+confirmMenu = NodePath("VBoxContainer/Confirm_Menu")
+yesButton = NodePath("VBoxContainer/Confirm_Menu/HBoxContainer/Button")
+noButton = NodePath("VBoxContainer/Confirm_Menu/HBoxContainer/Button2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu"]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 754.0
 grow_horizontal = 2
-grow_vertical = 2
 
 [node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
 custom_minimum_size = Vector2(0, 70)
@@ -566,94 +631,97 @@ text = "Flea Market"
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+[node name="Buy_Menu" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu"]
 layout_mode = 2
 theme_override_constants/margin_left = 11
 theme_override_constants/margin_right = 11
 
-[node name="ClipContent" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer"]
+[node name="ClipContent" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer"]
 clip_contents = true
 layout_mode = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent"]
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent"]
 clip_contents = false
 layout_mode = 2
 follow_focus = true
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 15
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
+[node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
 action_mode = 0
 text = "asd
 "
 
-[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_right = 8
 
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/MarginContainer2"]
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer2"]
 layout_mode = 2
 bbcode_enabled = true
 text = "[center][font_size=35]Name of the Card[/font_size][font_size=20]
@@ -663,9 +731,85 @@ Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 [/center]"
 fit_content = true
 
-[node name="TouchScreenButton" type="TouchScreenButton" parent="CanvasLayer"]
+[node name="Confirm_Menu" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu"]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer"]
+custom_minimum_size = Vector2(198, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Carnd N° X"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu"]
+layout_mode = 2
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Do you Want to Buy This Card?"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu"]
+layout_mode = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+action_mode = 0
+text = "Yes"
+
+[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+action_mode = 0
+text = "No"
+
+[node name="Pad" type="Node2D" parent="CanvasLayer"]
 process_mode = 3
-position = Vector2(961, 392)
-texture_normal = ExtResource("13_fug2n")
-texture_pressed = ExtResource("13_fug2n")
+position = Vector2(92, 443)
+scale = Vector2(5, 5)
+
+[node name="x" type="TouchScreenButton" parent="CanvasLayer/Pad"]
+position = Vector2(-15, 0)
+texture_normal = ExtResource("19_334te")
+action = "input_Focus"
+
+[node name="y" type="TouchScreenButton" parent="CanvasLayer/Pad"]
+position = Vector2(0, -15)
+texture_normal = ExtResource("20_o8vix")
 action = "input_Pause"
+
+[node name="a" type="TouchScreenButton" parent="CanvasLayer/Pad"]
+position = Vector2(0, 15)
+texture_normal = ExtResource("21_4y53g")
+action = "input_Shoot"
+
+[node name="b" type="TouchScreenButton" parent="CanvasLayer/Pad"]
+position = Vector2(15, 0)
+texture_normal = ExtResource("22_b0e5b")
+action = "input_Power"

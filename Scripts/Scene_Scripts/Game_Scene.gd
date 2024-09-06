@@ -545,9 +545,10 @@ func WaveOfEnemies_and_Market(_s:String, _c:Callable, _time:int):
 	_c.call()
 	StartTimer(_time)
 	await endMoment
-	OpenMarket()
+	marketMenu.OpenMarket()
 	await endMoment
-	CloseMarket()
+	myPLAY_STATE = PLAY_STATE.IN_GAME
+	PlayerShoot()
 #-------------------------------------------------------------------------------
 func StartTimer(_time:int):
 	var _maxTimer: String = "s / "+str(_time)+"s"
@@ -566,19 +567,6 @@ func ShowBanner(_s:String):
 	await Frame(90)
 	completedPanel.hide()
 	completedLabel.text = "_s"
-#-------------------------------------------------------------------------------
-func OpenMarket():
-	marketMenu.show()
-	marketMenu.CreateCardButtons()
-	gameVariables.MoveToFirstButton(marketMenu.card)
-	#NOTA: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
-	marketMenu.scrollContainer.scroll_horizontal = 0
-#-------------------------------------------------------------------------------
-func CloseMarket():
-	marketMenu.DeleteCardButtons()
-	marketMenu.hide()
-	myPLAY_STATE = PLAY_STATE.IN_GAME
-	PlayerShoot()
 #endregion
 #-------------------------------------------------------------------------------
 #region ENEMY FUNCTIONS

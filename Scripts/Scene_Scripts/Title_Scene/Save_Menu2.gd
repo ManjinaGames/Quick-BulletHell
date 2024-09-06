@@ -5,13 +5,15 @@ class_name Save_Menu2
 var gameVariables: Game_Variables
 #-------------------------------------------------------------------------------
 @export var title: Label
-@export var saveLavel: Label
+@export var saveLabel: Label
 #-------------------------------------------------------------------------------
+@export_group("What to do Menu")
 @export var whatToDo_Menu: PanelContainer
 @export var start: Button
 @export var delete: Button
 @export var back: Button
 #-------------------------------------------------------------------------------
+@export_group("Confirm Menu")
 @export var confirm_Menu: PanelContainer
 @export var yes: Button
 @export var no: Button
