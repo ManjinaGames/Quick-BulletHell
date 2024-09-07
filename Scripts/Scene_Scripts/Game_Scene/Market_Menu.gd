@@ -19,6 +19,7 @@ var gameVariables: Game_Variables
 @export var yesButton: Button
 @export var noButton: Button
 const buttonSize: Vector2 = Vector2(198, 250)
+signal closeMarket
 #endregion
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
@@ -33,6 +34,7 @@ func Start():
 	hide()
 #endregion
 #-------------------------------------------------------------------------------
+#region CREATE CARDS FUNCTIONS
 func OpenMarket():
 	CreateCardButtons()
 	gameVariables.MoveToFirstButton(cardButton)
@@ -40,8 +42,8 @@ func OpenMarket():
 	buyMenu.show()
 	confirmMenu.hide()
 	show()
+	await closeMarket
 #-------------------------------------------------------------------------------
-#region CREATE CARDS FUNCTIONS
 func CreateCardButtons() ->void:
 	ClearContainer()
 	for _i in cardCatalogue.size():
@@ -68,7 +70,7 @@ func SetCardTextNumber(_i:int) -> String:
 	return _s
 #endregion
 #-------------------------------------------------------------------------------
-#region BUY MENU FUNCTIONS
+#region CARD BUTTON FUNCTIONS
 func CardButton_Selected(_i:int) -> void:
 	var _s: String = "[center][font_size=35]"+ cardCatalogue[_i].title + "[/font_size][font_size=20]\n"
 	_s += cardCatalogue[_i].description
@@ -92,7 +94,7 @@ func CardButton_Canceled() -> void:
 func ConfirmMenu_YesButton_Submited():
 	DeleteCardButtons()
 	hide()
-	gameScene.endMoment.emit()
+	closeMarket.emit()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
 func ConfirmMenu_YesButton_Canceled():

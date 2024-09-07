@@ -1,7 +1,7 @@
 extends Node
 class_name Game_Scene
 #-------------------------------------------------------------------------------
-enum PLAY_STATE{IN_GAME, IN_MARKET, IN_OPTION_MENU}
+enum PLAY_STATE{IN_GAME, IN_MARKET, IN_OPTION_MENU, IN_DIALOGUE}
 enum ITEM_STATE{FREED, IMANTED}
 #region VARIABLES
 var gameVariables: Game_Variables
@@ -12,6 +12,7 @@ var inPause: bool = false
 @export var currentLayer: CanvasLayer
 @export var pauseMenu: Pause_Menu
 @export var marketMenu: Market_Menu
+@export var dialogueMenu: Dialogue_Menu
 #-------------------------------------------------------------------------------
 @export var timerLabel: Label
 var timer: int
@@ -78,7 +79,6 @@ var _direct_space_state :PhysicsDirectSpaceState2D
 var deltaTimeScale: float = 1
 #-------------------------------------------------------------------------------
 signal frame
-signal endMoment
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
@@ -89,6 +89,7 @@ func _ready():
 	#-------------------------------------------------------------------------------
 	pauseMenu.Start()
 	marketMenu.Start()
+	dialogueMenu.Start()
 	#-------------------------------------------------------------------------------
 	SetIdiome()
 	#-------------------------------------------------------------------------------
@@ -99,16 +100,29 @@ func _ready():
 #-------------------------------------------------------------------------------
 func _physics_process(_delta:float) -> void:
 	deltaTimeScale = Engine.time_scale
-	PlayerMovement()
-	PauseGame()
 	frame.emit()
+	#-------------------------------------------------------------------------------
+	match(myPLAY_STATE):
+		PLAY_STATE.IN_GAME:
+			PlayerMovement()
+			PauseGame()
+			return
+		#-------------------------------------------------------------------------------
+		PLAY_STATE.IN_MARKET:
+			pass
+		#-------------------------------------------------------------------------------
+		PLAY_STATE.IN_OPTION_MENU:
+			pass
+		#-------------------------------------------------------------------------------
+		PLAY_STATE.IN_DIALOGUE:
+			if(Input.is_action_just_pressed("ui_accept")):
+				dialogueMenu.nextLine.emit()
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
 #region PLAYER FUNCTIONS
 func PlayerMovement() -> void:
-	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
-		return
-	#-------------------------------------------------------------------------------
 	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	if(input_dir != Vector2.ZERO):
 		input_dir.normalized()
@@ -124,8 +138,6 @@ func PlayerMovement() -> void:
 #-------------------------------------------------------------------------------
 #region PAUSE INPUTS
 func PauseGame() -> void:
-	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
-		return
 	if(Input.is_action_just_pressed("input_Pause")):
 		pauseMenu.show()
 		gameVariables.playPosition = gameVariables.bgmPlayer.get_playback_position()
@@ -378,7 +390,7 @@ func BeginGame() -> void:
 	completedLabel.text = ""
 	timerLabel.text = ""
 	#-------------------------------------------------------------------------------
-	PlayerShoot()
+	Enter_GameState()
 	Choreography()
 #-------------------------------------------------------------------------------
 func Choreography() -> void:
@@ -407,6 +419,8 @@ func Choreography() -> void:
 func Stage1() -> void:
 	#await StageCommon("Stage 1 Completed",1,0)
 	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1, 5)
+	await Frame(5)	#NOTA: TENGO QUE PONER UN AWAIT O ALGO PORQUE SI NO SALTEO LA 1ER LINEA DE DIÁLOGO.
+	await OpenDialogue()
 	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave3, 10)
 	await StageCommon("Stage 1 Completed",1,0)
 #-------------------------------------------------------------------------------
@@ -414,9 +428,9 @@ func Stage1_Wave1():
 	for _j in 2:
 		for _i in 4:
 			Stage1_Enemy1(unitX*_i*0.75, maxY, -1)
-			await Frame2(15)
+			await Frame_InGame(15)
 			Stage1_Enemy1(width-unitX*_i*0.75, maxY, 1)
-			await Frame2(15)
+			await Frame_InGame(15)
 #-------------------------------------------------------------------------------
 func Stage1_Enemy1(_x:float, _y:float, _mirror:float) -> void:
 	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
@@ -424,9 +438,9 @@ func Stage1_Enemy1(_x:float, _y:float, _mirror:float) -> void:
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 5)
 	await MoveTowards(_enemy, _x-unitX*_mirror, CenterY(-0.8), 60)
-	await Frame2(60)
+	await Frame_InGame(60)
 	await Stage1_Enemy1_Fire(_enemy, 5)
-	await Frame2(60)
+	await Frame_InGame(60)
 	await MoveTowards(_enemy, CenterX(-1*_mirror), CenterY(-0.4), 60)
 	DestroyEnemy(_enemy)
 #-------------------------------------------------------------------------------
@@ -543,30 +557,40 @@ func GoToMainScene():
 func WaveOfEnemies_and_Market(_s:String, _c:Callable, _time:int):
 	await ShowBanner(_s)
 	_c.call()
-	StartTimer(_time)
-	await endMoment
-	marketMenu.OpenMarket()
-	await endMoment
-	myPLAY_STATE = PLAY_STATE.IN_GAME
-	PlayerShoot()
+	await StartTimer(_time)
+	await OpenMarket()
+	Enter_GameState()
 #-------------------------------------------------------------------------------
 func StartTimer(_time:int):
 	var _maxTimer: String = "s / "+str(_time)+"s"
 	_time+=1
+	timerLabel.show()
 	while(_time > 0):
 		_time -=1
 		timerLabel.text = str(_time)+_maxTimer
 		await Frame(60)
 	timerLabel.text = ""
-	myPLAY_STATE = PLAY_STATE.IN_MARKET
-	endMoment.emit()
+	timerLabel.hide()
 #-------------------------------------------------------------------------------
 func ShowBanner(_s:String):
 	completedPanel.show()
 	completedLabel.text = _s
 	await Frame(90)
+	completedLabel.text = ""
 	completedPanel.hide()
-	completedLabel.text = "_s"
+#-------------------------------------------------------------------------------
+func OpenMarket():
+	myPLAY_STATE = PLAY_STATE.IN_MARKET
+	await marketMenu.OpenMarket()
+#-------------------------------------------------------------------------------
+func OpenDialogue():
+	myPLAY_STATE = PLAY_STATE.IN_DIALOGUE
+	await dialogueMenu.OpenDialogue()
+	Enter_GameState()
+#-------------------------------------------------------------------------------
+func Enter_GameState():
+	myPLAY_STATE = PLAY_STATE.IN_GAME
+	PlayerShoot()
 #endregion
 #-------------------------------------------------------------------------------
 #region ENEMY FUNCTIONS
@@ -755,7 +779,7 @@ func Frame(_maxTimer:int) -> void:
 		_timer += deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
-func Frame2(_maxTimer:int) -> void:
+func Frame_InGame(_maxTimer:int) -> void:
 	var _timer: float = 0
 	while(_timer < _maxTimer):
 		_timer += deltaTimeScale

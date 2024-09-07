@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=38 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Collider_Script.gd" id="4_1isya"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
+[ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
 [ext_resource type="Texture2D" uid="uid://dqbugw3tefi1c" path="res://Assets/Sprites/Hitbox.png" id="7_sglw3"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
@@ -19,6 +20,8 @@
 [ext_resource type="Resource" uid="uid://dbdg5uol4v182" path="res://Resources/Cards/03.tres" id="17_dadln"]
 [ext_resource type="Resource" uid="uid://d1cw7163jesar" path="res://Resources/Cards/04.tres" id="18_chr6o"]
 [ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
+[ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="19_jc3d8"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Dialogue_Menu.gd" id="20_kjtdd"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
@@ -95,12 +98,13 @@ _data = {
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q7mad"]
 animation = &"Idle"
 
-[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "marketMenu", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
+[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
 currentLayer = NodePath("CanvasLayer")
 pauseMenu = NodePath("CanvasLayer/Window_MarginContainer/Pause_Menu")
 marketMenu = NodePath("CanvasLayer/Window_MarginContainer/Market_Menu")
-timerLabel = NodePath("CanvasLayer/Window_MarginContainer/Label")
+dialogueMenu = NodePath("CanvasLayer/Window_MarginContainer/Dialogue_Menu")
+timerLabel = NodePath("CanvasLayer/Window_MarginContainer/Timer_Label")
 content = NodePath("CanvasLayer/Window_MarginContainer/Content")
 player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player")
 enemy_Prefab = ExtResource("2_acyb6")
@@ -118,8 +122,8 @@ moneyLabel_title = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxCon
 moneyLabel_Num = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer/RichTextLabel2")
 maxMoneyLabel_Num = NodePath("CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer/RichTextLabel3")
 leftLabel = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/MarginContainer/RichTextLabel")
-completedPanel = NodePath("CanvasLayer/Window_MarginContainer/PanelContainer")
-completedLabel = NodePath("CanvasLayer/Window_MarginContainer/PanelContainer/MarginContainer/Label")
+completedPanel = NodePath("CanvasLayer/Window_MarginContainer/Banner")
+completedLabel = NodePath("CanvasLayer/Window_MarginContainer/Banner/MarginContainer/Label")
 playerLayer = 1
 grazeLayer = 4
 magnetLayer = 8
@@ -138,59 +142,41 @@ environment = SubResource("Environment_q1y1w")
 size = Vector2i(2048, 2048)
 
 [node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 2.5, 4)
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 2.5, 2)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="World3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -1.75)
-size = Vector3(7, 0.5, 17.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -1.25)
+size = Vector3(48, 0.5, 18.5)
 
-[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, 2.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, 0)
 
-[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, 0.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House2" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -2)
 
-[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -1.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House3" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -4)
 
-[node name="CSGPolygon3D4" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -3.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House4" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -6)
 
-[node name="CSGPolygon3D5" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -5.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House5" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -8)
 
-[node name="CSGPolygon3D6" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -7.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House6" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, 0)
 
-[node name="CSGPolygon3D7" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, 2.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House7" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -2)
 
-[node name="CSGPolygon3D8" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, 0.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House8" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -4)
 
-[node name="CSGPolygon3D9" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -1.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House9" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -6)
 
-[node name="CSGPolygon3D10" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -3.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
-
-[node name="CSGPolygon3D11" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -5.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
-
-[node name="CSGPolygon3D12" type="CSGPolygon3D" parent="World3D"]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -7.5)
-polygon = PackedVector2Array(0, 0, 0, 0.5, 0.5, 1, 1, 0.5, 1, 0)
+[node name="House10" parent="World3D" instance=ExtResource("5_xpyxf")]
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -8)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -499,7 +485,7 @@ libraries = {
 tree_root = SubResource("AnimationNodeAnimation_q7mad")
 anim_player = NodePath("../AnimationPlayer")
 
-[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]
+[node name="Timer_Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]
 z_index = 30
 layout_mode = 2
 size_flags_horizontal = 4
@@ -509,20 +495,20 @@ theme_override_font_sizes/font_size = 60
 text = "60s / 60s"
 horizontal_alignment = 1
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Window_MarginContainer"]
+[node name="Banner" type="PanelContainer" parent="CanvasLayer/Window_MarginContainer"]
 visible = false
 z_index = 30
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Banner"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/PanelContainer/MarginContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Banner/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_font_sizes/font_size = 30
@@ -600,6 +586,7 @@ action_mode = 0
 text = "Quit Game"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCardLabel", "confirmMenu", "yesButton", "noButton")]
+visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -788,6 +775,70 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 action_mode = 0
 text = "No"
+
+[node name="Dialogue_Menu" type="Control" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("dialogueLabel")]
+z_index = 30
+layout_mode = 2
+script = ExtResource("20_kjtdd")
+dialogueText = Array[String](["11111111111111111", "2222222222222222222222", "3333333333333333", "444444444444444444444", "555555555555555555"])
+dialogueLabel = NodePath("MarginContainer/PanelContainer/MarginContainer/RichTextLabel")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Dialogue_Menu"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -64.0
+offset_right = 128.0
+offset_bottom = 64.0
+grow_vertical = 2
+texture = ExtResource("19_jc3d8")
+
+[node name="TextureRect2" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Dialogue_Menu"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -128.0
+offset_top = -64.0
+offset_bottom = 64.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("19_jc3d8")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Dialogue_Menu"]
+custom_minimum_size = Vector2(0, 166)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -30.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/Window_MarginContainer/Dialogue_Menu/MarginContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Dialogue_Menu/MarginContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Window_MarginContainer/Dialogue_Menu/MarginContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[u]Name of the Speaker:[/u]
+Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla."
 
 [node name="Pad" type="Node2D" parent="CanvasLayer"]
 process_mode = 3
