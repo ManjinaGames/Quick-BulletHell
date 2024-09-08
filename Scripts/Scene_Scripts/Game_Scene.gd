@@ -115,6 +115,7 @@ func _physics_process(_delta:float) -> void:
 			pass
 		#-------------------------------------------------------------------------------
 		PLAY_STATE.IN_DIALOGUE:
+			PlayerMovement()
 			if(Input.is_action_just_pressed("ui_accept")):
 				dialogueMenu.nextLine.emit()
 		#-------------------------------------------------------------------------------
@@ -419,7 +420,6 @@ func Choreography() -> void:
 func Stage1() -> void:
 	#await StageCommon("Stage 1 Completed",1,0)
 	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1, 5)
-	await Frame(5)	#NOTA: TENGO QUE PONER UN AWAIT O ALGO PORQUE SI NO SALTEO LA 1ER LINEA DE DIÁLOGO.
 	await OpenDialogue()
 	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave3, 10)
 	await StageCommon("Stage 1 Completed",1,0)
@@ -456,7 +456,7 @@ func Stage1_Enemy1_Fire(_enemy, _num:int) -> void:
 			var _bullet: Sprite2D = CreateShotA1(_enemy.position.x, _enemy.position.y, 4, AngleToPlayer(_enemy)+_dir)
 			Move_V_Des(_bullet, 0.04, 1)
 			_dir += _cone/float(_num-1)
-		await Frame(15)
+		await Frame_InGame(15)
 #-------------------------------------------------------------------------------
 func Stage1_Enemy2(_x:float, _y:float, _mirror:float) -> void:
 	var _enemy: Enemy = CreateEnemy(_x, _y, 5)
@@ -526,10 +526,7 @@ func Stage9():
 	await StageCommon("Boss-Rush Mode Completed",8,8)
 #-------------------------------------------------------------------------------
 func StageCommon(_s:String, _enabled:int, _completed:int):
-	await Frame(90)
-	completedPanel.show()
-	completedLabel.text = _s
-	await Frame(90)
+	await ShowBanner(_s)
 	EnableStage(_enabled)
 	CompletedStage(_completed)
 	gameVariables.Save_SaveData(gameVariables.currentSaveData,gameVariables.optionMenu.optionSaveData.saveIndex)
@@ -573,17 +570,26 @@ func StartTimer(_time:int):
 	timerLabel.hide()
 #-------------------------------------------------------------------------------
 func ShowBanner(_s:String):
+	await Frame(60)
+	await ShowBanner2(_s)
+#-------------------------------------------------------------------------------
+func ShowBanner2(_s:String):
 	completedPanel.show()
 	completedLabel.text = _s
-	await Frame(90)
+	await Frame(150)
 	completedLabel.text = ""
 	completedPanel.hide()
 #-------------------------------------------------------------------------------
 func OpenMarket():
 	myPLAY_STATE = PLAY_STATE.IN_MARKET
+	await ShowBanner2("Flea Market has being Open")
 	await marketMenu.OpenMarket()
 #-------------------------------------------------------------------------------
 func OpenDialogue():
+	#NOTA IMPORTANTE: tiene que haber un await antes del OpenDialogue() porque si no puedo saltear la primer linea de texto al oprimir "Z".
+	await ShowBanner("Enter Dialogue with Enemy")		#OPCION 1
+	#await dialogueMenu.nextLine						#OPCION 2
+	#await Frame(60)									#OPCION 3
 	myPLAY_STATE = PLAY_STATE.IN_DIALOGUE
 	await dialogueMenu.OpenDialogue()
 	Enter_GameState()

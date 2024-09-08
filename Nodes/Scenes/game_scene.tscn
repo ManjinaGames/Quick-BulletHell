@@ -142,41 +142,41 @@ environment = SubResource("Environment_q1y1w")
 size = Vector2i(2048, 2048)
 
 [node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 2.5, 2)
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.5, 1.5)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="World3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -1.25)
 size = Vector3(48, 0.5, 18.5)
 
 [node name="House" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, 0)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, 0)
 
 [node name="House2" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -2)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -2)
 
 [node name="House3" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -4)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -4)
 
 [node name="House4" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -6)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -6)
 
 [node name="House5" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -3, 0, -8)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -8)
 
 [node name="House6" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, 0)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, 0)
 
 [node name="House7" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -2)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -2)
 
 [node name="House8" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -4)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -4)
 
 [node name="House9" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -6)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -6)
 
 [node name="House10" parent="World3D" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 1.5, 0, -8)
+transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -8)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -201,6 +201,13 @@ theme_override_constants/margin_bottom = 15
 
 [node name="LeftUI_VBoxContainer" type="VBoxContainer" parent="CanvasLayer/LeftUI_MarginContainer"]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "DIFFICULT"
+horizontal_alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer"]
 layout_mode = 2
@@ -496,7 +503,6 @@ text = "60s / 60s"
 horizontal_alignment = 1
 
 [node name="Banner" type="PanelContainer" parent="CanvasLayer/Window_MarginContainer"]
-visible = false
 z_index = 30
 layout_mode = 2
 size_flags_vertical = 4
@@ -515,6 +521,7 @@ theme_override_font_sizes/font_size = 30
 text = "Stage Completed"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="Pause_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "title", "continuar", "retry", "options", "goToTitle", "quitGame")]
 process_mode = 2
