@@ -30,6 +30,7 @@ const gameScene_Path: StringName = "res://Nodes/Scenes/game_scene.tscn"
 #-------------------------------------------------------------------------------
 var maxSave: int = 9
 var isSlowMotion: bool = false
+@export var useCustomButton: bool = true
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOBEHAVIOUR
@@ -79,6 +80,13 @@ func PlayerInfo() -> String:
 #-------------------------------------------------------------------------------
 #region SET THE BUTTONS SIGNALS
 func SetButton(_b:Button, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	if(useCustomButton):
+		SetButton1(_b, _selected, _submited, _canceled)
+	else:
+		SetButton2(_b, _selected, _submited, _canceled)
+#-------------------------------------------------------------------------------
+func SetButton1(_b:Button, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 	_b.focus_entered.connect(_selected)
 	_b.gui_input.connect(
 		func(_event:InputEvent):
@@ -97,8 +105,28 @@ func SetButton(_b:Button, _selected:Callable, _submited:Callable, _canceled:Call
 						currentFocus = _b
 	)
 #-------------------------------------------------------------------------------
+func SetButton2(_b:Button, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	_b.focus_entered.connect(_selected)
+	_b.pressed.connect(_submited)
+	_b.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+	)
+#-------------------------------------------------------------------------------
 func DisconnectButton(_b:Button) -> void:
+	if(useCustomButton):
+		DisconnectButton1(_b)
+	else:
+		DisconnectButton2(_b)
+#-------------------------------------------------------------------------------
+func DisconnectButton1(_b:Button) -> void:
 	DisconnectAll(_b.focus_entered)
+	DisconnectAll(_b.gui_input)
+#-------------------------------------------------------------------------------
+func DisconnectButton2(_b:Button) -> void:
+	DisconnectAll(_b.focus_entered)
+	DisconnectAll(_b.pressed)
 	DisconnectAll(_b.gui_input)
 #-------------------------------------------------------------------------------
 func DisconnectAll(_signal:Signal):
@@ -107,6 +135,13 @@ func DisconnectAll(_signal:Signal):
 		_signal.disconnect(_dictionary["callable"])
 #-------------------------------------------------------------------------------
 func SetOptionButtons(_ob:OptionButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	if(useCustomButton):
+		SetOptionButtons1(_ob, _selected, _submited, _canceled)
+	else:
+		SetOptionButtons2(_ob, _selected, _submited, _canceled)
+#-------------------------------------------------------------------------------
+func SetOptionButtons1(_ob:OptionButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	_ob.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 	_ob.focus_entered.connect(
 		func():
 			currentFocus = _ob
@@ -119,10 +154,26 @@ func SetOptionButtons(_ob:OptionButton, _selected:Callable, _submited:Callable, 
 				_canceled.call()
 	)
 #-------------------------------------------------------------------------------
+func SetOptionButtons2(_ob:OptionButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	_ob.focus_entered.connect(_selected)
+	_ob.item_selected.connect(_submited)
+	_ob.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+	)
+#-------------------------------------------------------------------------------
 func OptionButtons_AddSubmited(_ob:OptionButton, _submited:Callable):
 	_ob.item_selected.connect(_submited)
 #-------------------------------------------------------------------------------
 func SetCheckButton(_cb:CheckButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	if(useCustomButton):
+		SetCheckButton1(_cb, _selected, _submited, _canceled)
+	else:
+		SetCheckButton2(_cb, _selected, _submited, _canceled)
+#-------------------------------------------------------------------------------
+func SetCheckButton1(_cb:CheckButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	_cb.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 	_cb.focus_entered.connect(
 		func():
 			currentFocus = _cb
@@ -135,12 +186,36 @@ func SetCheckButton(_cb:CheckButton, _selected:Callable, _submited:Callable, _ca
 				_canceled.call()
 	)
 #-------------------------------------------------------------------------------
+func SetCheckButton2(_cb:CheckButton, _selected:Callable, _submited:Callable, _canceled:Callable) -> void:
+	_cb.focus_entered.connect(_selected)
+	_cb.toggled.connect(_submited)
+	_cb.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+	)
+#-------------------------------------------------------------------------------
 func SetSlider(_sl:Slider,  _selected:Callable,  _submited:Callable,  _canceled:Callable) -> void:
+	if(useCustomButton):
+		SetSlider1(_sl,  _selected,  _submited,  _canceled)
+	else:
+		SetSlider2(_sl,  _selected,  _submited,  _canceled)
+#-------------------------------------------------------------------------------
+func SetSlider1(_sl:Slider,  _selected:Callable,  _submited:Callable,  _canceled:Callable) -> void:
 	_sl.focus_entered.connect(
 		func():
 			currentFocus = _sl
 			_selected.call()
 	)
+	_sl.value_changed.connect(_submited)
+	_sl.gui_input.connect(
+		func(_event:InputEvent):
+			if(_event.is_action_pressed(cancelInput)):
+				_canceled.call()
+	)
+#-------------------------------------------------------------------------------
+func SetSlider2(_sl:Slider,  _selected:Callable,  _submited:Callable,  _canceled:Callable) -> void:
+	_sl.focus_entered.connect(_selected)
 	_sl.value_changed.connect(_submited)
 	_sl.gui_input.connect(
 		func(_event:InputEvent):

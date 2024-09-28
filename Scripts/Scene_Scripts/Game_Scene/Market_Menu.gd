@@ -49,7 +49,8 @@ func CreateCardButtons() ->void:
 	for _i in cardCatalogue.size():
 		var _b : Button = Button.new()
 		_b.custom_minimum_size = buttonSize
-		_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
+		if(gameVariables.useCustomButton):
+			_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		_b.text = SetCardTextNumber(_i)
 		gameVariables.SetButton(_b, func():CardButton_Selected(_i), func():CardButton_Subited(_i), CardButton_Canceled)
 		cardContainer.add_child(_b)

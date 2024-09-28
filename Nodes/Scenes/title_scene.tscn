@@ -88,19 +88,16 @@ layout_mode = 2
 [node name="Button" type="Button" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-action_mode = 0
 text = "Start"
 
 [node name="Button2" type="Button" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-action_mode = 0
 text = "Options"
 
 [node name="Button3" type="Button" parent="MarginContainer/Title_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
-action_mode = 0
 text = "Quit"
 
 [node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/Title_Menu"]
@@ -186,34 +183,28 @@ layout_mode = 2
 [node name="Button" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
-action_mode = 0
 
 [node name="Button2" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
-action_mode = 0
 
 [node name="Button3" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
-action_mode = 0
 
 [node name="Button4" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
-action_mode = 0
 
 [node name="Button5" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 150)
 layout_mode = 2
-action_mode = 0
 
 [node name="Button" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Back
 "
 
@@ -293,19 +284,16 @@ layout_mode = 2
 [node name="Button" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Load"
 
 [node name="Button2" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Delete"
 
 [node name="Button3" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Back"
 
 [node name="Confirm Deletion" type="PanelContainer" parent="MarginContainer/Save_Menu2/VBoxContainer"]
@@ -327,12 +315,10 @@ alignment = 1
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Yes"
 
 [node name="Button2" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "No"

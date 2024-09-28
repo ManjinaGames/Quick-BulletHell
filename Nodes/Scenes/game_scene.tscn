@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=39 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
 [ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="19_jc3d8"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Dialogue_Menu.gd" id="20_kjtdd"]
+[ext_resource type="Texture2D" uid="uid://ci4jfw2wl4k36" path="res://Assets/Images/Cards/128px-ALICE_OP_max.png" id="20_o5gvt"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
@@ -565,35 +566,29 @@ size_flags_vertical = 4
 [node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Continue"
 
 [node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Retry"
 
 [node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Options"
 
 [node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Go to Main Menu"
 
 [node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Quit Game"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCardLabel", "confirmMenu", "yesButton", "noButton")]
-visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -657,56 +652,64 @@ layout_mode = 2
 [node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer/Button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer/Button/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("20_o5gvt")
 
 [node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
 
 [node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
 
 [node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
 
 [node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
 
 [node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
 
 [node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
 
 [node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(198, 250)
 layout_mode = 2
-action_mode = 0
 text = "asd
 "
 
@@ -773,17 +776,16 @@ alignment = 1
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "Yes"
 
 [node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/HBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
-action_mode = 0
 text = "No"
 
 [node name="Dialogue_Menu" type="Control" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("dialogueLabel")]
+visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("20_kjtdd")

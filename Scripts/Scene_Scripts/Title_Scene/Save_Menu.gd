@@ -26,7 +26,8 @@ func CreateSaveButtons() ->void:
 	for _i in gameVariables.maxSave:
 		var _b : Button = Button.new()
 		_b.custom_minimum_size = buttonSize
-		_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
+		if(gameVariables.useCustomButton):
+			_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 		gameVariables.SetButton(_b, gameVariables.CommonSelected, func():SaveButton_Subited(_i), AnyButton_Canceled)
 		vBoxContainer.add_child(_b)
 		button.append(_b)
