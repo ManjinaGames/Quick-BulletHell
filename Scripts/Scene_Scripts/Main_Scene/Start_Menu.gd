@@ -22,7 +22,7 @@ func SetAllButtons() -> void:
 	gameVariables.SetButton(back, gameVariables.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------
 func StartButton_Subited() -> void:
-	gameVariables.Save_SaveData(gameVariables.currentSaveData, gameVariables.optionMenu.optionSaveData.saveIndex)
+	gameVariables.Save_SaveData_Json(gameVariables.optionMenu.optionSaveData_Json["saveIndex"])
 	gameVariables.CommonSubmited()
 	get_tree().change_scene_to_file(gameVariables.gameScene_Path)
 #-------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ func BackButton_Canceled() -> void:
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()
-	gameVariables.MoveToButton(mainScene.stageMenu.button[gameVariables.currentSaveData.stageIndex])
+	gameVariables.MoveToButton(mainScene.stageMenu.button[gameVariables.currentSaveData_Json["stageIndex"]])
 	mainScene.stageMenu.show()
 #endregion
 #-------------------------------------------------------------------------------

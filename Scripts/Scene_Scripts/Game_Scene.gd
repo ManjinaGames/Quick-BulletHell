@@ -395,7 +395,7 @@ func BeginGame() -> void:
 	Choreography()
 #-------------------------------------------------------------------------------
 func Choreography() -> void:
-	match(gameVariables.currentSaveData.stageIndex):
+	match(gameVariables.currentSaveData_Json["stageIndex"]):
 		0:
 			await Stage1()
 		1:
@@ -529,20 +529,20 @@ func StageCommon(_s:String, _enabled:int, _completed:int):
 	await ShowBanner(_s)
 	EnableStage(_enabled)
 	CompletedStage(_completed)
-	gameVariables.Save_SaveData(gameVariables.currentSaveData,gameVariables.optionMenu.optionSaveData.saveIndex)
+	gameVariables.Save_SaveData_Json(gameVariables.optionMenu.optionSaveData_Json["saveIndex"])
 	gameVariables.CommonSubmited()
 	GoToMainScene()
 #-------------------------------------------------------------------------------
 func EnableStage(_i:int):
-	var _player: int = gameVariables.currentSaveData.playerIndex
-	var _difficulty: int = gameVariables.currentSaveData.difficultyIndex
-	if(gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE == StageSaveData.STAGE_STATE.DISABLED):
-		gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE = StageSaveData.STAGE_STATE.ENABLED
+	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
+	if(gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] == gameVariables.STAGE_STATE.DISABLED):
+		gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = gameVariables.STAGE_STATE.ENABLED
 #-------------------------------------------------------------------------------
 func CompletedStage(_i:int):
-	var _player: int = gameVariables.currentSaveData.playerIndex
-	var _difficulty: int = gameVariables.currentSaveData.difficultyIndex
-	gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE = StageSaveData.STAGE_STATE.COMPLETED
+	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
+	gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = gameVariables.STAGE_STATE.COMPLETED
 #-------------------------------------------------------------------------------
 func GoToMainScene():
 	gameVariables.PlayBGM(gameVariables.bgmTitle)

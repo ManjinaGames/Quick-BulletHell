@@ -80,7 +80,7 @@ func OptionMenu_BackButton_Canceled() -> void:
 	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func OptionMenu_BackButton_Common() -> void:
-	gameVariables.optionMenu.Save_OptionSaveData(gameVariables.optionMenu.optionSaveData)
+	gameVariables.optionMenu.Save_OptionSaveData_Json()
 	gameVariables.optionMenu.hide()
 	gameScene.currentLayer.show()
 	inOption = false

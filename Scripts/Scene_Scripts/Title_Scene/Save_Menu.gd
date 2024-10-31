@@ -83,21 +83,22 @@ func SetSaveButtons() -> void:
 		button[_i].text = SetSaveText(_i)
 #-------------------------------------------------------------------------------
 func SetSaveText(_i:int) -> String:
-	var _path: String = gameVariables.Get_SaveDataPath(_i)
+	var _path: String = gameVariables.Get_SaveDataPath_Json(_i)
 	var _s:String
 	if(ResourceLoader.exists(_path)):
-		var _saveData: SaveData = load(_path) as SaveData
-		var _player: int = _saveData.playerIndex
-		var _difficulty: int = _saveData.difficultyIndex
+		var _saveData: Dictionary = gameVariables.Load_SaveData_Json(_i)
+		var _playerIndex: String = str(_saveData["playerIndex"])
+		var _difficultyIndex: String = str(_saveData["difficultyIndex"])
 		#-------------------------------------------------------------------------------
 		_s = tr("saveMenu_save")+" N°"+str(_i)+"\n"
-		_s += tr("playerMenu_button"+str(_saveData.playerIndex)) + " - "
-		_s +=  tr("difficultyMenu_button"+str(_saveData.difficultyIndex)) + " - "
-		_s += tr("stageMenu_button"+str(_saveData.stageIndex))+"\n"
+		_s += tr("playerMenu_button"+str(_saveData["playerIndex"])) + " - "
+		_s +=  tr("difficultyMenu_button"+str(_saveData["difficultyIndex"])) + " - "
+		_s += tr("stageMenu_button"+str(_saveData["stageIndex"]))+"\n"
 		#-------------------------------------------------------------------------------
 		_s += "-"
-		for _j in _saveData.player[_player].difficulty[_difficulty].stage.size():
-			_s += str(_saveData.player[_player].difficulty[_difficulty].stage[_j].mySTAGE_STATE)+"-"
+		var _stage: Dictionary = _saveData["saveData"][_playerIndex][_difficultyIndex]
+		for _j in _stage.size():
+			_s += str(_stage[str(_j)]["value"])+"-"
 	else:
 		_s = SetEmptySaveText(_i)
 	return _s 

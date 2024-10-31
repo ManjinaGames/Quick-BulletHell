@@ -1,5 +1,7 @@
 extends Node
 class_name Game_Variables
+#-------------------------------------------------------------------------------
+enum STAGE_STATE{DISABLED, ENABLED, COMPLETED}
 #region VARIABLES
 #-------------------------------------------------------------------------------
 @export var optionMenu: Option_Menu
@@ -17,9 +19,8 @@ const submitInput: String = "ui_accept"
 const cancelInput: String = "ui_cancel"
 #-------------------------------------------------------------------------------
 const saveData_name : String = "Save"
-const saveData_ext : String = ".tres"
 const saveData_path : String = "user://Save/"
-var currentSaveData : SaveData;
+var currentSaveData_Json: Dictionary;
 var currentFocus: Control
 #-------------------------------------------------------------------------------
 const titleScene_Path: StringName = "res://Nodes/Scenes/title_scene.tscn"
@@ -49,25 +50,56 @@ func _process(_delta:float):
 #-------------------------------------------------------------------------------
 #region PLAYER DATA SAVE SYSTEM
 #-------------------------------------------------------------------------------
-func Save_SaveData(_sd:SaveData, _i:int) -> void:
-	DirAccess.make_dir_absolute(saveData_path)
-	ResourceSaver.save(_sd, Get_SaveDataPath(_i))
+func SaveCurrent_SaveData_Json():
+	Save_SaveData_Json(optionMenu.optionSaveData_Json["saveIndex"])
 #-------------------------------------------------------------------------------
-func Delete_SaveData(_i:int) -> void:
-	var _path: String = Get_SaveDataPath(_i)
+func Save_SaveData_Json(_index:int):
+	DirAccess.make_dir_absolute(saveData_path)
+	var _jsonString :String = JSON.stringify(currentSaveData_Json)
+	var _jsonFile: FileAccess = FileAccess.open(Get_SaveDataPath_Json(_index),FileAccess.WRITE)
+	_jsonFile.store_line(_jsonString)
+	_jsonFile.close()
+#-------------------------------------------------------------------------------
+func Delete_SaveData_Json(_i:int) -> void:
+	var _path: String = Get_SaveDataPath_Json(_i)
 	if(ResourceLoader.exists(_path)):
 		DirAccess.remove_absolute(_path)
 #-------------------------------------------------------------------------------
-func Load_SaveData(_i:int) -> SaveData:
-	var _path: String = Get_SaveDataPath(_i)
+func Load_SaveData_Json(_i:int) -> Dictionary:
+	var _path: String = Get_SaveDataPath_Json(_i)
 	if(ResourceLoader.exists(_path)):
-		return load(_path) as SaveData
-	else:
-		var _saveData: SaveData = SaveData.new()
+		var _jsonFile: FileAccess = FileAccess.open(_path, FileAccess.READ)
+		var _jsonString: String = _jsonFile.get_as_text()
+		_jsonFile.close()
+		var _saveData: Dictionary = JSON.parse_string(_jsonString)
 		return _saveData
+	else:
+		return CreateNew_SaveData_Json()
 #-------------------------------------------------------------------------------
-func Get_SaveDataPath(_i:int) -> String:
-	var _path: String = saveData_path+saveData_name+str(_i)+saveData_ext
+func CreateNew_SaveData_Json() -> Dictionary:
+	var _saveData: Dictionary = {}
+	_saveData["playerIndex"] = 0
+	_saveData["difficultyIndex"] = 0
+	_saveData["stageIndex"] = 0
+	var _playerData: Dictionary
+	for _i in 2:
+		var _difficultyData: Dictionary
+		for _j in 4:
+			var _stageData: Dictionary
+			for _k in 9:
+				#Aqui viene toda la data de cada nivel.
+				var _clearData: Dictionary
+				_clearData["value"] = STAGE_STATE.DISABLED
+				_stageData[str(_k)] = _clearData
+				#-------------------------------------------------------------------------------
+			_stageData["0"]["value"] = STAGE_STATE.ENABLED
+			_difficultyData[str(_j)] = _stageData
+		_playerData[str(_i)] = _difficultyData
+	_saveData["saveData"] = _playerData
+	return _saveData
+#-------------------------------------------------------------------------------
+func Get_SaveDataPath_Json(_i:int) -> String:
+	var _path: String = saveData_path+saveData_name+str(_i)+".json"
 	return _path
 #endregion
 #-------------------------------------------------------------------------------

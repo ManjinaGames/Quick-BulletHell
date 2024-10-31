@@ -16,9 +16,9 @@ signal idiomeChange
 @export var bgm : Option_Slider
 @export var back : Button
 #-------------------------------------------------------------------------------
-const optionSaveData_name : String = "optionSaveData.tres"
+const optionSaveData_name : String = "optionSaveData"
 const optionSaveData_path : String = "user://Options/"
-var optionSaveData : OptionSaveData;
+var optionSaveData_Json : Dictionary
 #-------------------------------------------------------------------------------
 var bus_master_Index: int = AudioServer.get_bus_index("Master")
 var bus_sfx_Index: int = AudioServer.get_bus_index("sfx")
@@ -39,7 +39,7 @@ const resolution_dictionary : Dictionary = {
 #region MONOVEHAVIOUR
 func Start() -> void:
 	#SetTheme()
-	optionSaveData = Load_OptionSaveData()
+	optionSaveData_Json = Load_OptionSaveData_Json()
 	#-------------------------------------------------------------------------------
 	SetResolution_Start()
 	SetIdiome_Start()
@@ -47,41 +47,60 @@ func Start() -> void:
 	SetBorderless_Start()
 	SetVsync_Start()
 	#-------------------------------------------------------------------------------
-	SetValume_Start(master.slider, master.number, MasterSlider_Submit, bus_master_Index, optionSaveData.masterVolumen)
-	SetValume_Start(sfx.slider, sfx.number, sfxSlider_Submit, bus_sfx_Index, optionSaveData.sfxVolumen)
-	SetValume_Start(bgm.slider, bgm.number, bgmSlider_Submit, bus_bgm_Index, optionSaveData.bgmVolumen)
+	SetValume_Start(master.slider, master.number, MasterSlider_Submit, bus_master_Index, optionSaveData_Json["masterVolumen"])
+	SetValume_Start(sfx.slider, sfx.number, sfxSlider_Submit, bus_sfx_Index, optionSaveData_Json["sfxVolumen"])
+	SetValume_Start(bgm.slider, bgm.number, bgmSlider_Submit, bus_bgm_Index, optionSaveData_Json["bgmVolumen"])
 	#-------------------------------------------------------------------------------
 	hide()
 #endregion
 #-------------------------------------------------------------------------------
 #region OPTION SAVE SYSTEM
-func Save_OptionSaveData(_osd:OptionSaveData) -> void:
+func Save_OptionSaveData_Json() -> void:
 	DirAccess.make_dir_absolute(optionSaveData_path)
-	ResourceSaver.save(_osd, GetPath_OptionSaveData())
+	var _jsonString :String = JSON.stringify(optionSaveData_Json)
+	var _jsonFile: FileAccess = FileAccess.open(GetPath_OptionSaveData_Json(),FileAccess.WRITE)
+	_jsonFile.store_line(_jsonString)
+	_jsonFile.close()
 #-------------------------------------------------------------------------------
-func Load_OptionSaveData() -> OptionSaveData:
-	var _path:String = GetPath_OptionSaveData()
+func Load_OptionSaveData_Json() -> Dictionary:
+	var _path: String = GetPath_OptionSaveData_Json()
 	if(ResourceLoader.exists(_path)):
-		return load(_path) as OptionSaveData
-	else:
-		var _optionSaveData: OptionSaveData = OptionSaveData.new()
+		var _jsonFile: FileAccess = FileAccess.open(_path, FileAccess.READ)
+		var _jsonString: String = _jsonFile.get_as_text()
+		_jsonFile.close()
+		var _optionSaveData: Dictionary = JSON.parse_string(_jsonString)
 		return _optionSaveData
+	else:
+		return CreateNew_OptionSaveData_Json()
 #-------------------------------------------------------------------------------
-func Delete_OptionSaveData() -> void:
-	var _path: String = GetPath_OptionSaveData()
+func CreateNew_OptionSaveData_Json() -> Dictionary:
+	var _optionSaveData: Dictionary = {}
+	_optionSaveData["masterVolumen"] = 1.0
+	_optionSaveData["sfxVolumen"] = 1.0
+	_optionSaveData["bgmVolumen"] = 1.0
+	_optionSaveData["vsync"] = false
+	_optionSaveData["fullscreen"] = false
+	_optionSaveData["borderless"] = false
+	_optionSaveData["resolutionIndex"] = 3
+	_optionSaveData["idiomeIndex"] = 0
+	_optionSaveData["saveIndex"] = 0
+	return _optionSaveData
+#-------------------------------------------------------------------------------
+func Delete_OptionSaveData_Json() -> void:
+	var _path: String = GetPath_OptionSaveData_Json()
 	if(ResourceLoader.exists(_path)):
 		DirAccess.remove_absolute(_path)
 #-------------------------------------------------------------------------------
-func GetPath_OptionSaveData() -> String:
-	var _path: String = optionSaveData_path+optionSaveData_name
+func GetPath_OptionSaveData_Json() -> String:
+	var _path: String = optionSaveData_path+optionSaveData_name+".json"
 	return _path
 #endregion
 #-------------------------------------------------------------------------------
 #region RESOLUTION SETTINGS
 func SetResolution_Start():
-	SetResolution(optionSaveData.resolutionIndex)
+	SetResolution(optionSaveData_Json["resolutionIndex"])
 	AddResolutionOptions(resolution.optionButton, resolution_dictionary)
-	resolution.optionButton.select(optionSaveData.resolutionIndex)
+	resolution.optionButton.select(optionSaveData_Json["resolutionIndex"])
 	gameVariables.SetOptionButtons(resolution.optionButton, gameVariables.CommonSelected, ResolutionButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func AddResolutionOptions(_ob:OptionButton, _dictionary:Dictionary) -> void:
@@ -91,7 +110,7 @@ func AddResolutionOptions(_ob:OptionButton, _dictionary:Dictionary) -> void:
 #-------------------------------------------------------------------------------
 func ResolutionButton_Submited(_index:int) -> void:
 	gameVariables.CommonSubmited()
-	optionSaveData.resolutionIndex = _index
+	optionSaveData_Json["resolutionIndex"] = _index
 	SetResolution(_index)
 #-------------------------------------------------------------------------------
 func SetResolution(_index:int) -> void:
@@ -103,9 +122,9 @@ func SetResolution(_index:int) -> void:
 #-------------------------------------------------------------------------------
 #region IDIOME SETTINGS
 func SetIdiome_Start():
-	SetIdiome(optionSaveData.idiomeIndex)
+	SetIdiome(optionSaveData_Json["idiomeIndex"])
 	AddIdiomeButtons(idiome.optionButton)
-	idiome.optionButton.select(optionSaveData.idiomeIndex)
+	idiome.optionButton.select(optionSaveData_Json["idiomeIndex"])
 	gameVariables.SetOptionButtons(idiome.optionButton, gameVariables.CommonSelected, IdiomeButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func AddIdiomeButtons(_ob:OptionButton) -> void:
@@ -114,7 +133,7 @@ func AddIdiomeButtons(_ob:OptionButton) -> void:
 		_ob.add_item(TranslationServer.get_locale_name(_idiomes[_i]))
 #-------------------------------------------------------------------------------
 func IdiomeButton_Submited(_index:int):
-	optionSaveData.idiomeIndex = _index
+	optionSaveData_Json["idiomeIndex"] = _index
 	SetIdiome(_index)
 	idiomeChange.emit()
 	gameVariables.CommonSubmited()
@@ -142,14 +161,14 @@ func SetIdiome(_index:int):
 #-------------------------------------------------------------------------------
 #region FULLSCREEN SETTINGS
 func SetFullScreen_Start():
-	var _b: bool = optionSaveData.fullscreen
+	var _b: bool = optionSaveData_Json["fullscreen"]
 	SetFullScreen(_b)
 	fullscreen.checkButton.button_pressed = _b
 	gameVariables.SetCheckButton(fullscreen.checkButton, gameVariables.CommonSelected, FullScreenButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func FullScreenButton_Submited(_b:bool):
 	gameVariables.CommonSubmited()
-	optionSaveData.fullscreen = _b
+	optionSaveData_Json["fullscreen"] = _b
 	SetFullScreen(_b)
 #-------------------------------------------------------------------------------
 func SetFullScreen(_b: bool):
@@ -157,37 +176,37 @@ func SetFullScreen(_b: bool):
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 	else:
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		SetResolution(optionSaveData.resolutionIndex)
+		SetResolution(optionSaveData_Json["resolutionIndex"])
 		CenterScreem()
 #endregion
 #-------------------------------------------------------------------------------
 #region BORDERLESS SETTINGS
 func SetBorderless_Start():
-	var _b: bool = optionSaveData.borderless
+	var _b: bool = optionSaveData_Json["borderless"]
 	SetBorderless(_b)
 	borderless.checkButton.button_pressed = _b
 	gameVariables.SetCheckButton(borderless.checkButton, gameVariables.CommonSelected, BorderlessButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func BorderlessButton_Submited(_b:bool):
 	gameVariables.CommonSubmited()
-	optionSaveData.borderless = _b
+	optionSaveData_Json["borderless"] = _b
 	SetBorderless(_b)
 #-------------------------------------------------------------------------------
 func SetBorderless(_b: bool):
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, _b)
-	SetResolution(optionSaveData.resolutionIndex)
+	SetResolution(optionSaveData_Json["resolutionIndex"])
 #endregion
 #-------------------------------------------------------------------------------
 #region VSYNC SETTINGS
 func SetVsync_Start():
-	var _b: bool = optionSaveData.vsync
+	var _b: bool = optionSaveData_Json["vsync"]
 	SetVsync(_b)
 	vsync.checkButton.button_pressed = _b
 	gameVariables.SetCheckButton(vsync.checkButton, gameVariables.CommonSelected, VsyncButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func VsyncButton_Submited(_b:bool) -> void:
 	gameVariables.CommonSubmited()
-	optionSaveData.vsync = _b
+	optionSaveData_Json["vsync"] = _b
 	SetVsync(_b)
 #-------------------------------------------------------------------------------
 func SetVsync(_b: bool) -> void:
@@ -205,18 +224,18 @@ func SetValume_Start(_slider: Slider, _label: Label, _submit: Callable, _index:i
 #-------------------------------------------------------------------------------
 func MasterSlider_Submit(_value:float) -> void:
 	gameVariables.CommonSubmited()
-	optionSaveData.masterVolumen = _value
+	optionSaveData_Json["masterVolumen"] = _value
 	SetValume(master.number, bus_master_Index, _value)
 	pass
 #-------------------------------------------------------------------------------
 func sfxSlider_Submit(_value:float) -> void:
 	gameVariables.CommonSubmited()
-	optionSaveData.sfxVolumen = _value
+	optionSaveData_Json["sfxVolumen"] = _value
 	SetValume(sfx.number, bus_sfx_Index, _value)
 #-------------------------------------------------------------------------------
 func bgmSlider_Submit(_value:float) -> void:
 	gameVariables.CommonSubmited()
-	optionSaveData.bgmVolumen = _value
+	optionSaveData_Json["bgmVolumen"] = _value
 	SetValume(bgm.number, bus_bgm_Index, _value)
 #-------------------------------------------------------------------------------
 func SetValume(_label: Label, _index:int, _value:float):

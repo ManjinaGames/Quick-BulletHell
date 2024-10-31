@@ -23,9 +23,9 @@ func SetAllButtons() -> void:
 	gameVariables.SetButton(back, gameVariables.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------
 func PlayerButton_Subited(_i:int) -> void:
-	gameVariables.currentSaveData.playerIndex = _i
+	gameVariables.currentSaveData_Json["playerIndex"] = _i
 	mainScene.mainMenu.SetGameInfo()
-	gameVariables.Save_SaveData(gameVariables.currentSaveData, gameVariables.optionMenu.optionSaveData.saveIndex)
+	gameVariables.Save_SaveData_Json(gameVariables.optionMenu.optionSaveData_Json["saveIndex"])
 	BackButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------

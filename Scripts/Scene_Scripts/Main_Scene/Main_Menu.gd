@@ -36,13 +36,13 @@ func StartButton_Subited() -> void:
 func PlayerButton_Submited() -> void:
 	hide()
 	mainScene.playerMenu.show()
-	gameVariables.MoveToButton(mainScene.playerMenu.button[gameVariables.currentSaveData.playerIndex])
+	gameVariables.MoveToButton(mainScene.playerMenu.button[gameVariables.currentSaveData_Json["playerIndex"]])
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
 func DifficultyButton_Submited() -> void:
 	hide()
 	mainScene.difficultyMenu.show()
-	gameVariables.MoveToButton(mainScene.difficultyMenu.button[gameVariables.currentSaveData.difficultyIndex])
+	gameVariables.MoveToButton(mainScene.difficultyMenu.button[gameVariables.currentSaveData_Json["difficultyIndex"]])
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------
 func OptionsButton_Subited() -> void:
@@ -54,7 +54,7 @@ func OptionsButton_Subited() -> void:
 #-------------------------------------------------------------------------------
 func QuitButton_Subited() -> void:
 	gameVariables.CommonSubmited()
-	gameVariables.currentSaveData = null
+	gameVariables.currentSaveData_Json = {}
 	get_tree().change_scene_to_file(gameVariables.titleScene_Path)
 #-------------------------------------------------------------------------------
 func AnyButton_Canceled() -> void:
@@ -76,7 +76,7 @@ func OptionMenu_BackButton_Canceled() -> void:
 	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func OptionMenu_BackButton_Common() -> void:
-	gameVariables.optionMenu.Save_OptionSaveData(gameVariables.optionMenu.optionSaveData)
+	gameVariables.optionMenu.Save_OptionSaveData_Json()
 	gameVariables.optionMenu.hide()
 	mainScene.mainMenu.show()
 	mainScene.show()
@@ -90,16 +90,18 @@ func SetIdiome():
 		button[_i].text = tr("mainMenu_button"+str(_i))
 #-------------------------------------------------------------------------------
 func SetGameInfo():
-	var _player: int = gameVariables.currentSaveData.playerIndex
-	var _difficulty: int = gameVariables.currentSaveData.difficultyIndex
-	var _stage: int = gameVariables.currentSaveData.stageIndex
+	var _saveData: Dictionary = gameVariables.currentSaveData_Json
+	var _playerIndex: StringName = str(_saveData["playerIndex"])
+	var _difficultyIndex: StringName = str(_saveData["difficultyIndex"])
+	var _stageIndex: StringName = str(_saveData["stageIndex"])
 	#-------------------------------------------------------------------------------
-	gameInfo.text = tr("playerMenu_button"+str(_player))+"\n"
-	gameInfo.text +=  tr("difficultyMenu_button"+str(_difficulty))+"\n"
-	gameInfo.text += tr("stageMenu_button"+str(_stage))+"\n"
+	gameInfo.text = tr("playerMenu_button"+_playerIndex)+"\n"
+	gameInfo.text +=  tr("difficultyMenu_button"+_difficultyIndex)+"\n"
+	gameInfo.text += tr("stageMenu_button"+_stageIndex)+"\n"
 	#-------------------------------------------------------------------------------
 	gameInfo.text += "-"
-	for _i in gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage.size():
-		gameInfo.text += str(gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE)+"-"
+	var _stage: Dictionary = _saveData["saveData"][_playerIndex][_difficultyIndex]
+	for _i in _stage.size():
+		gameInfo.text += str(_stage[str(_i)]["value"])+"-"
 #endregion
 #-------------------------------------------------------------------------------

@@ -48,11 +48,11 @@ func Set_SaveMenu2(_index:int):
 #-------------------------------------------------------------------------------
 #region WHAT TO DO BUTTON FUNCTIONS
 func StartButton_Subited(_index:int) -> void:
-	gameVariables.optionMenu.optionSaveData.saveIndex = _index
-	gameVariables.optionMenu.Save_OptionSaveData(gameVariables.optionMenu.optionSaveData)
+	gameVariables.optionMenu.optionSaveData_Json["saveIndex"] = _index
+	gameVariables.optionMenu.Save_OptionSaveData_Json()
 	#-------------------------------------------------------------------------------
-	gameVariables.currentSaveData = gameVariables.Load_SaveData(_index)
-	gameVariables.Save_SaveData(gameVariables.currentSaveData, _index)
+	gameVariables.currentSaveData_Json = gameVariables.Load_SaveData_Json(_index)
+	gameVariables.Save_SaveData_Json(_index)
 	#-------------------------------------------------------------------------------
 	gameVariables.CommonSubmited()
 	get_tree().change_scene_to_file(gameVariables.mainScene_Path)
@@ -83,8 +83,8 @@ func CancelButton_Common(_index:int) -> void:
 #region CONFIRM BUTTON FUNCTIONS
 func YesButton_Subited(_index:int) -> void:
 	confirm_Menu.hide()
-	gameVariables.Delete_SaveData(_index)
-	gameVariables.currentSaveData = null
+	gameVariables.Delete_SaveData_Json(_index)
+	gameVariables.currentSaveData_Json = {}
 	titleScene.saveMenu.button[_index].text = titleScene.saveMenu.SetEmptySaveText(_index)
 	GoBackToSaveMenu1(_index)
 	gameVariables.CommonSubmited()

@@ -25,7 +25,7 @@ func Start() -> void:
 func StartButton_Subited() -> void:
 	hide()
 	titleScene.saveMenu.SetSaveButtons()
-	var _index: int = gameVariables.optionMenu.optionSaveData.saveIndex
+	var _index: int = gameVariables.optionMenu.optionSaveData_Json["saveIndex"]
 	titleScene.saveMenu.show()
 	gameVariables.MoveToButton(titleScene.saveMenu.button[_index])
 	#NOTA: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
@@ -64,7 +64,7 @@ func OptionMenu_BackButton_Canceled() -> void:
 	gameVariables.CommonCanceled()
 #-------------------------------------------------------------------------------
 func OptionMenu_BackButton_Common() -> void:
-	gameVariables.optionMenu.Save_OptionSaveData(gameVariables.optionMenu.optionSaveData)
+	gameVariables.optionMenu.Save_OptionSaveData_Json()
 	gameVariables.optionMenu.hide()
 	titleScene.show()
 	show()

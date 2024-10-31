@@ -20,9 +20,9 @@ func Start() -> void:
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS
 func DifficultyButton_Subited(_i:int) -> void:
-	gameVariables.currentSaveData.difficultyIndex = _i
+	gameVariables.currentSaveData_Json["difficultyIndex"] = _i
 	mainScene.mainMenu.SetGameInfo()
-	gameVariables.Save_SaveData(gameVariables.currentSaveData, gameVariables.optionMenu.optionSaveData.saveIndex)
+	gameVariables.Save_SaveData_Json(gameVariables.optionMenu.optionSaveData_Json["saveIndex"])
 	BackButton_Common()
 	gameVariables.CommonSubmited()
 #-------------------------------------------------------------------------------

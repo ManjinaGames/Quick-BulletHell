@@ -23,24 +23,29 @@ func SetAllButtons() -> void:
 	gameVariables.SetButton(back, gameVariables.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------
 func UpdateStageButtons():
-	var _player: int = gameVariables.currentSaveData.playerIndex
-	var _difficulty: int = gameVariables.currentSaveData.difficultyIndex
+	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
+	var _stage: Dictionary = gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
 	for _i in 9:
-		match(gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE):
-			StageSaveData.STAGE_STATE.DISABLED:
+		match(int(_stage[str(_i)]["value"])):
+			gameVariables.STAGE_STATE.DISABLED:
 				button[_i].text = "[Locked]"
-			_:
+			gameVariables.STAGE_STATE.ENABLED:
 				SetButtonIdiome(button[_i], _i)
+			gameVariables.STAGE_STATE.COMPLETED:
+				SetButtonIdiome(button[_i], _i)
+				button[_i].text += " (Clear)"
 #-------------------------------------------------------------------------------
 func StageButton_Subited(_i:int) -> void:
-	var _player: int = gameVariables.currentSaveData.playerIndex
-	var _difficulty: int = gameVariables.currentSaveData.difficultyIndex
-	match(gameVariables.currentSaveData.player[_player].difficulty[_difficulty].stage[_i].mySTAGE_STATE):
-		StageSaveData.STAGE_STATE.DISABLED:
+	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
+	var _stage: Dictionary = gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
+	match(int(_stage[str(_i)]["value"])):
+		gameVariables.STAGE_STATE.DISABLED:
 			gameVariables.CommonCanceled()
 		_:
 			hide()
-			gameVariables.currentSaveData.stageIndex = _i
+			gameVariables.currentSaveData_Json["stageIndex"] = _i
 			mainScene.mainMenu.SetGameInfo()
 			gameVariables.MoveToButton(mainScene.startMenu.start)
 			mainScene.startMenu.show()
