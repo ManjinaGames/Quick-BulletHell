@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://c1d5igf3ydly"]
+
+[ext_resource type="Texture2D" uid="uid://bm2lkcurpb1h" path="res://Assets/Images/Cards/128px-MARISA_OP_max.png" id="1_8dh84"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_ru2i3"]
+
+[resource]
+script = ExtResource("1_ru2i3")
+price = 700
+maxHold = 7
+artwork = ExtResource("1_8dh84")

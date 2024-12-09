@@ -77,8 +77,8 @@ func CreateNew_OptionSaveData_Json() -> Dictionary:
 	var _optionSaveData: Dictionary = {}
 	_optionSaveData["masterVolumen"] = 1.0
 	_optionSaveData["sfxVolumen"] = 1.0
-	_optionSaveData["bgmVolumen"] = 1.0
-	_optionSaveData["vsync"] = false
+	_optionSaveData["bgmVolumen"] = 0.3
+	_optionSaveData["vsync"] = true
 	_optionSaveData["fullscreen"] = false
 	_optionSaveData["borderless"] = false
 	_optionSaveData["resolutionIndex"] = 3

@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3 uid="uid://djt1b5rhqntqr"]
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://djt1b5rhqntqr"]
 
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_cbqkr"]
+[ext_resource type="Texture2D" uid="uid://qe0pv72mqbir" path="res://Assets/Images/Cards/128px-EXTEND_max.png" id="1_urtff"]
 
 [resource]
 script = ExtResource("1_cbqkr")
-title = "Card 1"
-description = "11111111111111111111111111"
-price = 0
-maxHold = 0
+price = 100
+maxHold = 1
+artwork = ExtResource("1_urtff")

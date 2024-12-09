@@ -1,0 +1,299 @@
+key,en-US,es-AR,pt-BR,ja-JP,de-DE
+titleMenu_title,Salamanca of Syncretism,Salamanca del Sincretismo,Salamanca do Sincretismo,シンクレティズムのサラマンカ,Salamanca des Synkretismus
+titleMenu_button0,Start,Empezar,Começar,始める,Start
+titleMenu_button1,Options,Opciones,Opções,オプション,Optionen
+titleMenu_button2,Exit,Salir,Sair,外出,Beenden
+optionMenu_title,Option Menu,Menú de Opciones,Menu de opções,オプションメニュー,Optionsmenü
+optionMenu_idiome,Idiome,Idioma,Linguagem,言語,Idiom
+optionMenu_resolution,Resolution,Resolución,Resolução,解決,Auflösung
+optionMenu_fullScreen,Full Screen,Pantalla Completa,Tela completa,全画面表示,Vollbild
+optionMenu_borderless,Borderless,Sin Bordes,Sem Fronteiras,ボーダレス,Randlos
+optionMenu_vSync,Vertical Synchronization,Sincronización Vertical,Sincronização Vertical,垂直同期,Vertikale Synchronisierung
+optionMenu_master,Master,Maestro,Professor,教師,Master
+optionMenu_sfx,SFX,SFX,efeitos sonoros,特撮,SFX
+optionMenu_bgm,BGM,BGM,Música musical,BGM,BGM
+optionMenu_back,Back,Volver,Retornar,戻る,Zurück
+saveMenu_title,Save Menu,Menú de Guardado,Salvar Menu,保存メニュー,Speichern-Menü
+saveMenu_save,Save Data,Archivo de Guardado,Salvar Arquivo,ファイルを保存,Daten speichern
+saveMenu_empty,Empty,Vacio,Vazio,空の,Leer
+saveMenu2_Title,What do you want to do?,Que quieres hacer?,O que você quer fazer?,あなたは何をしたいですか？,Was möchtest du tun?
+saveMenu2_button0,Load,Cargar,Carregar,運ぶ,Laden
+saveMenu2_button1,Delete,Eliminar,Eliminar,なくす,Löschen
+deleteMenu_title,Do you want to delete this save?,Quieres eliminar este archivo,Você deseja excluir este arquivo,このファイルを削除しますか?,Möchtest du diesen Speicherstand löschen?
+deleteMenu_button0,Yes,Si,Sim,うん,Ja
+deleteMenu_button1,No,No,Não,いいえ,Nein
+mainMenu_button0,Start,Comenzar,Começar,始める,Start
+mainMenu_button1,Player,Personaje,Personagem,キャラクター,Spieler
+mainMenu_button2,Difficulty,Dificultad,Dificuldade,困難,Schwierigkeitsgrad
+mainMenu_button3,Options,Opciones,Opções,オプション,Optionen
+mainMenu_button4,Go to Title Menu,Volver al Título,Voltar ao título,タイトルに戻る,Zum Titelmenü
+playerMenu_button0,Player 1,Personaje 1,Personagem 1,キャラクター1,Spieler 1
+playerMenu_button1,Player 2,Personaje 2,Personagem 2,キャラクター2,Spieler 2
+playerMenu_back,Back,Volver,Retornar,戻る,Zurück
+difficultyMenu_button0,Easy,Facil,Fácil,簡単,Einfach
+difficultyMenu_button1,Normal,Normal,Normal,普通,Normal
+difficultyMenu_button2,Hard,Dificil,Difícil,難しい,Schwierig
+difficultyMenu_button3,Lunatic,Lunático,Lunático,狂人,Verrückt
+difficultyMenu_back,Back,Volver,Retornar,戻る,Zurück
+stageMenu_button0,Stage 1,Nivel 1,Nível 1,レベル1,Stufe 1
+stageMenu_button1,Stage 2,Nivel 2,Nível 2,レベル2,Stufe 2
+stageMenu_button2,Stage 3,Nivel 3,Nível 3,レベル3,Stufe 3
+stageMenu_button3,Stage 4,Nivel 4,Nível 4,レベル4,Stufe 4
+stageMenu_button4,Stage 5,Nivel 5,Nível 5,レベル5,Stufe 5
+stageMenu_button5,Stage Final,Nivel Final,Nível Final,最終レベル,Stufe Finale
+stageMenu_button6,Stage Extra,Nivel Extra,Nível Extra,エクストラレベル,Stufe Extra
+stageMenu_button7,Legacy Mode,Modo Legado,Modo legado,レガシーモード,Legacy-Modus
+stageMenu_button8,Boss-Rush Mode,Modo Avalancha de Jefes,Modo Avalanche de Chefes,ボスアバランチモード,Boss-Rush-Modus
+stageMenu_back,Back,Volver,Retornar,戻る,Zurück
+startMenu_button0,Start,Comenzar,Começar,始める,Start
+startMenu_button1,Info,Información,Informação,情報,Info
+startMenu_button2,Back,Volver,Retornar,戻る,Zurück
+pauseMenu_title,Pause,Pausa,Pausa,一時停止,Pause
+pauseMenu_button0,Continue,Continuar,Continuar,続く,Fortsetzen
+pauseMenu_button1,Retry,Reintentar,Tentar novamente,リトライ,Erneut versuchen
+pauseMenu_button2,Options,Opciones,Opções,オプション,Optionen
+pauseMenu_button3,Go to Main Menu,Volver al Menu Principal,Voltar ao menu principal,メインメニューに戻る,Zum Hauptmenü
+pauseMenu_button4,Quit Game,Salir del Juego,Sair do jogo,ゲームを終了する,Spiel beenden
+gameUI_lives,Lives,Vidas,Vidas,生きる,Leben
+gameUI_power,Power,Poder,Pode,できる,Power
+gameUI_maxScore,Max-Score,Máx.Puntuación,Pontuação máxima,最大スコア,Max-Score
+gameUI_score,Score,Puntuación,Pontuação,句読点,Score
+cardName_ID00,Go to deck,Ir al Mazo,Vá para o convés,デッキへ移動,Gehe an Deck
+cardDescription_ID00,"Don't buy anything, close the flea market.","No compres nada, cierra el mercadillo.","Não compre nada, feche o mercado de pulgas.",何も買わないで、フリーマーケットを閉めてください。,"Kaufe nichts, schließe den Flohmarkt."
+cardName_ID01,Life Card,Carta de vida,Carta de Vida,命のカード,Lebenskarte
+cardDescription_ID01,"Gives you 1 more life upon purchase.
+
+A simple and useful card.
+You're not sure whose life is contained within it,
+but let's just accept it gratefully.
+*Activates upon purchase; cannot be equipped by default","Te da 1 vida más al comprarla.
+
+Una carta sencilla y útil.
+No estás seguro de qué vida contiene,
+pero aceptémosla con gratitud.
+*Se activa al comprarla; no se puede equipar por defecto","Dá a você mais 1 vida na compra.
+
+Uma carta simples e útil.
+Você não tem certeza de qual vida está contida nela,
+mas vamos aceitá-la com gratidão.
+*Ativa na compra; não pode ser equipada por padrão","入手時にライフが１つ増える
+　
+シンプルにありがたいカード
+誰のライフが込められているのか判らないが
+ありがたく頂いておこう
+＊入手時に効果発動　初期装備不可","„Gibt dir beim Kauf 1 weiteres Leben.
+Eine einfache und nützliche Karte.
+Du bist dir nicht sicher, wessen Leben darin steckt,
+aber lass es uns einfach dankbar annehmen.
+*Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden“"
+cardName_ID02,Spell Card,Carta de hechizo,Carta de Magia,スペルのカード,Zauberkarte
+cardDescription_ID02,"It's... a little unclear what differentiates a ""Spell"" ""Card"" from a ""Spell Card"".
+Its effect is plain, but it helps you out a bit.
+Sure is plain, though.
+*Activates upon purchase; cannot be equipped by default","No está muy claro qué diferencia una ""Carta de hechizo"" de una ""Carta de hechizo"".
+Su efecto es simple, pero te ayuda un poco.
+Sin embargo, sí es simple.
+*Se activa al comprarla; no se puede equipar por defecto","É... um pouco obscuro o que diferencia uma ""Carta de Magia"" de uma ""Carta de Magia"".
+Seu efeito é simples, mas ajuda um pouco.
+Claro que é simples, no entanto.
+*Ativa na compra; não pode ser equipada por padrão","入手時にスペルカードが１つ増えるカード
+　
+スペルカードと何が違うのか悩むネーミング
+効果は地味だけどちょっぴり助かるカードだ
+効果は地味なんだけど
+＊入手時に効果発動　初期装備不可","„Es ist … ein wenig unklar, was eine „Zauberkarte“ von einer „Zauberkarte“ unterscheidet.
+Ihre Wirkung ist klar, aber sie hilft dir ein wenig.
+Aber sie ist klar.
+*Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden“"
+cardName_ID03,Money Comes and Goes On its Own,El dinero va y viene por sí solo,O dinheiro vem e vai sozinho,勝手に天下の回り物,Geld kommt und geht von selbst
+cardDescription_ID03,"Nazrin's ability to give you more money.
+
+She gathered up everything that was lying around nearby.
+This card is basically a cheque-cashing item.
+
+*Activates upon purchase; cannot be equipped by default","La habilidad de Nazrin para darte más dinero.
+
+Reunió todo lo que estaba tirado cerca.
+Esta carta es básicamente un objeto para cobrar cheques.
+
+*Se activa al comprarla; no se puede equipar por defecto","A habilidade de Nazrin de lhe dar mais dinheiro.
+
+Ela juntou tudo o que estava por perto.
+Esta carta é basicamente um item para descontar cheques.
+
+*Ativa na compra; não pode ser equipada por padrão","お金が増えるナズーリンの能力
+　
+その辺に落ちている物を集めておきました
+このカードはいわゆる換金アイテムです
+　
+＊入手時に効果発動　初期装備不可","„Nazrins Fähigkeit, dir mehr Geld zu geben.
+Sie sammelte alles auf, was in der Nähe herumlag.
+Diese Karte ist im Grunde ein Gegenstand zum Einlösen von Schecks.
+*Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden“"
+cardName_ID04,Ringo-Brand Dango,Dango de la marca Ringo,Dango da Marca Ringo,鈴瑚印の団子,Ringo-Brand-Dango
+cardDescription_ID04,"Ringo's ability to considerably increase your Power.
+
+Ya can't fight on an empty stomach!
+How about some Ringo-brand dango?
+
+*Activates upon purchase; cannot be equipped by default","La habilidad de Ringo para aumentar considerablemente tu poder.
+
+¡No puedes pelear con el estómago vacío!
+¿Qué tal un poco de la marca Ringo? dango?
+
+*Se activa al comprar; no se puede equipar por defecto","A habilidade de Ringo de aumentar consideravelmente seu Poder.
+
+Você não pode lutar com o estômago vazio!
+Que tal um pouco de Dango da marca Ringo?
+
+*Ativa na compra; não pode ser equipado por padrão","パワーが大幅に増える鈴瑚の能力
+　
+腹が減っては戦は出来ぬぞ
+鈴瑚印のダンゴは如何？
+　
+＊入手時に効果発動　初期装備不可","„Ringos Fähigkeit, deine Macht erheblich zu steigern.
+Man kann nicht mit leerem Magen kämpfen!
+Wie wär’s mit etwas Ringo-Brand-Dango? dango?
+*Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden"""
+cardName_ID05,Phoenix's Tail,Cola de Fénix,Phoenix's Tail,不死鳥の尾,Phoenix's Tail
+cardDescription_ID05,"Fujiwara no Mokou's ability to increase your lives by 3.
+Extremely strong, with no strings attached; no ability could be more powerful.
+
+Offense... Defense... Evasion... Memorization...
+From an immortal's perspective, they're all nothing more than rules to a petty game!
+
+*Activates upon purchase; cannot be equipped by default","La habilidad de Fujiwara no Mokou de aumentar tus vidas en 3.
+Extremadamente fuerte, sin condiciones; ninguna habilidad podría ser más poderosa.
+
+Ataque... Defensa... Evasión... Memorización...
+¡Desde la perspectiva de un inmortal, no son más que reglas para un juego insignificante!
+
+*Se activa al comprar; no se puede equipar por defecto","A habilidade de Fujiwara no Mokou de aumentar suas vidas em 3.
+Extremamente forte, sem amarras; nenhuma habilidade poderia ser mais poderosa.
+
+Ofensa... Defesa... Evasão... Memorização...
+Da perspectiva de um imortal, elas não são nada mais do que regras para um jogo mesquinho!
+
+*Ativa na compra; não pode ser equipado por padrão","ライフを３つ増加させる藤原妹紅の能力
+これほど前提無しで、強力な能力も無いだろう
+
+攻撃……防御……回避……パターン化……
+不死の存在からみたら全てただのゲームのルールだ
+
+＊入手時に効果発動　初期装備不可","„Fujiwara no Mokou's Fähigkeit, deine Leben um 3 zu erhöhen.
+Extrem stark, ohne Bedingungen; keine Fähigkeit könnte mächtiger sein.
+Angriff... Verteidigung... Ausweichen... Auswendiglernen...
+Aus der Sicht eines Unsterblichen sind sie alle nichts weiter als Regeln für ein kleines Spiel!
+*Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden"""
+cardName_ID06,Yin-Yang Orb,Orbe Yin-Yang,Yin-Yang Orb,陰陽玉,Yin-Yang Orb
+cardDescription_ID06,"Reimu Hakurei's ability to shoot homing bullets at enemies.
+A useful card that can beef up your attack power in a simple way.
+
+When exactly did this ability get copied?
+It's scary to think that something like this is out there circulating...","La habilidad de Reimu Hakurei de disparar balas teledirigidas a los enemigos.
+Una carta útil que puede aumentar tu poder de ataque de una manera sencilla.
+
+¿Cuándo exactamente se copió esta habilidad?
+Da miedo pensar que algo así esté circulando por ahí...","A habilidade de Reimu Hakurei de atirar balas teleguiadas em inimigos.
+Uma carta útil que pode reforçar seu poder de ataque de uma forma simples.
+
+Quando exatamente essa habilidade foi copiada?
+É assustador pensar que algo assim está circulando por aí...","ホーミングショットを撃つ博麗霊夢の能力
+シンプルに攻撃力のかさ増し出来る便利なカードだ
+　
+いつの間にこんな能力をコピーされたんだろう
+こんなものが出回っているなんて恐ろしい……","„Reimu Hakureis Fähigkeit, zielsuchende Kugeln auf Feinde abzufeuern.
+Eine nützliche Karte, die deine Angriffskraft auf einfache Weise steigern kann.
+Wann genau wurde diese Fähigkeit kopiert?
+Es ist beängstigend, wenn man bedenkt, dass so etwas im Umlauf ist...“"
+cardName_ID07,Mini-Hakkero,Mini-Hakkero,Mini-Hakkero,ミニ八卦炉,Mini-Hakkero
+cardDescription_ID07,"Type: Equipment Card
+Marisa Kirisame's ability to shoot a laser.
+One of the highest-firepower Equipment Cards there is.
+
+There are many humans and youkai who wanted to try
+shooting a laser, so it's a fairly popular card.","Tipo: Carta de Equipo
+La habilidad de Marisa Kirisame de disparar un láser.
+Una de las Cartas de Equipo con mayor poder de fuego que existen.
+
+Hay muchos humanos y youkai que querían intentar
+disparar un láser, por lo que es una carta bastante popular.","Tipo: Carta de Equipamento
+A habilidade de Marisa Kirisame de atirar um laser.
+Uma das Cartas de Equipamento com maior poder de fogo que existe.
+
+Há muitos humanos e youkai que queriam tentar
+atirar um laser, então é uma carta bem popular.","レーザーを撃つ霧雨魔理沙の能力
+装備タイプの中では高威力の部類に入る
+　
+レーザーを撃ってみたかったという人間、妖怪も
+多くいて、割と人気のカード","„Typ: Ausrüstungskarte
+Marisa Kirisames Fähigkeit, einen Laser abzufeuern.
+Eine der Ausrüstungskarten mit der höchsten Feuerkraft, die es gibt.
+Es gibt viele Menschen und Youkai, die versuchen wollten,
+mit einem Laser zu schießen, daher ist es eine ziemlich beliebte Karte."""
+cardName_ID08,Maid Knife,Maid Knife,Faca de empregada,メイドナイフ,Dienstmädchenmesser
+cardDescription_ID08,"Sakuya Izayoi's ability to throw knives.
+Throwing knives that can be shot left and right.
+
+
+You are not qualified to be a maid
+until you can aim and hit the fairies.","La habilidad de Sakuya Izayoi para lanzar cuchillos.
+Lanza cuchillos que se pueden disparar de izquierda a derecha.
+
+No estás calificada para ser una maid
+hasta que puedas apuntar y golpear a las hadas.","A habilidade de Sakuya Izayoi de atirar facas.
+Arremessar facas que podem ser atiradas para a esquerda e para a direita.
+
+Você não está qualificada para ser uma empregada
+até que consiga mirar e acertar as fadas.","投げナイフを撃つ十六夜咲夜の能力
+左右に打ち分ける事の出来るナイフを投げる
+　
+狙って妖精を打ち抜けるようになるまで
+メイドの資格は無い","„Sakuya Izayois Fähigkeit, Messer zu werfen.
+Wurfmesser, die nach links und rechts geschossen werden können.
+Sie sind nicht qualifiziert, ein Dienstmädchen zu sein,
+bis Sie zielen und die Feen treffen können."""
+cardName_ID09,Safe Return Amulet,Safe Return Amulet,Amuleto de retorno seguro,無事かえるお守り,Amulett für sichere Rückkehr
+cardDescription_ID09,"The Moriya Shrine's popular amulet.
+Can shoot exploding frog shots.
+One of Sanae Kochiya's abilities...
+or rather, something Suwako gave to her.
+A good-luck charm to ensure your safe return home.","El amuleto popular del Santuario Moriya.
+Puede disparar proyectiles explosivos de rana.
+Una de las habilidades de Sanae Kochiya...
+o más bien, algo que Suwako le dio.
+Un amuleto de buena suerte para asegurar tu regreso seguro a casa.","O amuleto popular do Santuário Moriya.
+Pode atirar tiros explosivos de sapo.
+Uma das habilidades de Sanae Kochiya...
+ou melhor, algo que Suwako deu a ela.
+Um amuleto de boa sorte para garantir seu retorno seguro para casa.","守矢神社の人気お守り
+爆発するカエルのショットを撃つ事が出来る
+東風谷早苗の能力の一つ……
+というか諏訪子から預かったもの
+これを持っていると無事に帰れるというお守り","„Das beliebte Amulett des Moriya-Schreins.
+Kann explodierende Froschschüsse abfeuern.
+Eine von Sanae Kochiyas Fähigkeiten …
+oder vielmehr etwas, das Suwako ihr gegeben hat.
+Ein Glücksbringer, der Ihre sichere Heimkehr gewährleistet."""
+cardName_ID10,Shed Snakeskin Amulet,Shed Snakeskin Amulet,Amuleto de pele de cobra,蛇の抜け殻入りお守り,Amulett für abgeworfene Schlangenhaut
+cardDescription_ID10,"Can shoot snake bullets that bite at the enemies.
+One of Sanae Kochiya's abilities...
+
+
+or rather, something Kanako Yasaka gave to her.
+People say that holding this charm gives you a healthier body.","Puede disparar balas de serpiente que muerden a los enemigos.
+Una de las habilidades de Sanae Kochiya...
+
+o más bien, algo que Kanako Yasaka le dio.
+La gente dice que sostener este amuleto te da un cuerpo más saludable.","Pode atirar balas de cobra que mordem os inimigos.
+Uma das habilidades de Sanae Kochiya...
+
+ou melhor, algo que Kanako Yasaka deu a ela.
+As pessoas dizem que segurar esse amuleto lhe dá um corpo mais saudável.","敵に喰らい付く蛇のショットを撃つ事が出来る
+東風谷早苗の能力の一つ……
+
+というか八坂神奈子から預かったもの
+これを持っていると体が強くなると言われている","„Kann Schlangenkugeln abfeuern, die die Feinde beißen.
+Eine von Sanae Kochiyas Fähigkeiten …
+oder vielmehr etwas, das Kanako Yasaka ihr gegeben hat.
+Die Leute sagen, dass das Tragen dieses Zaubers Ihnen einen gesünderen Körper verleiht."""

@@ -1,0 +1,55 @@
+[gd_scene load_steps=3 format=3 uid="uid://kthlaqw0sk1v"]
+
+[ext_resource type="Texture2D" uid="uid://ci4jfw2wl4k36" path="res://Assets/Images/Cards/128px-ALICE_OP_max.png" id="1_1ly6d"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/cardButton_Script.gd" id="1_3uemk"]
+
+[node name="cardButton" type="Button" node_paths=PackedStringArray("artwork", "hold", "price")]
+custom_minimum_size = Vector2(198, 250)
+offset_right = 198.0
+offset_bottom = 250.0
+script = ExtResource("1_3uemk")
+artwork = NodePath("MarginContainer/TextureRect")
+hold = NodePath("Label")
+price = NodePath("Label2")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+layout_mode = 2
+texture = ExtResource("1_1ly6d")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 55.0
+grow_horizontal = 2
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
+text = "5 / 5"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
+text = "   550 $"
+horizontal_alignment = 1

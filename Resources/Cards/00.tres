@@ -1,5 +1,6 @@
-[gd_resource type="Resource" script_class="CardResource" load_steps=2 format=3 uid="uid://qd50ywh4rm84"]
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://qd50ywh4rm84"]
 
+[ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="1_potj5"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_y63ih"]
 
 [resource]
@@ -7,4 +8,5 @@ script = ExtResource("1_y63ih")
 title = "Go to the Deck"
 description = "You go to the Deck, close the Market and continue to the next phase."
 price = 0
-max = 1
+maxHold = 0
+artwork = ExtResource("1_potj5")
