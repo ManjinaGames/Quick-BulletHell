@@ -123,11 +123,11 @@ text = "Assets:
 * Interface sfx pack 1 by ObsydianX.
 * 1-Bit Input Prompts Pixel 16× (1.0) by Kenney."
 
-[node name="Save_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "scrollContainer", "vBoxContainer", "back")]
-visible = false
+[node name="Save_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "clipContainer", "scrollContainer", "vBoxContainer", "back")]
 layout_mode = 2
 script = ExtResource("3_g1pxl")
 titleScene = NodePath("../..")
+clipContainer = NodePath("VBoxContainer/PanelContainer/MarginContainer/ClipContent")
 scrollContainer = NodePath("VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer")
 vBoxContainer = NodePath("VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/VBoxContainer")
 back = NodePath("VBoxContainer/Button")
@@ -139,18 +139,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -214.0
-offset_top = -262.0
-offset_right = 214.0
-offset_bottom = 262.0
+offset_left = -277.0
+offset_top = -279.5
+offset_right = 277.0
+offset_bottom = 279.5
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Save_Menu/VBoxContainer"]
-custom_minimum_size = Vector2(428, 482)
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer"]
 layout_mode = 2
@@ -175,10 +174,13 @@ vertical_scroll_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/margin_right = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 4
 
 [node name="Button" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer/PanelContainer/MarginContainer/ClipContent/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 150)
@@ -202,8 +204,7 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="MarginContainer/Save_Menu/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 0
 theme_override_font_sizes/font_size = 30
 text = "Back
 "
@@ -283,16 +284,19 @@ layout_mode = 2
 
 [node name="Button" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Load"
 
 [node name="Button2" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Delete"
 
 [node name="Button3" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/What To Do/MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_font_sizes/font_size = 30
 text = "Back"
 
@@ -308,17 +312,19 @@ theme_override_constants/margin_bottom = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 30
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="Button" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 30
 text = "Yes"
 
 [node name="Button2" type="Button" parent="MarginContainer/Save_Menu2/VBoxContainer/Confirm Deletion/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 30
 text = "No"

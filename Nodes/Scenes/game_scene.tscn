@@ -541,6 +541,7 @@ text = "60s / 60s"
 horizontal_alignment = 1
 
 [node name="Banner" type="PanelContainer" parent="CanvasLayer/Window_MarginContainer"]
+visible = false
 z_index = 30
 layout_mode = 2
 size_flags_vertical = 4
@@ -625,23 +626,24 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Quit Game"
 
-[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "yesButton", "noButton")]
+[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "yesButton", "noButton")]
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
 gameScene = NodePath("../../..")
 buyMenu = NodePath("VBoxContainer/Buy_Menu")
-scrollContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer")
-cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer")
+scrollContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer")
+cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
 cardPrefab = ExtResource("20_4usgd")
 cardCatalogue = Array[ExtResource("13_x786h")]([ExtResource("14_4qbfb"), ExtResource("15_k2dx3"), ExtResource("16_hovb2"), ExtResource("17_dadln"), ExtResource("18_chr6o"), ExtResource("20_yckle"), ExtResource("21_ukb5v"), ExtResource("22_rdkvm"), ExtResource("23_r1lby"), ExtResource("24_4hole"), ExtResource("25_w1v0v")])
 description = NodePath("VBoxContainer/Buy_Menu/MarginContainer2/RichTextLabel")
-confirmCard_Artwork = NodePath("VBoxContainer/Confirm_Menu/MarginContainer/Panel/MarginContainer/TextureRect")
-confirmCard_Hold = NodePath("VBoxContainer/Confirm_Menu/MarginContainer/Panel/Label")
-confirmCard_Price = NodePath("VBoxContainer/Confirm_Menu/MarginContainer/Panel/Label2")
+confirmCard_Panel = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel")
+confirmCard_Artwork = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer/TextureRect")
+confirmCard_Hold = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/Label")
+confirmCard_Price = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/Label2")
 confirmMenu = NodePath("VBoxContainer/Confirm_Menu")
-yesButton = NodePath("VBoxContainer/Confirm_Menu/HBoxContainer/Button")
-noButton = NodePath("VBoxContainer/Confirm_Menu/HBoxContainer/Button2")
+yesButton = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/HBoxContainer/Button")
+noButton = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/HBoxContainer/Button2")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu"]
 layout_mode = 1
@@ -661,82 +663,64 @@ horizontal_alignment = 1
 vertical_alignment = 2
 
 [node name="Buy_Menu" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu"]
-layout_mode = 2
-theme_override_constants/margin_left = 11
-theme_override_constants/margin_right = 11
-
-[node name="ClipContent" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer"]
 clip_contents = true
 layout_mode = 2
-theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 5
 
-[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent"]
+[node name="ScrollContainer" type="ScrollContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer"]
 clip_contents = false
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
 follow_focus = true
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer"]
 layout_mode = 2
-theme_override_constants/margin_bottom = 15
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 70
+
+[node name="cardButton" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("20_4usgd")]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 
-[node name="cardButton" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("20_4usgd")]
+[node name="cardButton2" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("20_4usgd")]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 
-[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(198, 250)
+[node name="cardButton3" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("20_4usgd")]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
-text = "asd
-"
 
-[node name="Button3" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(198, 250)
+[node name="cardButton4" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("20_4usgd")]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
-text = "asd
-"
 
-[node name="Button4" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(198, 250)
+[node name="cardButton5" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("20_4usgd")]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
-text = "asd
-"
 
-[node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(198, 250)
+[node name="cardButton6" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("20_4usgd")]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
-text = "asd
-"
-
-[node name="Button6" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(198, 250)
-layout_mode = 2
-text = "asd
-"
-
-[node name="Button7" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(198, 250)
-layout_mode = 2
-text = "asd
-"
-
-[node name="Button8" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer/ClipContent/ScrollContainer/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(198, 250)
-layout_mode = 2
-text = "asd
-"
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu"]
 layout_mode = 2
+size_flags_vertical = 0
 theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = -10
 theme_override_constants/margin_right = 8
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu/MarginContainer2"]
@@ -749,24 +733,28 @@ Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 [/center]"
 fit_content = true
 
-[node name="Confirm_Menu" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
-visible = false
+[node name="Confirm_Menu" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_right = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu"]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 2
 theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="Panel" type="Panel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer"]
-custom_minimum_size = Vector2(198, 250)
+[node name="Panel" type="Panel" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(200, 250)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -778,12 +766,12 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 2
 theme_override_constants/margin_bottom = 2
 
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer/Panel/MarginContainer"]
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer"]
 layout_mode = 2
 texture = ExtResource("21_fdfmj")
 expand_mode = 1
 
-[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer/Panel"]
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -794,7 +782,7 @@ theme_override_font_sizes/font_size = 40
 text = "5 / 5"
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer/Panel"]
+[node name="Label2" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -809,31 +797,33 @@ text = "500 $"
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu"]
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/margin_top = 28
+theme_override_constants/margin_top = 10
 theme_override_constants/margin_bottom = 8
 
-[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/MarginContainer2"]
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer2"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_font_sizes/font_size = 35
 text = "Do you Want to Buy This Card?"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 50
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/HBoxContainer"]
+[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 30
 text = "Yes"
 
-[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/HBoxContainer"]
+[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 30
 text = "No"
 

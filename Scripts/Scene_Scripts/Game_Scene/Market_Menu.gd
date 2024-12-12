@@ -15,13 +15,14 @@ var gameVariables: Game_Variables
 @export var description: RichTextLabel
 #-------------------------------------------------------------------------------
 @export_group("Confirm Menu Properties")
+@export var confirmCard_Panel: Panel
 @export var confirmCard_Artwork: TextureRect
 @export var confirmCard_Hold: Label
 @export var confirmCard_Price: Label
-@export var confirmMenu: VBoxContainer
+@export var confirmMenu: MarginContainer
 @export var yesButton: Button
 @export var noButton: Button
-const buttonSize: Vector2 = Vector2(198, 250)
+const buttonSize: Vector2 = Vector2(200, 250)
 signal closeMarket
 #endregion
 #-------------------------------------------------------------------------------
@@ -41,6 +42,7 @@ func Start():
 func OpenMarket():
 	CreateCardButtons()
 	gameVariables.MoveToFirstButton(cardButton)
+	scrollContainer.custom_minimum_size = buttonSize
 	scrollContainer.scroll_horizontal = 0	#NOTA: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
 	buyMenu.show()
 	confirmMenu.hide()
@@ -103,6 +105,7 @@ func CardButton_Selected(_i:int) -> void:
 #-------------------------------------------------------------------------------
 func CardButton_Subited(_i:int) -> void:
 	cardIndex = _i
+	confirmCard_Panel.custom_minimum_size = buttonSize
 	confirmCard_Artwork.texture = cardCatalogue[_i].artwork
 	confirmCard_Hold.text = GetCardText_Hold(_i)
 	confirmCard_Price.text = GetCardText_Price(_i)

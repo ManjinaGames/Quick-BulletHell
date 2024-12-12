@@ -9,5 +9,7 @@ Lista de cosas para Hacer:
 	*Arreglar todos los menues para que se puedan traducir de forma Dinámica.
 	NOTA: Voy a tener que hacer maquina de estados para cada menú.
 	*Arreglar las funciones VDirs y relacionadas.
+(LISTO)*Agregar matemáticas a los botones en ScrollContainer.
+	*Cambiar el Nombre de GameVariables a Singleton.
 	
 	
