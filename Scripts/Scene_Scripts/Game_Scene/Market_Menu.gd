@@ -1,7 +1,7 @@
 extends Panel
 class_name Market_Menu
 #region VARIABLES
-var gameVariables: Game_Variables
+var singleton: Singleton
 @export var gameScene: Game_Scene
 #-------------------------------------------------------------------------------
 @export_group("Buy Menu Properties")
@@ -10,8 +10,8 @@ var gameVariables: Game_Variables
 @export var cardContainer: HBoxContainer
 @export var cardPrefab: PackedScene
 @export var cardButton: Array[Button]
-@export var cardIndex: int = 0
 @export var cardCatalogue: Array[CardResource]
+@export var deckResource: CardResource
 @export var description: RichTextLabel
 #-------------------------------------------------------------------------------
 @export_group("Confirm Menu Properties")
@@ -28,10 +28,7 @@ signal closeMarket
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
 func Start():
-	gameVariables = get_node("/root/GameVariables")
-	#-------------------------------------------------------------------------------
-	gameVariables.SetButton(yesButton, gameVariables.CommonSelected, ConfirmMenu_YesButton_Submited, ConfirmMenu_YesButton_Canceled)
-	gameVariables.SetButton(noButton, gameVariables.CommonSelected, ConfirmMenu_NoButton_Submited, ConfirmMenu_NoButton_Canceled)
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	buyMenu.hide()
 	confirmMenu.hide()
@@ -40,8 +37,8 @@ func Start():
 #-------------------------------------------------------------------------------
 #region CREATE CARDS FUNCTIONS
 func OpenMarket():
-	CreateCardButtons()
-	gameVariables.MoveToFirstButton(cardButton)
+	CreateCardMarket()
+	singleton.MoveToFirstButton(cardButton)
 	scrollContainer.custom_minimum_size = buttonSize
 	scrollContainer.scroll_horizontal = 0	#NOTA: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
 	buyMenu.show()
@@ -49,23 +46,37 @@ func OpenMarket():
 	show()
 	await closeMarket
 #-------------------------------------------------------------------------------
-func CreateCardButtons() ->void:
-	ClearContainer()
-	for _i in cardCatalogue.size():
-		var _b : CardButton = cardPrefab.instantiate() as CardButton
-		_b.custom_minimum_size = buttonSize
-		if(gameVariables.useCustomButton):
-			_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
-		_b.artwork.texture = cardCatalogue[_i].artwork
-		_b.hold.text = GetCardText_Hold(_i)
-		_b.price.text = GetCardText_Price(_i)
-		gameVariables.SetButton(_b, func():CardButton_Selected(_i), func():CardButton_Subited(_i), CardButton_Canceled)
-		cardContainer.add_child(_b)
-		cardButton.append(_b)
+func CreateCardMarket() ->void:
+	DeleteCardButtons()
+	CreateDeckButton()
+	for _cr in cardCatalogue:
+		CreateCardButton(_cr)
+#-------------------------------------------------------------------------------
+func CreateCardButton(_cr: CardResource):
+	var _cb : CardButton = CreateCardButton_Common(_cr)
+	singleton.SetButton(_cb, func():CardButton_Selected(_cr), func():CardButton_Subited(_cr, _cb), CardButton_Canceled)
+	_cb.hold.text = GetCardText_Hold(_cr)
+	_cb.price.text = GetCardText_Price(_cr)
+#-------------------------------------------------------------------------------
+func CreateDeckButton():
+	var _cb : CardButton = CreateCardButton_Common(deckResource)
+	singleton.SetButton(_cb, func():CardButton_Selected(deckResource), func():DeckButton_Submit(deckResource, _cb), func():DeckButton_Canceled(deckResource, _cb))
+	_cb.hold.text = ""
+	_cb.price.text = ""
+#-------------------------------------------------------------------------------
+func CreateCardButton_Common(_cr: CardResource) -> CardButton:
+	var _cb : CardButton = cardPrefab.instantiate() as CardButton
+	_cb.custom_minimum_size = buttonSize
+	if(singleton.useCustomButton):
+		_cb.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
+	_cb.artwork.texture = _cr.artwork
+	cardContainer.add_child(_cb)
+	cardButton.append(_cb)
+	return _cb
 #-------------------------------------------------------------------------------
 func DeleteCardButtons() -> void:
-	for _b in cardButton:
-		_b.queue_free()
+	for _cb in cardButton:
+		_cb.queue_free()
 	cardButton.clear()
 	ClearContainer()
 #-------------------------------------------------------------------------------
@@ -73,16 +84,16 @@ func ClearContainer():
 	for _child in cardContainer.get_children():
 		_child.queue_free()
 #-------------------------------------------------------------------------------
-func GetCardText_Hold(_i) -> String:
-	var _s: String = str(cardCatalogue[_i].maxHold) + " / " + str(cardCatalogue[_i].maxHold)
+func GetCardText_Hold(_cr:CardResource) -> String:
+	var _s: String = str(_cr.maxHold) + " / " + str(_cr.maxHold)
 	return _s
 #-------------------------------------------------------------------------------
-func GetCardText_Price(_i) -> String:
-	var _s: String = "   " + str(cardCatalogue[_i].price) + " $"
+func GetCardText_Price(_cr:CardResource) -> String:
+	var _s: String = "   " + str(_cr.price) + " $"
 	return _s
 #-------------------------------------------------------------------------------
-func GetCardText_ID(_i:int) -> String:
-	var _s: String = cardCatalogue[_i].resource_path.get_file().trim_suffix('.tres')
+func GetCardText_ID(_cr:CardResource) -> String:
+	var _s: String = _cr.resource_path.get_file().trim_suffix('.tres')
 	return _s
 #-------------------------------------------------------------------------------
 func GetCardText_Name(_id: String) -> String:
@@ -95,52 +106,73 @@ func GetCardText_Description(_id: String) -> String:
 #endregion
 #-------------------------------------------------------------------------------
 #region CARD BUTTON FUNCTIONS
-func CardButton_Selected(_i:int) -> void:
-	var _id: String = GetCardText_ID(_i)
+func CardButton_Selected(_cr:CardResource) -> void:
+	var _id: String = GetCardText_ID(_cr)
 	var _s: String = "[center][font_size=35]"+ GetCardText_Name(_id) + "[/font_size][font_size=20]\n"
 	_s += "ID: " + _id + "\n"
 	_s += GetCardText_Description(_id)
 	description.text = _s
-	gameVariables.CommonSelected()
+	singleton.CommonSelected()
 #-------------------------------------------------------------------------------
-func CardButton_Subited(_i:int) -> void:
-	cardIndex = _i
+func CardButton_Subited(_cr:CardResource, _cb:CardButton) -> void:
+	confirmCard_Hold.text = GetCardText_Hold(_cr)
+	confirmCard_Price.text = GetCardText_Price(_cr)
+	CardButton_Submit_Common(_cr, _cb)
+	singleton.CommonSubmited()
+#-------------------------------------------------------------------------------
+func DeckButton_Submit(_cr:CardResource, _cb:CardButton) -> void:
+	DeckButton_Common(_cr, _cb)
+	singleton.CommonSubmited()
+#-------------------------------------------------------------------------------
+func DeckButton_Canceled(_cr:CardResource, _cb:CardButton) -> void:
+	DeckButton_Common(_cr, _cb)
+	singleton.CommonCanceled()
+#-------------------------------------------------------------------------------
+func DeckButton_Common(_cr:CardResource, _cb:CardButton) -> void:
+	confirmCard_Hold.text = ""
+	confirmCard_Price.text = ""
+	CardButton_Submit_Common(_cr, _cb)
+#-------------------------------------------------------------------------------
+func CardButton_Submit_Common(_cr:CardResource, _cb:CardButton) -> void:
 	confirmCard_Panel.custom_minimum_size = buttonSize
-	confirmCard_Artwork.texture = cardCatalogue[_i].artwork
-	confirmCard_Hold.text = GetCardText_Hold(_i)
-	confirmCard_Price.text = GetCardText_Price(_i)
+	confirmCard_Artwork.texture = _cr.artwork
+	#-------------------------------------------------------------------------------
+	singleton.DisconnectButton(yesButton)
+	singleton.DisconnectButton(noButton)
+	singleton.SetButton(yesButton, singleton.CommonSelected, func():ConfirmMenu_YesButton_Submited(_cr), ConfirmMenu_YesButton_Canceled)
+	singleton.SetButton(noButton, singleton.CommonSelected, func():ConfirmMenu_NoButton_Submited(_cb), func():ConfirmMenu_NoButton_Canceled(_cb))
+	#-------------------------------------------------------------------------------
 	buyMenu.hide()
 	confirmMenu.show()
-	gameVariables.MoveToButton(noButton)
-	gameVariables.CommonSubmited()
+	singleton.MoveToButton(noButton)
 #-------------------------------------------------------------------------------
 func CardButton_Canceled() -> void:
-	gameVariables.MoveToFirstButton(cardButton)
-	gameVariables.CommonCanceled()
+	singleton.MoveToFirstButton(cardButton)
+	singleton.CommonCanceled()
 #endregion
 #-------------------------------------------------------------------------------
 #region CONFIRM MENU FUNCTIONS
-func ConfirmMenu_YesButton_Submited():
+func ConfirmMenu_YesButton_Submited(_cr:CardResource):
 	DeleteCardButtons()
 	hide()
 	closeMarket.emit()
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func ConfirmMenu_YesButton_Canceled():
-	gameVariables.MoveToButton(noButton)
-	gameVariables.CommonCanceled()
+	singleton.MoveToButton(noButton)
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
-func ConfirmMenu_NoButton_Submited():
-	ConfurmMenu_NoButton_Common()
-	gameVariables.CommonSubmited()
+func ConfirmMenu_NoButton_Submited(_cb:CardButton):
+	ConfurmMenu_NoButton_Common(_cb)
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
-func ConfirmMenu_NoButton_Canceled():
-	ConfurmMenu_NoButton_Common()
-	gameVariables.CommonCanceled()
+func ConfirmMenu_NoButton_Canceled(_cb:CardButton):
+	ConfurmMenu_NoButton_Common(_cb)
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
-func ConfurmMenu_NoButton_Common():
+func ConfurmMenu_NoButton_Common(_cb:CardButton):
 	confirmMenu.hide()
 	buyMenu.show()
-	gameVariables.MoveToButton(cardButton[cardIndex])
+	singleton.MoveToButton(_cb)
 #endregion
 #-------------------------------------------------------------------------------

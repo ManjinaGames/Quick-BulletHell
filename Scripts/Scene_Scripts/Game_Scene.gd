@@ -4,7 +4,7 @@ class_name Game_Scene
 enum PLAY_STATE{IN_GAME, IN_MARKET, IN_OPTION_MENU, IN_DIALOGUE}
 enum ITEM_STATE{FREED, IMANTED}
 #region VARIABLES
-var gameVariables: Game_Variables
+var singleton: Singleton
 #-------------------------------------------------------------------------------
 var myPLAY_STATE: PLAY_STATE = PLAY_STATE.IN_GAME
 var inPause: bool = false
@@ -83,7 +83,7 @@ signal frame
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
 func _ready():
-	gameVariables = get_node("/root/GameVariables")
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	_direct_space_state = content.get_world_2d().direct_space_state
 	#-------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ func _ready():
 	#-------------------------------------------------------------------------------
 	SetIdiome()
 	#-------------------------------------------------------------------------------
-	gameVariables.PlayBGM(gameVariables.bgmStage1)
+	singleton.PlayBGM(singleton.bgmStage1)
 	get_tree().set_deferred("paused", false)
 	currentLayer.show()
 	BeginGame()
@@ -141,16 +141,16 @@ func PlayerMovement() -> void:
 func PauseGame() -> void:
 	if(Input.is_action_just_pressed("input_Pause")):
 		pauseMenu.show()
-		gameVariables.playPosition = gameVariables.bgmPlayer.get_playback_position()
-		gameVariables.bgmPlayer.stop()
+		singleton.playPosition = singleton.bgmPlayer.get_playback_position()
+		singleton.bgmPlayer.stop()
 		get_tree().set_deferred("paused", true)
-		gameVariables.MoveToButton(pauseMenu.continuar)
+		singleton.MoveToButton(pauseMenu.continuar)
 #-------------------------------------------------------------------------------
 func PauseOff():
 	pauseMenu.hide()
 	myPLAY_STATE = PLAY_STATE.IN_GAME
 	get_tree().set_deferred("paused", false)
-	gameVariables.bgmPlayer.play(gameVariables.playPosition)
+	singleton.bgmPlayer.play(singleton.playPosition)
 #endregion
 #-------------------------------------------------------------------------------
 #region PLAYER BULLET FUNCTIONS
@@ -395,7 +395,7 @@ func BeginGame() -> void:
 	Choreography()
 #-------------------------------------------------------------------------------
 func Choreography() -> void:
-	match(gameVariables.currentSaveData_Json["stageIndex"]):
+	match(singleton.currentSaveData_Json["stageIndex"]):
 		0:
 			await Stage1()
 		1:
@@ -529,25 +529,25 @@ func StageCommon(_s:String, _enabled:int, _completed:int):
 	await ShowBanner(_s)
 	EnableStage(_enabled)
 	CompletedStage(_completed)
-	gameVariables.Save_SaveData_Json(gameVariables.optionMenu.optionSaveData_Json["saveIndex"])
-	gameVariables.CommonSubmited()
+	singleton.Save_SaveData_Json(singleton.optionMenu.optionSaveData_Json["saveIndex"])
+	singleton.CommonSubmited()
 	GoToMainScene()
 #-------------------------------------------------------------------------------
 func EnableStage(_i:int):
-	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
-	if(gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] == gameVariables.STAGE_STATE.DISABLED):
-		gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = gameVariables.STAGE_STATE.ENABLED
+	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	if(singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] == singleton.STAGE_STATE.DISABLED):
+		singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = singleton.STAGE_STATE.ENABLED
 #-------------------------------------------------------------------------------
 func CompletedStage(_i:int):
-	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
-	gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = gameVariables.STAGE_STATE.COMPLETED
+	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = singleton.STAGE_STATE.COMPLETED
 #-------------------------------------------------------------------------------
 func GoToMainScene():
-	gameVariables.PlayBGM(gameVariables.bgmTitle)
+	singleton.PlayBGM(singleton.bgmTitle)
 	get_tree().set_deferred("paused", false)
-	get_tree().change_scene_to_file(gameVariables.mainScene_Path)
+	get_tree().change_scene_to_file(singleton.mainScene_Path)
 #endregion
 #-------------------------------------------------------------------------------
 #region STAGE FUNCTIONS
@@ -796,10 +796,10 @@ func Frame_InGame(_maxTimer:int) -> void:
 #-------------------------------------------------------------------------------
 #region IDIOME FUNCTIONS
 func SetIdiome():
-	gameVariables.DisconnectAll(gameVariables.optionMenu.idiomeChange)
+	singleton.DisconnectAll(singleton.optionMenu.idiomeChange)
 	#-------------------------------------------------------------------------------
-	gameVariables.optionMenu.idiomeChange.connect(pauseMenu.SetIdiome)
-	gameVariables.optionMenu.idiomeChange.connect(SetIdiome2)
+	singleton.optionMenu.idiomeChange.connect(pauseMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(SetIdiome2)
 	#-------------------------------------------------------------------------------
 	pauseMenu.SetIdiome()
 	SetIdiome2()

@@ -2,7 +2,7 @@ extends Control
 class_name Option_Menu
 #region VARIABLES
 #-------------------------------------------------------------------------------
-@export var gameVariables: Game_Variables
+@export var mySingleton: Singleton
 #-------------------------------------------------------------------------------
 @export var title : Label
 @export var idiome : Option_OptionButton
@@ -101,7 +101,7 @@ func SetResolution_Start():
 	SetResolution(optionSaveData_Json["resolutionIndex"])
 	AddResolutionOptions(resolution.optionButton, resolution_dictionary)
 	resolution.optionButton.select(optionSaveData_Json["resolutionIndex"])
-	gameVariables.SetOptionButtons(resolution.optionButton, gameVariables.CommonSelected, ResolutionButton_Submited, AnyButton_Cancel)
+	mySingleton.SetOptionButtons(resolution.optionButton, mySingleton.CommonSelected, ResolutionButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func AddResolutionOptions(_ob:OptionButton, _dictionary:Dictionary) -> void:
 	_ob.clear()
@@ -109,7 +109,7 @@ func AddResolutionOptions(_ob:OptionButton, _dictionary:Dictionary) -> void:
 		_ob.add_item(i)
 #-------------------------------------------------------------------------------
 func ResolutionButton_Submited(_index:int) -> void:
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 	optionSaveData_Json["resolutionIndex"] = _index
 	SetResolution(_index)
 #-------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ func SetIdiome_Start():
 	SetIdiome(optionSaveData_Json["idiomeIndex"])
 	AddIdiomeButtons(idiome.optionButton)
 	idiome.optionButton.select(optionSaveData_Json["idiomeIndex"])
-	gameVariables.SetOptionButtons(idiome.optionButton, gameVariables.CommonSelected, IdiomeButton_Submited, AnyButton_Cancel)
+	mySingleton.SetOptionButtons(idiome.optionButton, mySingleton.CommonSelected, IdiomeButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func AddIdiomeButtons(_ob:OptionButton) -> void:
 	var _idiomes:PackedStringArray = TranslationServer.get_loaded_locales()
@@ -136,7 +136,7 @@ func IdiomeButton_Submited(_index:int):
 	optionSaveData_Json["idiomeIndex"] = _index
 	SetIdiome(_index)
 	idiomeChange.emit()
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func SetIdiome(_index:int):
 	var _idiomes:PackedStringArray = TranslationServer.get_loaded_locales()
@@ -164,10 +164,10 @@ func SetFullScreen_Start():
 	var _b: bool = optionSaveData_Json["fullscreen"]
 	SetFullScreen(_b)
 	fullscreen.checkButton.button_pressed = _b
-	gameVariables.SetCheckButton(fullscreen.checkButton, gameVariables.CommonSelected, FullScreenButton_Submited, AnyButton_Cancel)
+	mySingleton.SetCheckButton(fullscreen.checkButton, mySingleton.CommonSelected, FullScreenButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func FullScreenButton_Submited(_b:bool):
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 	optionSaveData_Json["fullscreen"] = _b
 	SetFullScreen(_b)
 #-------------------------------------------------------------------------------
@@ -185,10 +185,10 @@ func SetBorderless_Start():
 	var _b: bool = optionSaveData_Json["borderless"]
 	SetBorderless(_b)
 	borderless.checkButton.button_pressed = _b
-	gameVariables.SetCheckButton(borderless.checkButton, gameVariables.CommonSelected, BorderlessButton_Submited, AnyButton_Cancel)
+	mySingleton.SetCheckButton(borderless.checkButton, mySingleton.CommonSelected, BorderlessButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func BorderlessButton_Submited(_b:bool):
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 	optionSaveData_Json["borderless"] = _b
 	SetBorderless(_b)
 #-------------------------------------------------------------------------------
@@ -202,10 +202,10 @@ func SetVsync_Start():
 	var _b: bool = optionSaveData_Json["vsync"]
 	SetVsync(_b)
 	vsync.checkButton.button_pressed = _b
-	gameVariables.SetCheckButton(vsync.checkButton, gameVariables.CommonSelected, VsyncButton_Submited, AnyButton_Cancel)
+	mySingleton.SetCheckButton(vsync.checkButton, mySingleton.CommonSelected, VsyncButton_Submited, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func VsyncButton_Submited(_b:bool) -> void:
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 	optionSaveData_Json["vsync"] = _b
 	SetVsync(_b)
 #-------------------------------------------------------------------------------
@@ -220,21 +220,21 @@ func SetVsync(_b: bool) -> void:
 func SetValume_Start(_slider: Slider, _label: Label, _submit: Callable, _index:int, _value:float):
 	SetValume(_label, _index, _value)
 	_slider.value = db_to_linear(AudioServer.get_bus_volume_db(_index))
-	gameVariables.SetSlider(_slider, gameVariables.CommonSelected, _submit, AnyButton_Cancel)
+	mySingleton.SetSlider(_slider, mySingleton.CommonSelected, _submit, AnyButton_Cancel)
 #-------------------------------------------------------------------------------
 func MasterSlider_Submit(_value:float) -> void:
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 	optionSaveData_Json["masterVolumen"] = _value
 	SetValume(master.number, bus_master_Index, _value)
 	pass
 #-------------------------------------------------------------------------------
 func sfxSlider_Submit(_value:float) -> void:
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 	optionSaveData_Json["sfxVolumen"] = _value
 	SetValume(sfx.number, bus_sfx_Index, _value)
 #-------------------------------------------------------------------------------
 func bgmSlider_Submit(_value:float) -> void:
-	gameVariables.CommonSubmited()
+	mySingleton.CommonSubmited()
 	optionSaveData_Json["bgmVolumen"] = _value
 	SetValume(bgm.number, bus_bgm_Index, _value)
 #-------------------------------------------------------------------------------
@@ -245,8 +245,8 @@ func SetValume(_label: Label, _index:int, _value:float):
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS
 func AnyButton_Cancel() -> void:
-	gameVariables.MoveToButton(back)
-	gameVariables.CommonCanceled()
+	mySingleton.MoveToButton(back)
+	mySingleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func CenterScreem():
 	var _center: Vector2i = (DisplayServer.screen_get_size()-DisplayServer.window_get_size())/2
@@ -255,15 +255,15 @@ func CenterScreem():
 #-------------------------------------------------------------------------------
 #region MISC
 func SetTheme():
-	idiome.optionButton.theme = gameVariables.myTheme
-	resolution.optionButton.theme = gameVariables.myTheme
+	idiome.optionButton.theme = mySingleton.myTheme
+	resolution.optionButton.theme = mySingleton.myTheme
 	#-------------------------------------------------------------------------------
-	#vsync.theme = gameVariables.myTheme
+	#vsync.theme = mySingleton.myTheme
 	#-------------------------------------------------------------------------------
-	master.label.theme = gameVariables.myTheme
-	sfx.label.theme = gameVariables.myTheme
-	bgm.label.theme = gameVariables.myTheme
+	master.label.theme = mySingleton.myTheme
+	sfx.label.theme = mySingleton.myTheme
+	bgm.label.theme = mySingleton.myTheme
 	#-------------------------------------------------------------------------------
-	back.theme = gameVariables.myTheme
+	back.theme = mySingleton.myTheme
 #endregion
 #-------------------------------------------------------------------------------

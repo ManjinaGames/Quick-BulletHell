@@ -1,0 +1,28 @@
+[gd_resource type="VisualShader" load_steps=2 format=3 uid="uid://l22pp6eqwvm8"]
+
+[sub_resource type="VisualShaderNodeDistanceFade" id="VisualShaderNodeDistanceFade_aoq3v"]
+default_input_values = [0, 15.0, 1, 5.0]
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+
+
+
+void fragment() {
+// DistanceFade:2
+	float n_in2p0 = 15.00000;
+	float n_in2p1 = 5.00000;
+	float n_out2p0 = clamp(smoothstep(n_in2p0, n_in2p1, length(VERTEX)), 0.0, 1.0);
+
+
+// Output:0
+	ALPHA = n_out2p0;
+
+
+}
+"
+nodes/fragment/2/node = SubResource("VisualShaderNodeDistanceFade_aoq3v")
+nodes/fragment/2/position = Vector2(94.1549, 291.738)
+nodes/fragment/connections = PackedInt32Array(2, 0, 0, 1)

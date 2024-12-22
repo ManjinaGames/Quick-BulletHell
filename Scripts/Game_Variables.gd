@@ -1,5 +1,5 @@
 extends Node
-class_name Game_Variables
+class_name Singleton
 #-------------------------------------------------------------------------------
 enum STAGE_STATE{DISABLED, ENABLED, COMPLETED}
 #region VARIABLES

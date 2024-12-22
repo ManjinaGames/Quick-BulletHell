@@ -1,7 +1,7 @@
 extends Panel
 class_name Pause_Menu
 #region VARIABLES
-var gameVariables: Game_Variables
+var singleton: Singleton
 @export var gameScene: Game_Scene
 #-------------------------------------------------------------------------------
 @export var title: Label
@@ -16,7 +16,7 @@ var inOption: bool = false
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
 func Start() -> void:
-	gameVariables = get_node("/root/GameVariables")
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	SetAllButtons()
 	OptionMenu_BackButton_Set()
@@ -27,64 +27,64 @@ func _physics_process(_delta:float) -> void:
 		return
 	if(Input.is_action_just_pressed("input_Pause")):
 		gameScene.PauseOff()
-		gameVariables.CommonCanceled()
+		singleton.CommonCanceled()
 #endregion
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS
 func SetAllButtons() -> void:
-	gameVariables.SetButton(continuar, gameVariables.CommonSelected, ContinueButton_Subited, AnyButton_Canceled)
-	gameVariables.SetButton(retry, gameVariables.CommonSelected, RetryButton_Subited, AnyButton_Canceled)
-	gameVariables.SetButton(options, gameVariables.CommonSelected, OptionButton_Subited, AnyButton_Canceled)
-	gameVariables.SetButton(goToTitle, gameVariables.CommonSelected, GoToTitleButton_Subited, AnyButton_Canceled)
-	gameVariables.SetButton(quitGame, gameVariables.CommonSelected, QuitGameButton_Subited, AnyButton_Canceled)
+	singleton.SetButton(continuar, singleton.CommonSelected, ContinueButton_Subited, AnyButton_Canceled)
+	singleton.SetButton(retry, singleton.CommonSelected, RetryButton_Subited, AnyButton_Canceled)
+	singleton.SetButton(options, singleton.CommonSelected, OptionButton_Subited, AnyButton_Canceled)
+	singleton.SetButton(goToTitle, singleton.CommonSelected, GoToTitleButton_Subited, AnyButton_Canceled)
+	singleton.SetButton(quitGame, singleton.CommonSelected, QuitGameButton_Subited, AnyButton_Canceled)
 #-------------------------------------------------------------------------------
 func ContinueButton_Subited() -> void:
 	gameScene.PauseOff()
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 	#-------------------------------------------------------------------------------
 func RetryButton_Subited() -> void:
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 	get_tree().reload_current_scene()
 #-------------------------------------------------------------------------------
 func OptionButton_Subited() -> void:
 	gameScene.currentLayer.hide()
 	inOption = true
-	gameVariables.MoveToButton(gameVariables.optionMenu.back)
-	gameVariables.optionMenu.show()
-	gameVariables.CommonSubmited()
+	singleton.MoveToButton(singleton.optionMenu.back)
+	singleton.optionMenu.show()
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func GoToTitleButton_Subited() -> void:
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 	gameScene.GoToMainScene()
 #-------------------------------------------------------------------------------
 func QuitGameButton_Subited() -> void:
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 	get_tree().quit()
 #-------------------------------------------------------------------------------
 func AnyButton_Canceled() -> void:
-	gameVariables.MoveToButton(quitGame)
-	gameVariables.CommonCanceled()
+	singleton.MoveToButton(quitGame)
+	singleton.CommonCanceled()
 #endregion
 #-------------------------------------------------------------------------------
 #region OPTION MENU BACK BUTTON
 func OptionMenu_BackButton_Set() -> void:
-	gameVariables.DisconnectButton(gameVariables.optionMenu.back)
-	gameVariables.SetButton(gameVariables.optionMenu.back,  gameVariables.CommonSelected, OptionMenu_BackButton_Subited, OptionMenu_BackButton_Canceled)
+	singleton.DisconnectButton(singleton.optionMenu.back)
+	singleton.SetButton(singleton.optionMenu.back,  singleton.CommonSelected, OptionMenu_BackButton_Subited, OptionMenu_BackButton_Canceled)
 #-------------------------------------------------------------------------------
 func OptionMenu_BackButton_Subited() -> void:
 	OptionMenu_BackButton_Common()
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func OptionMenu_BackButton_Canceled() -> void:
 	OptionMenu_BackButton_Common()
-	gameVariables.CommonCanceled()
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func OptionMenu_BackButton_Common() -> void:
-	gameVariables.optionMenu.Save_OptionSaveData_Json()
-	gameVariables.optionMenu.hide()
+	singleton.optionMenu.Save_OptionSaveData_Json()
+	singleton.optionMenu.hide()
 	gameScene.currentLayer.show()
 	inOption = false
-	gameVariables.MoveToButton(options)
+	singleton.MoveToButton(options)
 #endregion
 #-------------------------------------------------------------------------------
 #region IDIOME FUNCTIONS

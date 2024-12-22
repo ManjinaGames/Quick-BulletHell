@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GameVariables="*res://Nodes/Singleton/game_variables.tscn"
+singleton="*res://Nodes/Singleton/Singleton.tscn"
 
 [display]
 

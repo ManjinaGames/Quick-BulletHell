@@ -1,7 +1,7 @@
 extends Control
 class_name Title_Scene
 #region VARIABLES
-var gameVariables: Game_Variables
+var singleton: Singleton
 #-------------------------------------------------------------------------------
 @export var titleMenu: Title_Menu
 @export var saveMenu: Save_Menu
@@ -11,7 +11,7 @@ var gameVariables: Game_Variables
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
 func _ready() -> void:
-	gameVariables = get_node("/root/GameVariables")
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	titleMenu.Start()
 	saveMenu.Start()
@@ -19,18 +19,18 @@ func _ready() -> void:
 	#-------------------------------------------------------------------------------
 	SetIdiome()
 	#-------------------------------------------------------------------------------
-	gameVariables.MoveToButton(titleMenu.button[0])
-	gameVariables.PlayBGM(gameVariables.bgmTitle)
+	singleton.MoveToButton(titleMenu.button[0])
+	singleton.PlayBGM(singleton.bgmTitle)
 	show()
 #-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
 func SetIdiome():
-	gameVariables.DisconnectAll(gameVariables.optionMenu.idiomeChange)
+	singleton.DisconnectAll(singleton.optionMenu.idiomeChange)
 	#-------------------------------------------------------------------------------
-	gameVariables.optionMenu.idiomeChange.connect(titleMenu.SetIdiome)
-	gameVariables.optionMenu.idiomeChange.connect(saveMenu.SetIdiome)
-	gameVariables.optionMenu.idiomeChange.connect(saveMenu2.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(titleMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(saveMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(saveMenu2.SetIdiome)
 	#-------------------------------------------------------------------------------
 	titleMenu.SetIdiome()
 	saveMenu.SetIdiome()

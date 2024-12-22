@@ -2,7 +2,7 @@ extends Control
 class_name Save_Menu
 #region VARIABLES
 @export var titleScene: Title_Scene
-var gameVariables: Game_Variables
+var singleton: Singleton
 #-------------------------------------------------------------------------------
 @export var clipContainer: MarginContainer
 @export var scrollContainer: ScrollContainer
@@ -13,10 +13,10 @@ var gameVariables: Game_Variables
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
 func Start() -> void:
-	gameVariables = get_node("/root/GameVariables")
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	await CreateSaveButtons()
-	gameVariables.SetButton(back, gameVariables.CommonSelected, BackButton_Subited, BackButton_Canceled)
+	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 	hide()
 #endregion
 #-------------------------------------------------------------------------------
@@ -26,15 +26,15 @@ func CreateSaveButtons() ->void:
 	ClearContainer()
 	var _buttonSizeX: float = clipContainer.size.x
 	var _buttonSizeY: float = GetContainer_ButtonSize_Y_Current()
-	print(_buttonSizeX)
-	print(_buttonSizeY)
-	for _i in gameVariables.maxSave:
+	#print(_buttonSizeX)	#NOTA: Hice un print para saber por que los botones no se aliniaban.
+	#print(_buttonSizeY)	#NOTA: Resulta que necesitaba un await para que las medidas se arreglaran.
+	for _i in singleton.maxSave:
 		var _b : Button = Button.new()
 		_b.custom_minimum_size.x = _buttonSizeX
 		_b.custom_minimum_size.y = _buttonSizeY
-		if(gameVariables.useCustomButton):
+		if(singleton.useCustomButton):
 			_b.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
-		gameVariables.SetButton(_b, gameVariables.CommonSelected, func():SaveButton_Subited(_i), AnyButton_Canceled)
+		singleton.SetButton(_b, singleton.CommonSelected, func():SaveButton_Subited(_i), AnyButton_Canceled)
 		vBoxContainer.add_child(_b)
 		button.append(_b)
 #-------------------------------------------------------------------------------
@@ -75,24 +75,24 @@ func SaveButton_Subited(_i:int) -> void:
 	titleScene.saveMenu2.Set_SaveMenu2(_i)
 	titleScene.saveMenu2.show()
 	titleScene.saveMenu2.whatToDo_Menu.show()
-	gameVariables.MoveToButton(titleScene.saveMenu2.start)
-	gameVariables.CommonSubmited()
+	singleton.MoveToButton(titleScene.saveMenu2.start)
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func AnyButton_Canceled() -> void:
-	gameVariables.MoveToButton(back)
-	gameVariables.CommonCanceled()
+	singleton.MoveToButton(back)
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Subited() -> void:
 	BackButton_Common()
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func BackButton_Canceled() -> void:
 	BackButton_Common()
-	gameVariables.CommonCanceled()
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()
-	gameVariables.MoveToButton(titleScene.titleMenu.button[0])
+	singleton.MoveToButton(titleScene.titleMenu.button[0])
 	titleScene.titleMenu.show()
 #endregion
 #-------------------------------------------------------------------------------
@@ -103,14 +103,14 @@ func SetIdiome():
 	pass
 #-------------------------------------------------------------------------------
 func SetSaveButtons() -> void:
-	for _i in gameVariables.maxSave:
+	for _i in singleton.maxSave:
 		button[_i].text = SetSaveText(_i)
 #-------------------------------------------------------------------------------
 func SetSaveText(_i:int) -> String:
-	var _path: String = gameVariables.Get_SaveDataPath_Json(_i)
+	var _path: String = singleton.Get_SaveDataPath_Json(_i)
 	var _s:String
 	if(ResourceLoader.exists(_path)):
-		var _saveData: Dictionary = gameVariables.Load_SaveData_Json(_i)
+		var _saveData: Dictionary = singleton.Load_SaveData_Json(_i)
 		var _playerIndex: String = str(_saveData["playerIndex"])
 		var _difficultyIndex: String = str(_saveData["difficultyIndex"])
 		#-------------------------------------------------------------------------------

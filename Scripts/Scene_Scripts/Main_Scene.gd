@@ -1,7 +1,7 @@
 extends Control
 class_name Main_Scene
 #region VARIABLES
-var gameVariables: Game_Variables
+var singleton: Singleton
 #-------------------------------------------------------------------------------
 @export var mainMenu: Main_Menu
 @export var difficultyMenu: Difficulty_Menu
@@ -12,7 +12,7 @@ var gameVariables: Game_Variables
 #-------------------------------------------------------------------------------
 #region MONOBEHAVIOUR
 func _ready() -> void:
-	gameVariables = get_node("/root/GameVariables")
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	mainMenu.Start()
 	difficultyMenu.Start()
@@ -22,19 +22,19 @@ func _ready() -> void:
 	#-------------------------------------------------------------------------------
 	SetIdiome()
 	#-------------------------------------------------------------------------------
-	gameVariables.MoveToButton(mainMenu.button[0])
+	singleton.MoveToButton(mainMenu.button[0])
 	show()
 #endregion
 #-------------------------------------------------------------------------------
 #region IDIOME FUNCTIONS
 func SetIdiome():
-	gameVariables.DisconnectAll(gameVariables.optionMenu.idiomeChange)
+	singleton.DisconnectAll(singleton.optionMenu.idiomeChange)
 	#-------------------------------------------------------------------------------
-	gameVariables.optionMenu.idiomeChange.connect(mainMenu.SetIdiome)
-	gameVariables.optionMenu.idiomeChange.connect(playerMenu.SetIdiome)
-	gameVariables.optionMenu.idiomeChange.connect(difficultyMenu.SetIdiome)
-	gameVariables.optionMenu.idiomeChange.connect(stageMenu.SetIdiome)
-	gameVariables.optionMenu.idiomeChange.connect(startMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(mainMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(playerMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(difficultyMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(stageMenu.SetIdiome)
+	singleton.optionMenu.idiomeChange.connect(startMenu.SetIdiome)
 	#-------------------------------------------------------------------------------
 	mainMenu.SetIdiome()
 	playerMenu.SetIdiome()

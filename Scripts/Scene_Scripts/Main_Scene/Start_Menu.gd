@@ -2,7 +2,7 @@ extends Control
 class_name Start_Menu
 #region VARIABLES
 @export var mainScene: Main_Scene
-var gameVariables: Game_Variables
+var singleton: Singleton
 #-------------------------------------------------------------------------------
 @export var start: Button
 @export var back: Button
@@ -10,7 +10,7 @@ var gameVariables: Game_Variables
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
 func Start() -> void:
-	gameVariables = get_node("/root/GameVariables")
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	SetAllButtons()
 	hide()
@@ -18,29 +18,29 @@ func Start() -> void:
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS
 func SetAllButtons() -> void:
-	gameVariables.SetButton(start, gameVariables.CommonSelected, StartButton_Subited, AnyButton_Canceled)
-	gameVariables.SetButton(back, gameVariables.CommonSelected, BackButton_Subited, BackButton_Canceled)
+	singleton.SetButton(start, singleton.CommonSelected, StartButton_Subited, AnyButton_Canceled)
+	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------
 func StartButton_Subited() -> void:
-	gameVariables.Save_SaveData_Json(gameVariables.optionMenu.optionSaveData_Json["saveIndex"])
-	gameVariables.CommonSubmited()
-	get_tree().change_scene_to_file(gameVariables.gameScene_Path)
+	singleton.Save_SaveData_Json(singleton.optionMenu.optionSaveData_Json["saveIndex"])
+	singleton.CommonSubmited()
+	get_tree().change_scene_to_file(singleton.gameScene_Path)
 #-------------------------------------------------------------------------------
 func AnyButton_Canceled() -> void:
-	gameVariables.MoveToButton(back)
-	gameVariables.CommonCanceled()
+	singleton.MoveToButton(back)
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Subited() -> void:
 	BackButton_Common()
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func BackButton_Canceled() -> void:
 	BackButton_Common()
-	gameVariables.CommonCanceled()
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()
-	gameVariables.MoveToButton(mainScene.stageMenu.button[gameVariables.currentSaveData_Json["stageIndex"]])
+	singleton.MoveToButton(mainScene.stageMenu.button[singleton.currentSaveData_Json["stageIndex"]])
 	mainScene.stageMenu.show()
 #endregion
 #-------------------------------------------------------------------------------

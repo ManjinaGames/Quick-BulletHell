@@ -10,6 +10,8 @@ Lista de cosas para Hacer:
 	NOTA: Voy a tener que hacer maquina de estados para cada menú.
 	*Arreglar las funciones VDirs y relacionadas.
 (LISTO)*Agregar matemáticas a los botones en ScrollContainer.
-	*Cambiar el Nombre de GameVariables a Singleton.
+(LISTO)*Cambiar el Nombre de GameVariables a Singleton.
+	*Hacer la seleccion de Personaje y Dificultad igual que con las Cartas.
+(LISTO)*Que la Carta "Ir al Mazo" no tenga CardResource, ya que funciona distinto.
 	
 	

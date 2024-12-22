@@ -2,7 +2,7 @@ extends Control
 class_name Stage_Menu
 #region VARIABLES
 @export var mainScene: Main_Scene
-var gameVariables: Game_Variables
+var singleton: Singleton
 #-------------------------------------------------------------------------------
 @export var button: Array[Button]
 @export var back: Button
@@ -10,7 +10,7 @@ var gameVariables: Game_Variables
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
 func Start() -> void:
-	gameVariables = get_node("/root/GameVariables")
+	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	SetAllButtons()
 	hide()
@@ -19,53 +19,53 @@ func Start() -> void:
 #region BUTTON FUNCTIONS
 func SetAllButtons() -> void:
 	for _i in 9:
-		gameVariables.SetButton(button[_i], gameVariables.CommonSelected, func():StageButton_Subited(_i), AnyButton_Canceled)
-	gameVariables.SetButton(back, gameVariables.CommonSelected, BackButton_Subited, BackButton_Canceled)
+		singleton.SetButton(button[_i], singleton.CommonSelected, func():StageButton_Subited(_i), AnyButton_Canceled)
+	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------
 func UpdateStageButtons():
-	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
-	var _stage: Dictionary = gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
+	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	var _stage: Dictionary = singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
 	for _i in 9:
 		match(int(_stage[str(_i)]["value"])):
-			gameVariables.STAGE_STATE.DISABLED:
+			singleton.STAGE_STATE.DISABLED:
 				button[_i].text = "[Locked]"
-			gameVariables.STAGE_STATE.ENABLED:
+			singleton.STAGE_STATE.ENABLED:
 				SetButtonIdiome(button[_i], _i)
-			gameVariables.STAGE_STATE.COMPLETED:
+			singleton.STAGE_STATE.COMPLETED:
 				SetButtonIdiome(button[_i], _i)
 				button[_i].text += " (Clear)"
 #-------------------------------------------------------------------------------
 func StageButton_Subited(_i:int) -> void:
-	var _playerIndex: StringName = str(gameVariables.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(gameVariables.currentSaveData_Json["difficultyIndex"])
-	var _stage: Dictionary = gameVariables.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
+	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
+	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	var _stage: Dictionary = singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
 	match(int(_stage[str(_i)]["value"])):
-		gameVariables.STAGE_STATE.DISABLED:
-			gameVariables.CommonCanceled()
+		singleton.STAGE_STATE.DISABLED:
+			singleton.CommonCanceled()
 		_:
 			hide()
-			gameVariables.currentSaveData_Json["stageIndex"] = _i
+			singleton.currentSaveData_Json["stageIndex"] = _i
 			mainScene.mainMenu.SetGameInfo()
-			gameVariables.MoveToButton(mainScene.startMenu.start)
+			singleton.MoveToButton(mainScene.startMenu.start)
 			mainScene.startMenu.show()
-			gameVariables.CommonSubmited()
+			singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func AnyButton_Canceled() -> void:
-	gameVariables.MoveToButton(back)
-	gameVariables.CommonCanceled()
+	singleton.MoveToButton(back)
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Subited() -> void:
 	BackButton_Common()
-	gameVariables.CommonSubmited()
+	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func BackButton_Canceled() -> void:
 	BackButton_Common()
-	gameVariables.CommonCanceled()
+	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()
-	gameVariables.MoveToButton(mainScene.mainMenu.button[0])
+	singleton.MoveToButton(mainScene.mainMenu.button[0])
 	mainScene.mainMenu.show()
 #endregion
 #-------------------------------------------------------------------------------
