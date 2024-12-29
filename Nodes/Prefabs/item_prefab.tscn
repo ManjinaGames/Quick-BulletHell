@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Item_Script.gd" id="2_88yrc"]
 
 [node name="Item_Prefab" type="Sprite2D"]
+modulate = Color(1, 1, 1, 0.607843)
 z_index = 18
 scale = Vector2(2, 2)
 texture = ExtResource("1_dbh33")

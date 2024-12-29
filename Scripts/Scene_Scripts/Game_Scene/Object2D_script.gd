@@ -1,13 +1,12 @@
-extends Object2D
-class_name Enemy
+extends Sprite2D
+class_name Object2D
+#-------------------------------------------------------------------------------
+enum OBJECT2D_STATE{ALIVE, DEATH}
 #region VARIABLES
-@export var label: Label
-@export var area2D: StaticBody2D
 #-------------------------------------------------------------------------------
-var myOBJECT2D_STATE: OBJECT2D_STATE
-#-------------------------------------------------------------------------------
-var hp: int
-var maxHp: int
-var canBeHit: bool = true
+var vel: float
+var dir: float
+var velX: float
+var velY: float
 #endregion
 #-------------------------------------------------------------------------------
