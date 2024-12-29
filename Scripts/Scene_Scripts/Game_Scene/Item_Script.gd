@@ -1,6 +1,8 @@
 extends Sprite2D
 class_name Item
 #-------------------------------------------------------------------------------
+enum ITEM_STATE{SPIN, FALL, IMANTED}
+#-------------------------------------------------------------------------------
 var myITEM_STATE: int
 var size: Vector2 = Vector2(2.0, 2.0)
 var velX: float

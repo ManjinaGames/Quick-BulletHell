@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=47 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
+[ext_resource type="Texture2D" uid="uid://csodrfq23rym8" path="res://Assets/Sprites/money.png" id="7_hia1k"]
 [ext_resource type="Texture2D" uid="uid://dqbugw3tefi1c" path="res://Assets/Sprites/Hitbox.png" id="7_sglw3"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
@@ -381,6 +382,22 @@ bbcode_enabled = true
 text = "[u]Money:[/u]"
 fit_content = true
 
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer/RichTextLabel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.5
+offset_top = -12.5
+offset_right = 12.5
+offset_bottom = 12.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_hia1k")
+expand_mode = 1
+
 [node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -483,6 +500,7 @@ self_modulate = Color(0, 0, 0, 0.411765)
 texture = ExtResource("5_0qyn6")
 
 [node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player" node_paths=PackedStringArray("player", "sprite", "shape")]
+scale = Vector2(0.545, 0.545)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("4_1isya")
@@ -627,6 +645,7 @@ theme_override_font_sizes/font_size = 30
 text = "Quit Game"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "yesButton", "noButton")]
+visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
