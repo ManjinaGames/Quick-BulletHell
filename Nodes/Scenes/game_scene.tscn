@@ -500,7 +500,8 @@ self_modulate = Color(0, 0, 0, 0.411765)
 texture = ExtResource("5_0qyn6")
 
 [node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player" node_paths=PackedStringArray("player", "sprite", "shape")]
-scale = Vector2(0.545, 0.545)
+z_index = 24
+scale = Vector2(0.5, 0.5)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("4_1isya")
@@ -525,6 +526,7 @@ hframes = 8
 vframes = 3
 
 [node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player" node_paths=PackedStringArray("player", "sprite", "shape")]
+z_index = 25
 collision_mask = 0
 script = ExtResource("4_1isya")
 player = NodePath("..")
@@ -535,7 +537,6 @@ shape = NodePath("Hitbox_CollisionShape2D")
 shape = SubResource("CircleShape2D_c4em7")
 
 [node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player/Hitbox_PlayerCollision3"]
-z_index = 25
 scale = Vector2(2, 2)
 texture = ExtResource("7_sglw3")
 

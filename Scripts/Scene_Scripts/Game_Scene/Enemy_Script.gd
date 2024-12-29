@@ -4,7 +4,7 @@ class_name Enemy
 enum ENEMY_STATE{ALIVE, DEATH}
 #region VARIABLES
 @export var label: Label
-@export var myENEMY_STATE: ENEMY_STATE = ENEMY_STATE.ALIVE
+var myENEMY_STATE: ENEMY_STATE
 #-------------------------------------------------------------------------------
 var vel: float
 var dir: float
