@@ -592,8 +592,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Quit Game"
 
-[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "yesButton", "noButton")]
-visible = false
+[node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "confirmCard_Title", "yesButton", "noButton")]
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -610,6 +609,7 @@ confirmCard_Artwork = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginC
 confirmCard_Hold = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/Label")
 confirmCard_Price = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/Label2")
 confirmMenu = NodePath("VBoxContainer/Confirm_Menu")
+confirmCard_Title = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer2/Label")
 yesButton = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/HBoxContainer/Button")
 noButton = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/HBoxContainer/Button2")
 
@@ -746,7 +746,7 @@ anchor_right = 1.0
 offset_bottom = 23.0
 grow_horizontal = 2
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 25
 text = "5 / 5"
 horizontal_alignment = 1
 
@@ -760,8 +760,8 @@ offset_top = -23.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/outline_size = 8
-theme_override_font_sizes/font_size = 40
-text = "500 $"
+theme_override_font_sizes/font_size = 35
+text = "  500 $"
 horizontal_alignment = 1
 vertical_alignment = 2
 

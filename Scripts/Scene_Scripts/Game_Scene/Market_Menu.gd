@@ -20,6 +20,7 @@ var singleton: Singleton
 @export var confirmCard_Hold: Label
 @export var confirmCard_Price: Label
 @export var confirmMenu: MarginContainer
+@export var confirmCard_Title: Label
 @export var yesButton: Button
 @export var noButton: Button
 const buttonSize: Vector2 = Vector2(200, 250)
@@ -117,6 +118,7 @@ func CardButton_Selected(_cr:CardResource) -> void:
 func CardButton_Subited(_cr:CardResource, _cb:CardButton) -> void:
 	confirmCard_Hold.text = GetCardText_Hold(_cr)
 	confirmCard_Price.text = GetCardText_Price(_cr)
+	confirmCard_Title.text = "Do You Want to Buy This Card?"
 	CardButton_Submit_Common(_cr, _cb)
 	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
@@ -131,6 +133,7 @@ func DeckButton_Canceled(_cr:CardResource, _cb:CardButton) -> void:
 func DeckButton_Common(_cr:CardResource, _cb:CardButton) -> void:
 	confirmCard_Hold.text = ""
 	confirmCard_Price.text = ""
+	confirmCard_Title.text = "Do You Want to Quit the Market?"
 	CardButton_Submit_Common(_cr, _cb)
 #-------------------------------------------------------------------------------
 func CardButton_Submit_Common(_cr:CardResource, _cb:CardButton) -> void:

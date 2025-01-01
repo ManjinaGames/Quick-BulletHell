@@ -164,11 +164,8 @@ func CreateDisabledPlayerBullets(_num:int):
 func PlayerShoot() -> void:
 	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
 		if(Input.is_action_pressed("input_Shoot")):
-			PlayerShoot1(player.position.x-8, player.position.y-16, 8, -90)
-			PlayerShoot1(player.position.x-24, player.position.y-8, 8, -90)
-			PlayerShoot1(player.position.x+8, player.position.y-16, 8, -90)
-			PlayerShoot1(player.position.x+24, player.position.y-8, 8, -90)
-			await Frame(5)
+			PlayerShoot1(player.position.x, player.position.y-16, 16, -90)
+			await Frame(4)
 		else:
 			await frame
 #-------------------------------------------------------------------------------
@@ -433,11 +430,103 @@ func Choreography() -> void:
 #-------------------------------------------------------------------------------
 #region STAGE 1
 func Stage1() -> void:
-	#await StageCommon("Stage 1 Completed",1,0)
-	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_BlackMarket, 30)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
 	await OpenDialogue()
-	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave3, 10)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
 	await StageCommon("Stage 1 Completed",1,0)
+#-------------------------------------------------------------------------------
+func Stage1_Wave1_UM1():
+	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
+		await Stage1_Wave1_UM1_Enemies(-unitY*2, 1)
+		await Frame_InGame(60)
+		await Stage1_Wave1_UM1_Enemies(-unitY*2, -1)
+		await Frame_InGame(60)
+#-------------------------------------------------------------------------------
+func Stage1_Wave1_UM1_Enemies(_y:float, _mirror:float):
+	var _max: float = 5
+	var _pendiente: float = width/(_max+1)*_mirror
+	var _origen: float = centerX - centerX*_mirror-_pendiente*0.25
+	for _i in _max:
+		Stage1_Wave1_UM1_Enemy1(_origen+_pendiente*(_i+1), _y, _mirror)
+		await Frame_InGame(15)
+#-------------------------------------------------------------------------------
+func Stage1_Wave1_UM1_Enemy1(_x:float, _y:float, _mirror:float):
+	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+		return
+	#-------------------------------------------------------------------------------
+	var _enemy: Enemy = CreateEnemy(_x, _y, 10)
+	Stage1_Wave1_UM1_Enemy1_Fire1(_enemy)
+	await Move_VDir_VAccel(_enemy, 5, 90, -0.05, 0)
+	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, 0.2*_mirror, 120)
+	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.2*_mirror, 0.05, 4)
+	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.2*_mirror, 180)
+	#-------------------------------------------------------------------------------
+	var _revenge: Callable = func():Stage1_Wave1_UM1_Enemy1_Fire2(_enemy, _mirror)
+	DestroyEnemy_WithRevenge(_enemy, 20, _revenge)
+#-------------------------------------------------------------------------------
+func Stage1_Wave1_UM1_Enemy1_Fire1(_enemy:Enemy):
+	await Frame_InGame(60)
+	for _i in 7:
+		if(!Obj2D_IsInGame(_enemy)):
+			return
+		CreateShotA1(_enemy.position.x, _enemy.position.y, 6, AngleToPlayer(_enemy), 1)
+		await Frame_InGame(10)
+#-------------------------------------------------------------------------------
+func Stage1_Wave1_UM1_Enemy1_Fire2(_enemy:Enemy, _mirror:float):
+	var _max: float = 3
+	var _cone: float = 20
+	var _origen: float = AngleToPlayer(_enemy)-_cone/2*_mirror
+	var _pendiente: float = _cone/(_max+1)*_mirror
+	for _i in _max:
+		var _dir: float = _origen+_pendiente*(_i+1)
+		CreateShotA1(_enemy.position.x, _enemy.position.y, 3+0.3*_i, _dir, 0)
+#-------------------------------------------------------------------------------
+func Stage1_Wave2_UM1():
+	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
+		Stage1_Wave2_UM1_Enemies(-unitY, 1)
+		await Stage1_Wave2_UM1_Enemies(-unitY, -1)
+		await Frame_InGame(120)
+#-------------------------------------------------------------------------------
+func Stage1_Wave2_UM1_Enemies(_y:float, _mirror:float):
+	var _max1: float = 6
+	var _max2: float = 2
+	var _origen1: float = centerX - centerX * _mirror * 1
+	var _origen2: float = centerX - centerX * _mirror * 0.25
+	var _pendiente: float = abs(_origen1 - _origen2) * _mirror / (_max2+1)
+	for _i in _max1:
+		for _j in _max2:
+			Stage1_Wave2_UM1_Enemy1(_origen1+_pendiente*(_j+1), _y-unitY*0.5*_j, _mirror)
+		await Frame_InGame(30)
+#-------------------------------------------------------------------------------
+func Stage1_Wave2_UM1_Enemy1(_x:float, _y:float, _mirror:float):
+	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+		return
+	#-------------------------------------------------------------------------------
+	var _enemy: Enemy = CreateEnemy(_x, _y, 10)
+	Stage1_Wave2_UM1_Enemy1_Fire1(_enemy, _mirror)
+	await Move_VDir_DirAccel(_enemy, 2, 90, 0, 60)
+	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.5*_mirror, 120)
+	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.01*_mirror, 0.01, 4)
+	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.01*_mirror, 60)
+	#-------------------------------------------------------------------------------
+	DestroyEnemy(_enemy, 20)
+#-------------------------------------------------------------------------------
+func Stage1_Wave2_UM1_Enemy1_Fire1(_enemy:Enemy, _mirror:float):
+	await Frame_InGame(50)
+	var _max1: float = 3
+	var _max2: float = 3
+	var _cone: float = 150
+	var _origen: float
+	var _pendiente: float = _cone/(_max2+1)*_mirror
+	for _i in _max1:
+		if(!Obj2D_IsInGame(_enemy)):
+			return
+		for _j in _max2:
+			_origen = AngleToPlayer(_enemy)-_cone/2*_mirror
+			CreateShotA1(_enemy.position.x, _enemy.position.y, 5, _origen+_pendiente*(_j+1), 2)
+		await Frame_InGame(60)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_BlackMarket():
 	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
@@ -459,7 +548,7 @@ func Stage1_Enemy1_BlackMarket(_x:float, _y:float, _mirror:float):
 		return
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 25)
-	Stage1_Enemy1_Fire_BlackMarket(_enemy)
+	Stage1_Enemy1_Fire1_BlackMarket(_enemy)
 	await Move_VDir_DirAccel(_enemy, 5, 90-90*_mirror, -0.1*_mirror, 60*1)
 	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.1*_mirror, -0.05, 1)
 	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -1.5*_mirror, 60*1)
@@ -467,14 +556,14 @@ func Stage1_Enemy1_BlackMarket(_x:float, _y:float, _mirror:float):
 	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.1*_mirror, 60*1)
 	await Move_VDir(_enemy, _enemy.vel, _enemy.dir, 60*2)
 	#-------------------------------------------------------------------------------
-	DestroyEnemy(_enemy)
+	DestroyEnemy(_enemy, 20)
 #-------------------------------------------------------------------------------
-func Stage1_Enemy1_Fire_BlackMarket(_enemy:Enemy):
+func Stage1_Enemy1_Fire1_BlackMarket(_enemy:Enemy):
 	await Frame_InGame(100)
 	for _i in 4:
 		if(!Obj2D_IsInGame(_enemy)):
 			return
-		CreateShotA1(_enemy, _enemy.position.x, _enemy.position.y, randf_range(3,4), 90+randf_range(-5,5))
+		CreateShotA1(_enemy.position.x, _enemy.position.y, randf_range(3,4), 90+randf_range(-5,5), 1)
 		await Frame_InGame(10)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1():
@@ -495,7 +584,7 @@ func Stage1_Enemy1(_x:float, _y:float, _mirror:float) -> void:
 	await Stage1_Enemy1_Fire(_enemy, 5)
 	await Frame_InGame(60)
 	await Move_Towards(_enemy, CenterX(-1*_mirror), CenterY(-0.4), 60)
-	DestroyEnemy(_enemy)
+	DestroyEnemy(_enemy, 20)
 #-------------------------------------------------------------------------------
 func Stage1_Enemy1_Fire(_enemy:Enemy, _num:int) -> void:
 	var _dir: float
@@ -506,7 +595,7 @@ func Stage1_Enemy1_Fire(_enemy:Enemy, _num:int) -> void:
 		#-------------------------------------------------------------------------------
 		_dir = -_cone/2
 		for _j in _num:
-			var _bullet: Bullet = CreateShotA1(_enemy, _enemy.position.x, _enemy.position.y, 4, AngleToPlayer(_enemy)+_dir)
+			var _bullet: Bullet = CreateShotA1(_enemy.position.x, _enemy.position.y, 4, AngleToPlayer(_enemy)+_dir, 1)
 			#Move_Vaccel(_bullet, -0.04, 1)
 			_dir += _cone/float(_num-1)
 		await Frame_InGame(15)
@@ -521,7 +610,7 @@ func Stage1_Enemy2(_x:float, _y:float, _mirror:float) -> void:
 	#await Move_VDir(_enemy, 15)
 	#await Move_Vaccel(_enemy, 0.05, 5)
 	#await Move_VDir(_enemy, 60)
-	DestroyEnemy(_enemy)
+	DestroyEnemy(_enemy, 20)
 #-------------------------------------------------------------------------------
 func Stage1_Wave3():
 	var _radX: float = unitX*2.5
@@ -548,7 +637,7 @@ func Stage1_Enemy3(_x:float, _y:float, _mirror:float) -> void:
 			_y += 1 * deltaTimeScale
 			_enemy.position = Vector2(_x2, _y)
 		else:
-			DestroyEnemy(_enemy)
+			DestroyEnemy(_enemy, 20)
 			return
 		await frame
 #endregion
@@ -653,30 +742,22 @@ func Enter_GameState():
 #endregion
 #-------------------------------------------------------------------------------
 #region CREATE ENEMY BULLET
-func CreateShotA1(_enemy:Enemy, _x:float, _y:float, _vel:float, _dir:float) -> Bullet:
-	if(!Obj2D_IsInGame(_enemy)):
-		return
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir)
+func CreateShotA1(_x:float, _y:float, _vel:float, _dir:float, _frame:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
 	return _bullet
 #-------------------------------------------------------------------------------
-func CreateShotA2(_enemy:Enemy, _x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _maxTimer:float) -> Bullet:
-	if(!Obj2D_IsInGame(_enemy)):
-		return
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir)
+func CreateShotA2(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _maxTimer:float, _frame:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
 	await Move_VDir_DirAccel(_bullet, _vel, _dir, _dirAccel, _maxTimer)
 	return _bullet
 #-------------------------------------------------------------------------------
-func CreateShotA3(_enemy:Enemy, _x:float, _y:float, _vel:float, _dir:float, _vAccel:float, _VLimit:float) -> Bullet:
-	if(!Obj2D_IsInGame(_enemy)):
-		return
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir)
+func CreateShotA3(_x:float, _y:float, _vel:float, _dir:float, _vAccel:float, _VLimit:float, _frame:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
 	await Move_VDir_VAccel(_bullet, _vel, _dir, _vAccel, _VLimit)
 	return _bullet
 #-------------------------------------------------------------------------------
-func CreateShotA4(_enemy:Enemy, _x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _vAccel:float, _VLimit:float) -> Bullet:
-	if(!Obj2D_IsInGame(_enemy)):
-		return
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir)
+func CreateShotA4(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _vAccel:float, _VLimit:float, _frame:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
 	await Move_VDir_DirAccel_VAccel(_bullet, _vel, _dir, _dirAccel, _vAccel, _VLimit)
 	return _bullet
 #endregion
@@ -690,7 +771,7 @@ func CreateDisabledEnemyBullets(_num:int):
 		_bullet.hide()
 		content.add_child(_bullet)
 #-------------------------------------------------------------------------------
-func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float) -> Bullet:
+func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float, _frame:int) -> Bullet:
 	var _bullet: Bullet
 	if(enemyBulletsDisabled.size()>0):
 		_bullet = enemyBulletsDisabled[0]
@@ -704,6 +785,7 @@ func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float) -> Bullet:
 	_bullet.rotation = deg_to_rad(_dir + 90.0)
 	_bullet.vel = _vel
 	_bullet.dir = _dir
+	_bullet.frame = _frame
 	_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.ALIVE
 	LeftLabelText()
 	#-------------------------------------------------------------------------------
@@ -775,9 +857,15 @@ func Enemy_Movement(_enemy:Enemy):
 func SetHp(_enemy:Enemy) -> void:
 	_enemy.label.text = str(_enemy.hp)+"/"+str(_enemy.maxHp)+" HP"
 #-------------------------------------------------------------------------------
-func DestroyEnemy(_enemy:Enemy) -> void:
+func DestroyEnemy(_enemy:Enemy, _num:int) -> void:
 	if(_enemy.myOBJECT2D_STATE == Enemy.OBJECT2D_STATE.DEATH):
-		SpawnItems(_enemy.position.x, _enemy.position.y, 40.0, 20)
+		SpawnItems(_enemy.position.x, _enemy.position.y, 40.0, _num)
+	_enemy.queue_free()
+#-------------------------------------------------------------------------------
+func DestroyEnemy_WithRevenge(_enemy:Enemy, _num:int, _callable:Callable) -> void:
+	if(_enemy.myOBJECT2D_STATE == Enemy.OBJECT2D_STATE.DEATH):
+		SpawnItems(_enemy.position.x, _enemy.position.y, 40.0, _num)
+		_callable.call()
 	_enemy.queue_free()
 #endregion
 #-------------------------------------------------------------------------------
