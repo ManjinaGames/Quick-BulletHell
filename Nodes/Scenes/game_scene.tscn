@@ -449,12 +449,13 @@ hitBox = NodePath("Hitbox_PlayerCollision3")
 graze = NodePath("Graze_PlayerCollision2")
 magnet = NodePath("Magnet_PlayerCollision")
 
-[node name="Magnet_PlayerCollision" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("sprite", "shape")]
+[node name="Magnet_PlayerCollision" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
 z_index = -1
 scale = Vector2(0.5, 0.5)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("4_1isya")
+player = NodePath("..")
 sprite = NodePath("Magnet_Sprite2D")
 shape = NodePath("Magnet_CollisionShape2D")
 
@@ -465,11 +466,12 @@ shape = SubResource("CircleShape2D_cfppq")
 self_modulate = Color(0, 0, 0, 0.411765)
 texture = ExtResource("5_0qyn6")
 
-[node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("sprite", "shape")]
+[node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
 scale = Vector2(0.25, 0.25)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("4_1isya")
+player = NodePath("..")
 sprite = NodePath("Graze_Sprite2D")
 shape = NodePath("Graze_CollisionShape2D")
 
@@ -481,11 +483,12 @@ self_modulate = Color(0, 0, 0, 0.411765)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("5_0qyn6")
 
-[node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("sprite", "shape")]
+[node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
 z_index = 25
 scale = Vector2(0.5, 0.5)
 collision_mask = 0
 script = ExtResource("4_1isya")
+player = NodePath("..")
 sprite = NodePath("Hitbox_Sprite2D")
 shape = NodePath("Hitbox_CollisionShape2D")
 

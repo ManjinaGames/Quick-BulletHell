@@ -1,6 +1,9 @@
 extends Object2D
 class_name Player
+#-------------------------------------------------------------------------------
+enum PLAYER_STATE{ALIVE, DEATH, INVINCIBLE}
 #region VARIABLES
+@export var myPLAYER_STATE: PLAYER_STATE
 @export var hitBox: PlayerCollision
 @export var graze: PlayerCollision
 @export var magnet: PlayerCollision

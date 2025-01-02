@@ -1,11 +1,11 @@
 extends Node
 class_name Game_Scene
 #-------------------------------------------------------------------------------
-enum PLAY_STATE{IN_GAME, IN_MARKET, IN_OPTION_MENU, IN_DIALOGUE}
+enum GAME_STATE{IN_GAME, IN_MARKET, IN_OPTION_MENU, IN_DIALOGUE}
 #region VARIABLES
 var singleton: Singleton
 #-------------------------------------------------------------------------------
-var myPLAY_STATE: PLAY_STATE = PLAY_STATE.IN_GAME
+var myGAME_STATE: GAME_STATE = GAME_STATE.IN_GAME
 var inPause: bool = false
 #-------------------------------------------------------------------------------
 @export var currentLayer: CanvasLayer
@@ -101,19 +101,19 @@ func _physics_process(_delta:float) -> void:
 	deltaTimeScale = Engine.time_scale
 	frame.emit()
 	#-------------------------------------------------------------------------------
-	match(myPLAY_STATE):
-		PLAY_STATE.IN_GAME:
+	match(myGAME_STATE):
+		GAME_STATE.IN_GAME:
 			PlayerMovement()
 			PauseGame()
 			return
 		#-------------------------------------------------------------------------------
-		PLAY_STATE.IN_MARKET:
+		GAME_STATE.IN_MARKET:
 			pass
 		#-------------------------------------------------------------------------------
-		PLAY_STATE.IN_OPTION_MENU:
+		GAME_STATE.IN_OPTION_MENU:
 			pass
 		#-------------------------------------------------------------------------------
-		PLAY_STATE.IN_DIALOGUE:
+		GAME_STATE.IN_DIALOGUE:
 			PlayerMovement()
 			if(Input.is_action_just_pressed("ui_accept")):
 				dialogueMenu.nextLine.emit()
@@ -147,7 +147,7 @@ func PauseGame() -> void:
 #-------------------------------------------------------------------------------
 func PauseOff():
 	pauseMenu.hide()
-	myPLAY_STATE = PLAY_STATE.IN_GAME
+	myGAME_STATE = GAME_STATE.IN_GAME
 	get_tree().set_deferred("paused", false)
 	singleton.bgmPlayer.play(singleton.playPosition)
 #endregion
@@ -162,8 +162,8 @@ func CreateDisabledPlayerBullets(_num:int):
 		content.add_child(_bullet)
 #-------------------------------------------------------------------------------
 func PlayerShoot() -> void:
-	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
-		if(Input.is_action_pressed("input_Shoot")):
+	while(myGAME_STATE == GAME_STATE.IN_GAME):
+		if(Input.is_action_pressed("input_Shoot") and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
 			PlayerShoot1(player.position.x, player.position.y-16, 16, -90)
 			await Frame(4)
 		else:
@@ -319,7 +319,9 @@ func SpawnItem(_x:float, _y:float, _velY: float) -> void:
 					ItemMovement_Fall(_item, _maxVelY)
 					#-------------------------------------------------------------------------------
 					var _result: Array[Dictionary] = Colliding(_item, magnetLayer)
-					if(_result or myPLAY_STATE != PLAY_STATE.IN_GAME):
+					if(_result and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
+						_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
+					elif(myGAME_STATE != GAME_STATE.IN_GAME and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
 						_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
 				else:
 					DestroyItem(_item)
@@ -395,7 +397,9 @@ func BeginGame() -> void:
 	SetScore()
 	SetMoney()
 	SetMaxMoney()
+	lifePoints = player.maxLives
 	SetLife()
+	powerPoints = player.maxPower
 	SetPower()
 	LeftLabelText()
 	#-------------------------------------------------------------------------------
@@ -405,6 +409,8 @@ func BeginGame() -> void:
 	#-------------------------------------------------------------------------------
 	Enter_GameState()
 	Choreography()
+	#-------------------------------------------------------------------------------
+	player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
 #-------------------------------------------------------------------------------
 func Choreography() -> void:
 	match(singleton.currentSaveData_Json["stageIndex"]):
@@ -438,7 +444,7 @@ func Stage1() -> void:
 	await StageCommon("Stage 1 Completed",1,0)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_UM1():
-	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
+	while(myGAME_STATE == GAME_STATE.IN_GAME):
 		await Stage1_Wave1_UM1_Enemies(-unitY*2, 1)
 		await Frame_InGame(60)
 		await Stage1_Wave1_UM1_Enemies(-unitY*2, -1)
@@ -453,7 +459,7 @@ func Stage1_Wave1_UM1_Enemies(_y:float, _mirror:float):
 		await Frame_InGame(15)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_UM1_Enemy1(_x:float, _y:float, _mirror:float):
-	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+	if(myGAME_STATE != GAME_STATE.IN_GAME):
 		return
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 10)
@@ -484,7 +490,7 @@ func Stage1_Wave1_UM1_Enemy1_Fire2(_enemy:Enemy, _mirror:float):
 		CreateShotA1(_enemy.position.x, _enemy.position.y, 3+0.3*_i, _dir, 0)
 #-------------------------------------------------------------------------------
 func Stage1_Wave2_UM1():
-	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
+	while(myGAME_STATE == GAME_STATE.IN_GAME):
 		Stage1_Wave2_UM1_Enemies(-unitY, 1)
 		await Stage1_Wave2_UM1_Enemies(-unitY, -1)
 		await Frame_InGame(120)
@@ -501,7 +507,7 @@ func Stage1_Wave2_UM1_Enemies(_y:float, _mirror:float):
 		await Frame_InGame(30)
 #-------------------------------------------------------------------------------
 func Stage1_Wave2_UM1_Enemy1(_x:float, _y:float, _mirror:float):
-	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+	if(myGAME_STATE != GAME_STATE.IN_GAME):
 		return
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 10)
@@ -529,13 +535,13 @@ func Stage1_Wave2_UM1_Enemy1_Fire1(_enemy:Enemy, _mirror:float):
 		await Frame_InGame(60)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_BlackMarket():
-	while(myPLAY_STATE == PLAY_STATE.IN_GAME):
+	while(myGAME_STATE == GAME_STATE.IN_GAME):
 		await Stage1_Enemies1_BlackMarket(1)
 		await Stage1_Enemies1_BlackMarket(-1)
 #-------------------------------------------------------------------------------
 func Stage1_Enemies1_BlackMarket(_mirror:float):
 	for _i in 12:
-		if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+		if(myGAME_STATE != GAME_STATE.IN_GAME):
 			return
 		var _radX: float = unitX/2
 		var _x: float = centerX-(centerX+unitX)*_mirror+randf_range(-_radX, _radX)
@@ -544,7 +550,7 @@ func Stage1_Enemies1_BlackMarket(_mirror:float):
 		await Frame_InGame(20)
 #-------------------------------------------------------------------------------
 func Stage1_Enemy1_BlackMarket(_x:float, _y:float, _mirror:float):
-	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+	if(myGAME_STATE != GAME_STATE.IN_GAME):
 		return
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 25)
@@ -575,7 +581,7 @@ func Stage1_Wave1():
 			await Frame_InGame(15)
 #-------------------------------------------------------------------------------
 func Stage1_Enemy1(_x:float, _y:float, _mirror:float) -> void:
-	if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+	if(myGAME_STATE != GAME_STATE.IN_GAME):
 		return
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 5)
@@ -617,7 +623,7 @@ func Stage1_Wave3():
 	var _rotX: float = 190
 	var _x2: float = 0
 	for _i in 20:
-		if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+		if(myGAME_STATE != GAME_STATE.IN_GAME):
 			return
 		#-------------------------------------------------------------------------------
 		_rotX += 20
@@ -723,7 +729,7 @@ func ShowBanner2(_s:String):
 	completedPanel.hide()
 #-------------------------------------------------------------------------------
 func OpenMarket():
-	myPLAY_STATE = PLAY_STATE.IN_MARKET
+	myGAME_STATE = GAME_STATE.IN_MARKET
 	await ShowBanner2("Flea Market has being Open")
 	await marketMenu.OpenMarket()
 #-------------------------------------------------------------------------------
@@ -732,12 +738,12 @@ func OpenDialogue():
 	await ShowBanner("Enter Dialogue with Enemy")		#OPCION 1
 	#await dialogueMenu.nextLine						#OPCION 2
 	#await Frame(60)									#OPCION 3
-	myPLAY_STATE = PLAY_STATE.IN_DIALOGUE
+	myGAME_STATE = GAME_STATE.IN_DIALOGUE
 	await dialogueMenu.OpenDialogue()
 	Enter_GameState()
 #-------------------------------------------------------------------------------
 func Enter_GameState():
-	myPLAY_STATE = PLAY_STATE.IN_GAME
+	myGAME_STATE = GAME_STATE.IN_GAME
 	PlayerShoot()
 #endregion
 #-------------------------------------------------------------------------------
@@ -806,7 +812,7 @@ func Bullet_Movement(_bullet:Bullet) -> void:
 				#-------------------------------------------------------------------------------
 				var _result: Array[Dictionary] = Colliding(_bullet, playerLayer)
 				if(_result):
-					ShootedPlayer(_result[0]["collider"])
+					ShootedPlayer(_result[0]["collider"].get_parent(), _bullet)
 					break
 				#-------------------------------------------------------------------------------
 				Obj2D_Set_Common_VDir(_bullet)
@@ -828,9 +834,47 @@ func DestroyEnemyBullet(_bullet:Bullet) -> void:
 	enemyBulletsDisabled.push_back(_bullet)
 	LeftLabelText()
 #-------------------------------------------------------------------------------
-func ShootedPlayer(_playerCollision:PlayerCollision) -> void:
+func ShootedPlayer(_player:Player, _bullet:Bullet) -> void:
+	match(player.myPLAYER_STATE):
+		Player.PLAYER_STATE.ALIVE:
+			if(lifePoints > 0):
+				PlayerRespawn(_player)
+			else:
+				PlayerDeath(_player)
+#-------------------------------------------------------------------------------
+func PlayerRespawn(_player:Player):
 	lifePoints -= 1
 	SetLife()
+	PlayerDeath(_player)
+	#-------------------------------------------------------------------------------
+	await Frame(60)
+	_player.myPLAYER_STATE = Player.PLAYER_STATE.INVINCIBLE
+	_player.magnet.shape.disabled = false
+	_player.graze.shape.disabled = false
+	_player.position = Vector2(centerX, height*0.85)
+	_player.show()
+	#-------------------------------------------------------------------------------
+	for _i in 60:
+		_player.self_modulate.a = 0
+		_player.hitBox.sprite.self_modulate.a = 0
+		await Frame(2)
+		_player.self_modulate.a = 1
+		_player.hitBox.sprite.self_modulate.a = 1
+		await Frame(2)
+	_player.hitBox.shape.disabled = false
+	_player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
+#-------------------------------------------------------------------------------
+func PlayerDeath(_player:Player):
+	_player.myPLAYER_STATE = Player.PLAYER_STATE.DEATH
+	_player.hide()
+	_player.magnet.shape.disabled = true
+	_player.graze.shape.disabled = true
+	_player.hitBox.shape.disabled = true
+	#-------------------------------------------------------------------------------
+	for _item in itemsEnabled:
+		if(_item.myITEM_STATE == Item.ITEM_STATE.IMANTED):
+			_item.velY = -4
+			_item.myITEM_STATE = Item.ITEM_STATE.SPIN
 #endregion
 #-------------------------------------------------------------------------------
 #region ENEMY FUNCTIONS
@@ -966,7 +1010,7 @@ func Obj2D_Set_Common_VDir(_obj2D:Object2D) -> void:
 #NOTA IMPORTANTE: _obj2D no lo puedo definir porque aveces toma valor Null, y Godot no sabe que hacer cuando un parametro definido toma valor Null
 func Obj2D_IsInGame(_obj2D) -> bool:
 	if(_obj2D != null):
-		if(_obj2D.myOBJECT2D_STATE == Object2D.OBJECT2D_STATE.ALIVE and myPLAY_STATE == PLAY_STATE.IN_GAME):
+		if(_obj2D.myOBJECT2D_STATE == Object2D.OBJECT2D_STATE.ALIVE and myGAME_STATE == GAME_STATE.IN_GAME):
 			return true
 		else:
 			return false
@@ -1008,7 +1052,7 @@ func Frame_InGame(_maxTimer:int) -> void:
 	var _timer: float = 0
 	while(_timer < _maxTimer):
 		_timer += deltaTimeScale
-		if(myPLAY_STATE != PLAY_STATE.IN_GAME):
+		if(myGAME_STATE != GAME_STATE.IN_GAME):
 			return
 		await frame
 #endregion
