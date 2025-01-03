@@ -1,15 +1,15 @@
-[gd_scene load_steps=43 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=44 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
+[ext_resource type="PackedScene" uid="uid://dsbbbpoj74b1r" path="res://Nodes/Prefabs/Player_Explotion.tscn" id="2_pa18e"]
 [ext_resource type="PackedScene" uid="uid://cspvg8uimw0jt" path="res://Nodes/Prefabs/bullet_prefab.tscn" id="3_5om1x"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Collider_Script.gd" id="4_1isya"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
 [ext_resource type="Texture2D" uid="uid://csodrfq23rym8" path="res://Assets/Sprites/money.png" id="7_hia1k"]
-[ext_resource type="Texture2D" uid="uid://dqbugw3tefi1c" path="res://Assets/Sprites/Hitbox.png" id="7_sglw3"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Player_Script.gd" id="9_4cqcx"]
@@ -17,6 +17,7 @@
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="13_x786h"]
 [ext_resource type="Resource" uid="uid://qd50ywh4rm84" path="res://Resources/Cards/00.tres" id="14_4qbfb"]
 [ext_resource type="Resource" uid="uid://djt1b5rhqntqr" path="res://Resources/Cards/01.tres" id="15_k2dx3"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/game_over_menu.gd" id="15_ou6t6"]
 [ext_resource type="Resource" uid="uid://c4upbg36ku38m" path="res://Resources/Cards/02.tres" id="16_hovb2"]
 [ext_resource type="Resource" uid="uid://dbdg5uol4v182" path="res://Resources/Cards/03.tres" id="17_dadln"]
 [ext_resource type="Resource" uid="uid://d1cw7163jesar" path="res://Resources/Cards/04.tres" id="18_chr6o"]
@@ -63,17 +64,19 @@ radius = 128.0
 radius = 64.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
-radius = 8.24621
+radius = 6.0
 
-[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
+[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
 currentLayer = NodePath("CanvasLayer")
 pauseMenu = NodePath("CanvasLayer/Window_MarginContainer/Pause_Menu")
+gameoverMenu = NodePath("CanvasLayer/Window_MarginContainer/GameOver_Menu")
 marketMenu = NodePath("CanvasLayer/Window_MarginContainer/Market_Menu")
 dialogueMenu = NodePath("CanvasLayer/Window_MarginContainer/Dialogue_Menu")
 timerLabel = NodePath("CanvasLayer/Window_MarginContainer/Timer_Label")
 content = NodePath("CanvasLayer/Window_MarginContainer/Content")
 player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player_Prefab")
+playerExplotion = ExtResource("2_pa18e")
 enemy_Prefab = ExtResource("2_acyb6")
 enemyBullet_Prefab = ExtResource("3_5om1x")
 item_Prefab = ExtResource("4_7dwg7")
@@ -437,10 +440,10 @@ layout_mode = 2
 
 [node name="Player_Prefab" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content" node_paths=PackedStringArray("hitBox", "graze", "magnet")]
 z_index = 10
-position = Vector2(300, 563)
+position = Vector2(302, 559)
 scale = Vector2(2, 2)
 texture = ExtResource("9_7l1bi")
-offset = Vector2(-0.5, -1)
+offset = Vector2(-1.5, 1)
 hframes = 8
 vframes = 3
 frame = 1
@@ -459,14 +462,16 @@ player = NodePath("..")
 sprite = NodePath("Magnet_Sprite2D")
 shape = NodePath("Magnet_CollisionShape2D")
 
+[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
+self_modulate = Color(0, 0, 1, 0.215686)
+scale = Vector2(0.995, 0.995)
+texture = ExtResource("5_0qyn6")
+
 [node name="Magnet_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
 shape = SubResource("CircleShape2D_cfppq")
 
-[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
-self_modulate = Color(0, 0, 0, 0.411765)
-texture = ExtResource("5_0qyn6")
-
 [node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
+z_index = 1
 scale = Vector2(0.25, 0.25)
 collision_layer = 4
 collision_mask = 0
@@ -475,16 +480,16 @@ player = NodePath("..")
 sprite = NodePath("Graze_Sprite2D")
 shape = NodePath("Graze_CollisionShape2D")
 
+[node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
+self_modulate = Color(1, 0, 0, 0.215686)
+scale = Vector2(0.505, 0.505)
+texture = ExtResource("5_0qyn6")
+
 [node name="Graze_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
 shape = SubResource("CircleShape2D_qurjd")
 
-[node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
-self_modulate = Color(0, 0, 0, 0.411765)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("5_0qyn6")
-
 [node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
-z_index = 25
+z_index = 2
 scale = Vector2(0.5, 0.5)
 collision_mask = 0
 script = ExtResource("4_1isya")
@@ -492,14 +497,16 @@ player = NodePath("..")
 sprite = NodePath("Hitbox_Sprite2D")
 shape = NodePath("Hitbox_CollisionShape2D")
 
+[node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
+self_modulate = Color(0, 1, 0, 1)
+scale = Vector2(0.05, 0.05)
+texture = ExtResource("5_0qyn6")
+
 [node name="Hitbox_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
 shape = SubResource("CircleShape2D_c4em7")
 
-[node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
-scale = Vector2(2, 2)
-texture = ExtResource("7_sglw3")
-
 [node name="Timer_Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]
+visible = false
 z_index = 30
 layout_mode = 2
 size_flags_horizontal = 4
@@ -591,11 +598,56 @@ theme_override_font_sizes/font_size = 30
 text = "Go to Main Menu"
 
 [node name="Button5" type="Button" parent="CanvasLayer/Window_MarginContainer/Pause_Menu/VBoxContainer2/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Quit Game"
 
+[node name="GameOver_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "title", "retry", "quit")]
+process_mode = 2
+visible = false
+z_index = 30
+layout_mode = 2
+script = ExtResource("15_ou6t6")
+gameScene = NodePath("../../..")
+title = NodePath("VBoxContainer/Label")
+retry = NodePath("VBoxContainer/VBoxContainer/Button")
+quit = NodePath("VBoxContainer/VBoxContainer/Button2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/GameOver_Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -43.5
+offset_top = -29.5
+offset_right = 43.5
+offset_bottom = 29.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/GameOver_Menu/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "GAME OVER"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/GameOver_Menu/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CanvasLayer/Window_MarginContainer/GameOver_Menu/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Retry"
+
+[node name="Button2" type="Button" parent="CanvasLayer/Window_MarginContainer/GameOver_Menu/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Quit"
+
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "confirmCard_Title", "yesButton", "noButton")]
+visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -798,11 +850,12 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 30
 text = "No"
 
-[node name="Dialogue_Menu" type="Control" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("dialogueLabel")]
+[node name="Dialogue_Menu" type="Control" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "dialogueLabel")]
 visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("20_kjtdd")
+gameScene = NodePath("../../..")
 dialogueText = Array[String](["11111111111111111", "2222222222222222222222", "3333333333333333", "444444444444444444444", "555555555555555555"])
 dialogueLabel = NodePath("MarginContainer/PanelContainer/MarginContainer/RichTextLabel")
 

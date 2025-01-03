@@ -14,6 +14,9 @@ func Start():
 #-------------------------------------------------------------------------------
 #region FUNCTIONS
 func OpenDialogue():
+	#NOTA MUY IMPORTANTE: tiene que haber un await antes del OpenDialogue() porque si no puedo saltear la primer linea de texto al oprimir "Z".
+	#await nextLine					#OPCION 1
+	await gameScene.Frame(60)		#OPCION 2
 	show()
 	for _s in dialogueText:
 		dialogueLabel.text = _s

@@ -23,7 +23,7 @@ func Start() -> void:
 	hide()
 #-------------------------------------------------------------------------------
 func _physics_process(_delta:float) -> void:
-	if(inOption):
+	if(inOption or gameScene.myGAME_STATE == gameScene.GAME_STATE.IN_GAMEOVER):
 		return
 	if(Input.is_action_just_pressed("input_Pause")):
 		gameScene.PauseOff()
@@ -41,7 +41,7 @@ func SetAllButtons() -> void:
 func ContinueButton_Subited() -> void:
 	gameScene.PauseOff()
 	singleton.CommonSubmited()
-	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 func RetryButton_Subited() -> void:
 	singleton.CommonSubmited()
 	get_tree().reload_current_scene()

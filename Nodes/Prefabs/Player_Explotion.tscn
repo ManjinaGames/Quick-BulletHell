@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://dsbbbpoj74b1r"]
+
+[ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="1_ll2wg"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bmhol"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+angle_min = -720.0
+angle_max = 720.0
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 254.07
+initial_velocity_max = 378.05
+gravity = Vector3(0, 0, 0)
+scale_min = 0.2
+scale_max = 0.2
+
+[node name="Player_Explotion" type="GPUParticles2D"]
+emitting = false
+amount = 50
+process_material = SubResource("ParticleProcessMaterial_bmhol")
+texture = ExtResource("1_ll2wg")
+one_shot = true
+explosiveness = 1.0

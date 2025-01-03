@@ -1,7 +1,7 @@
 extends Node
 class_name Game_Scene
 #-------------------------------------------------------------------------------
-enum GAME_STATE{IN_GAME, IN_MARKET, IN_OPTION_MENU, IN_DIALOGUE}
+enum GAME_STATE{IN_GAME, IN_MARKET, IN_OPTION_MENU, IN_DIALOGUE, IN_GAMEOVER}
 #region VARIABLES
 var singleton: Singleton
 #-------------------------------------------------------------------------------
@@ -10,6 +10,7 @@ var inPause: bool = false
 #-------------------------------------------------------------------------------
 @export var currentLayer: CanvasLayer
 @export var pauseMenu: Pause_Menu
+@export var gameoverMenu: GameOver_Menu
 @export var marketMenu: Market_Menu
 @export var dialogueMenu: Dialogue_Menu
 #-------------------------------------------------------------------------------
@@ -17,6 +18,7 @@ var inPause: bool = false
 var timer: int
 @export var content: Control
 @export var player: Player
+@export var playerExplotion: PackedScene
 #-------------------------------------------------------------------------------
 @export var enemy_Prefab: PackedScene
 @export var enemyBullet_Prefab: PackedScene
@@ -87,6 +89,7 @@ func _ready():
 	_direct_space_state = content.get_world_2d().direct_space_state
 	#-------------------------------------------------------------------------------
 	pauseMenu.Start()
+	gameoverMenu.Start()
 	marketMenu.Start()
 	dialogueMenu.Start()
 	#-------------------------------------------------------------------------------
@@ -95,7 +98,7 @@ func _ready():
 	singleton.PlayBGM(singleton.bgmStage1)
 	get_tree().set_deferred("paused", false)
 	currentLayer.show()
-	BeginGame()
+	await BeginGame()
 #-------------------------------------------------------------------------------
 func _physics_process(_delta:float) -> void:
 	deltaTimeScale = Engine.time_scale
@@ -118,11 +121,17 @@ func _physics_process(_delta:float) -> void:
 			if(Input.is_action_just_pressed("ui_accept")):
 				dialogueMenu.nextLine.emit()
 		#-------------------------------------------------------------------------------
+		GAME_STATE.IN_GAMEOVER:
+			pass
+		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
 #region PLAYER FUNCTIONS
 func PlayerMovement() -> void:
+	if(player.myPLAYER_STATE == Player.PLAYER_STATE.DEATH):
+		return
+	#-------------------------------------------------------------------------------
 	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	if(input_dir != Vector2.ZERO):
 		input_dir.normalized()
@@ -138,12 +147,18 @@ func PlayerMovement() -> void:
 #-------------------------------------------------------------------------------
 #region PAUSE INPUTS
 func PauseGame() -> void:
+	if(myGAME_STATE == GAME_STATE.IN_GAMEOVER):
+		return
+	#-------------------------------------------------------------------------------
 	if(Input.is_action_just_pressed("input_Pause")):
 		pauseMenu.show()
-		singleton.playPosition = singleton.bgmPlayer.get_playback_position()
-		singleton.bgmPlayer.stop()
-		get_tree().set_deferred("paused", true)
+		StopTime()
 		singleton.MoveToButton(pauseMenu.continuar)
+#-------------------------------------------------------------------------------
+func StopTime():
+	singleton.playPosition = singleton.bgmPlayer.get_playback_position()
+	singleton.bgmPlayer.stop()
+	get_tree().set_deferred("paused", true)
 #-------------------------------------------------------------------------------
 func PauseOff():
 	pauseMenu.hide()
@@ -223,6 +238,7 @@ func ShootedEnemy(_enemy:Enemy) -> void:
 		SetHp(_enemy)
 	else:
 		_enemy.canBeHit = false
+		_enemy._deathSignal.emit()
 		_enemy.myOBJECT2D_STATE = Enemy.OBJECT2D_STATE.DEATH
 #endregion
 #-------------------------------------------------------------------------------
@@ -397,9 +413,9 @@ func BeginGame() -> void:
 	SetScore()
 	SetMoney()
 	SetMaxMoney()
-	lifePoints = player.maxLives
+	lifePoints = int(float(player.maxLives)*0.25)
 	SetLife()
-	powerPoints = player.maxPower
+	powerPoints = int(float(player.maxPower)*0.25)
 	SetPower()
 	LeftLabelText()
 	#-------------------------------------------------------------------------------
@@ -407,10 +423,12 @@ func BeginGame() -> void:
 	completedLabel.text = ""
 	timerLabel.text = ""
 	#-------------------------------------------------------------------------------
+	await content.resized
+	player.position = Vector2(centerX, height*0.85)
+	player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
+	#-------------------------------------------------------------------------------
 	Enter_GameState()
 	Choreography()
-	#-------------------------------------------------------------------------------
-	player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
 #-------------------------------------------------------------------------------
 func Choreography() -> void:
 	match(singleton.currentSaveData_Json["stageIndex"]):
@@ -436,12 +454,29 @@ func Choreography() -> void:
 #-------------------------------------------------------------------------------
 #region STAGE 1
 func Stage1() -> void:
-	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
-	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
-	await OpenDialogue()
+	#await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
+	#await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
+	await CreateBoss1()
 	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
 	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
 	await StageCommon("Stage 1 Completed",1,0)
+#-------------------------------------------------------------------------------
+func CreateBoss1() -> void:
+	await ShowBanner("Enter Boss 1")
+	#-------------------------------------------------------------------------------
+	myGAME_STATE = GAME_STATE.IN_DIALOGUE
+	await dialogueMenu.OpenDialogue()
+	#-------------------------------------------------------------------------------
+	var _boss: Enemy = CreateBoss(0, 0)
+	await Move_Towards_Old(_boss, width*0.5, height*0.5, 60)
+	#-------------------------------------------------------------------------------
+	await dialogueMenu.OpenDialogue()
+	#-------------------------------------------------------------------------------
+	ActivateBoss(_boss, 10)
+	Enter_GameState()
+	await _boss._deathSignal
+	#-------------------------------------------------------------------------------
+	DestroyEnemy(_boss, 20)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_UM1():
 	while(myGAME_STATE == GAME_STATE.IN_GAME):
@@ -470,7 +505,7 @@ func Stage1_Wave1_UM1_Enemy1(_x:float, _y:float, _mirror:float):
 	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.2*_mirror, 180)
 	#-------------------------------------------------------------------------------
 	var _revenge: Callable = func():Stage1_Wave1_UM1_Enemy1_Fire2(_enemy, _mirror)
-	DestroyEnemy_WithRevenge(_enemy, 20, _revenge)
+	DestroyEnemy_WithRevenge(_enemy, 5, _revenge)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_UM1_Enemy1_Fire1(_enemy:Enemy):
 	await Frame_InGame(60)
@@ -517,7 +552,7 @@ func Stage1_Wave2_UM1_Enemy1(_x:float, _y:float, _mirror:float):
 	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.01*_mirror, 0.01, 4)
 	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.01*_mirror, 60)
 	#-------------------------------------------------------------------------------
-	DestroyEnemy(_enemy, 20)
+	DestroyEnemy(_enemy, 5)
 #-------------------------------------------------------------------------------
 func Stage1_Wave2_UM1_Enemy1_Fire1(_enemy:Enemy, _mirror:float):
 	await Frame_InGame(50)
@@ -711,8 +746,9 @@ func StartTimer(_time:int):
 	_time+=1
 	timerLabel.show()
 	while(_time > 0):
-		_time -=1
-		timerLabel.text = str(_time)+_maxTimer
+		if(myGAME_STATE != GAME_STATE.IN_GAMEOVER):
+			_time -=1
+			timerLabel.text = str(_time)+_maxTimer
 		await Frame(60)
 	timerLabel.text = ""
 	timerLabel.hide()
@@ -732,15 +768,6 @@ func OpenMarket():
 	myGAME_STATE = GAME_STATE.IN_MARKET
 	await ShowBanner2("Flea Market has being Open")
 	await marketMenu.OpenMarket()
-#-------------------------------------------------------------------------------
-func OpenDialogue():
-	#NOTA IMPORTANTE: tiene que haber un await antes del OpenDialogue() porque si no puedo saltear la primer linea de texto al oprimir "Z".
-	await ShowBanner("Enter Dialogue with Enemy")		#OPCION 1
-	#await dialogueMenu.nextLine						#OPCION 2
-	#await Frame(60)									#OPCION 3
-	myGAME_STATE = GAME_STATE.IN_DIALOGUE
-	await dialogueMenu.OpenDialogue()
-	Enter_GameState()
 #-------------------------------------------------------------------------------
 func Enter_GameState():
 	myGAME_STATE = GAME_STATE.IN_GAME
@@ -768,7 +795,7 @@ func CreateShotA4(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _
 	return _bullet
 #endregion
 #-------------------------------------------------------------------------------
-#region BULLET FUNCTIONS
+#region ENEMY BULLET FUNCTIONS
 func CreateDisabledEnemyBullets(_num:int):
 	for _i in _num:
 		var _bullet: Bullet = enemyBullet_Prefab.instantiate() as Bullet
@@ -838,34 +865,69 @@ func ShootedPlayer(_player:Player, _bullet:Bullet) -> void:
 	match(player.myPLAYER_STATE):
 		Player.PLAYER_STATE.ALIVE:
 			if(lifePoints > 0):
-				PlayerRespawn(_player)
+				await PlayerRespawn(_player)
 			else:
-				PlayerDeath(_player)
+				await PlayerGameOver(_player)
 #-------------------------------------------------------------------------------
 func PlayerRespawn(_player:Player):
 	lifePoints -= 1
 	SetLife()
 	PlayerDeath(_player)
+	await Frame(15)
 	#-------------------------------------------------------------------------------
-	await Frame(60)
+	var _timer: float = 30
+	PlayerInvincible(_player, _timer)
+	await MovePlayer_Towards(player, _timer*2)
+	#-------------------------------------------------------------------------------
 	_player.myPLAYER_STATE = Player.PLAYER_STATE.INVINCIBLE
 	_player.magnet.shape.disabled = false
 	_player.graze.shape.disabled = false
-	_player.position = Vector2(centerX, height*0.85)
 	_player.show()
+	await PlayerInvincible(_player, 30)
 	#-------------------------------------------------------------------------------
-	for _i in 60:
-		_player.self_modulate.a = 0
-		_player.hitBox.sprite.self_modulate.a = 0
-		await Frame(2)
-		_player.self_modulate.a = 1
-		_player.hitBox.sprite.self_modulate.a = 1
-		await Frame(2)
 	_player.hitBox.shape.disabled = false
 	_player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
 #-------------------------------------------------------------------------------
-func PlayerDeath(_player:Player):
+func MovePlayer_Towards(_player:Player, _maxTimer:float) -> void:
+	player.position = Vector2(centerX, height*1.2)
+	player.show()
+	var _dx: float = (centerX-_player.position.x)/float(_maxTimer)
+	var _dy: float = (height*0.85-_player.position.y)/float(_maxTimer)
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		_timer += deltaTimeScale
+		_player.position += Vector2(_dx, _dy) * deltaTimeScale
+		await frame
+#-------------------------------------------------------------------------------
+func PlayerInvincible(_player:Player, _maxTimer: float) -> void:
+	var _b: bool = true
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		SetPlayerInvisible(_player, _b)
+		_timer += deltaTimeScale
+		_b = !_b
+		await Frame(2)
+#-------------------------------------------------------------------------------
+func SetPlayerInvisible(_player:Player, _b:bool) -> void:
+	if(_b):
+		_player.self_modulate.a = 0
+		_player.hitBox.sprite.self_modulate.a = 0
+	else:
+		_player.self_modulate.a = 1
+		_player.hitBox.sprite.self_modulate.a = 1
+#-------------------------------------------------------------------------------
+func PlayerGameOver(_player:Player) -> void:
+	myGAME_STATE = GAME_STATE.IN_GAMEOVER
+	PlayerDeath(_player)
+	#-------------------------------------------------------------------------------
+	await Frame(120)
+	StopTime()
+	gameoverMenu.show()
+	singleton.MoveToButton(gameoverMenu.retry)
+#-------------------------------------------------------------------------------
+func PlayerDeath(_player:Player) -> void:
 	_player.myPLAYER_STATE = Player.PLAYER_STATE.DEATH
+	PlayerExplotion(_player)
 	_player.hide()
 	_player.magnet.shape.disabled = true
 	_player.graze.shape.disabled = true
@@ -875,6 +937,13 @@ func PlayerDeath(_player:Player):
 		if(_item.myITEM_STATE == Item.ITEM_STATE.IMANTED):
 			_item.velY = -4
 			_item.myITEM_STATE = Item.ITEM_STATE.SPIN
+#-------------------------------------------------------------------------------
+func PlayerExplotion(_node2D:Node2D):
+	var _particle: GPUParticles2D = playerExplotion.instantiate() as GPUParticles2D
+	_particle.position = _node2D.position
+	_particle.rotation = _node2D.rotation
+	_particle.emitting = true
+	content.add_child(_particle)
 #endregion
 #-------------------------------------------------------------------------------
 #region ENEMY FUNCTIONS
@@ -885,11 +954,32 @@ func CreateEnemy(_x:float, _y:float, _hp: int) -> Enemy:
 	_enemy.hp = _hp
 	_enemy.myOBJECT2D_STATE = Enemy.OBJECT2D_STATE.ALIVE
 	SetHp(_enemy)
+	_enemy.collider.disabled = false
+	_enemy.label.show()
 	content.add_child(_enemy)
 	#-------------------------------------------------------------------------------
 	Enemy_Movement(_enemy)
 	#-------------------------------------------------------------------------------
 	return _enemy
+func CreateBoss(_x:float, _y:float) -> Enemy:
+	var _boss = enemy_Prefab.instantiate() as Enemy
+	_boss.position = Vector2(_x, _y)
+	_boss.canBeHit = false
+	_boss.collider.disabled = true
+	_boss.label.hide()
+	content.add_child(_boss)
+	#-------------------------------------------------------------------------------
+	return _boss
+#-------------------------------------------------------------------------------
+func ActivateBoss(_boss: Enemy, _hp: int):
+	_boss.maxHp = _hp
+	_boss.hp = _hp
+	_boss.myOBJECT2D_STATE = Enemy.OBJECT2D_STATE.ALIVE
+	SetHp(_boss)
+	_boss.canBeHit = true
+	_boss.collider.disabled = false
+	_boss.label.show()
+	Enemy_Movement(_boss)
 #-------------------------------------------------------------------------------
 func Enemy_Movement(_enemy:Enemy):
 	while(Obj2D_IsInGame(_enemy)):
@@ -903,7 +993,7 @@ func SetHp(_enemy:Enemy) -> void:
 #-------------------------------------------------------------------------------
 func DestroyEnemy(_enemy:Enemy, _num:int) -> void:
 	if(_enemy.myOBJECT2D_STATE == Enemy.OBJECT2D_STATE.DEATH):
-		SpawnItems(_enemy.position.x, _enemy.position.y, 40.0, _num)
+		SpawnItems(_enemy.position.x, _enemy.position.y, float(_num)*2, _num)
 	_enemy.queue_free()
 #-------------------------------------------------------------------------------
 func DestroyEnemy_WithRevenge(_enemy:Enemy, _num:int, _callable:Callable) -> void:
@@ -914,15 +1004,31 @@ func DestroyEnemy_WithRevenge(_enemy:Enemy, _num:int, _callable:Callable) -> voi
 #endregion
 #-------------------------------------------------------------------------------
 #region OBJECT2D FUNCTIONS
-func Move_Towards(_obj2D:Object2D, _x:float, _y:float,_maxTimer:float) -> void:
+func Move_Towards(_obj2D:Object2D, _x2:float, _y2:float, _maxTimer:float) -> void:
 	if(!Obj2D_IsInGame(_obj2D)):
 		return
-	var _dx: float = (_x-_obj2D.position.x)/float(_maxTimer)
-	var _dy: float = (_y-_obj2D.position.y)/float(_maxTimer)
+	var _x1: float = _obj2D.position.x
+	var _y1: float = _obj2D.position.y
+	if(_x2 == _x1 and _y2 == _y1):
+		return
+	var _dx: float = _x2 - _x1
+	var _dy: float = _y2 - _y1
+	_obj2D.vel = Vector2(_dx, _dy).length() / _maxTimer
+	_obj2D.dir = GetAngleXY(_dx, _dy)
+	#-------------------------------------------------------------------------------
 	var _timer: float = 0
 	while(_timer < _maxTimer):
 		if(!Obj2D_IsInGame(_obj2D)):
 			return
+		_timer += deltaTimeScale
+		await frame
+	_obj2D.vel = 0
+#-------------------------------------------------------------------------------
+func Move_Towards_Old(_obj2D:Object2D, _x:float, _y:float,_maxTimer:float) -> void:
+	var _dx: float = (_x-_obj2D.position.x)/float(_maxTimer)
+	var _dy: float = (_y-_obj2D.position.y)/float(_maxTimer)
+	var _timer: float = 0
+	while(_timer < _maxTimer):
 		_timer += deltaTimeScale
 		_obj2D.position += Vector2(_dx, _dy) * deltaTimeScale
 		await frame
@@ -1021,6 +1127,14 @@ func Obj2D_IsInGame(_obj2D) -> bool:
 #region MATH FUNCTIONS
 func AngleToPlayer(_obj: Node2D) -> float:
 	var _f: float = rad_to_deg(atan2(player.position.y-_obj.position.y, player.position.x-_obj.position.x))
+	return _f
+#-------------------------------------------------------------------------------
+func GetAngleFromTo(_obj1: Node2D, _obj2: Node2D) -> float:
+	var _f: float = rad_to_deg(atan2(_obj2.position.y-_obj1.position.y, _obj2.position.x-_obj1.position.x))
+	return _f
+#-------------------------------------------------------------------------------
+func GetAngleXY(_dx: float, _dy: float) -> float:
+	var _f: float = rad_to_deg(atan2(_dy, _dx))
 	return _f
 #endregion
 #-------------------------------------------------------------------------------
