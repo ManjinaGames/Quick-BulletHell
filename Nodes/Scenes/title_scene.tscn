@@ -41,7 +41,6 @@ theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
 [node name="Title_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "title", "button")]
-visible = false
 layout_mode = 2
 script = ExtResource("2_ctd5h")
 titleScene = NodePath("../..")
@@ -121,9 +120,11 @@ layout_mode = 2
 text = "Assets:
 * Fantasy Towns Music Pack by Chris Logsdon.
 * Interface sfx pack 1 by ObsydianX.
-* 1-Bit Input Prompts Pixel 16× (1.0) by Kenney."
+* 1-Bit Input Prompts Pixel 16× (1.0) by Kenney.
+*https://crystallotus.itch.io/skybox-textures"
 
 [node name="Save_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "clipContainer", "scrollContainer", "vBoxContainer", "back")]
+visible = false
 layout_mode = 2
 script = ExtResource("3_g1pxl")
 titleScene = NodePath("../..")
@@ -210,6 +211,7 @@ text = "Back
 "
 
 [node name="Save_Menu2" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "title", "saveLabel", "whatToDo_Menu", "start", "delete", "back", "confirm_Menu", "yes", "no")]
+visible = false
 layout_mode = 2
 script = ExtResource("4_k54io")
 titleScene = NodePath("../..")

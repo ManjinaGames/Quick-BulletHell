@@ -15,7 +15,8 @@ var singleton: Singleton
 func Start() -> void:
 	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
-	await CreateSaveButtons()
+	show()						#NOTA IMPORTANTE: Hay que tener abierto este Nodo para que lo de bajo pueda actuar, si no, sale Bug.
+	await CreateSaveButtons()	#NOTA IMPORTANTE: Como acá se controlas los tamaños de los botones, hay que esperar a que estos actualicen sus medidas.
 	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 	hide()
 #endregion

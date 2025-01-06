@@ -13,6 +13,7 @@ enum STAGE_STATE{DISABLED, ENABLED, COMPLETED}
 @export var bgmPlayer : AudioStreamPlayer
 var playPosition: float = 0.0
 @export var bgmStage1 : AudioStreamMP3
+@export var bgmBoss1 : AudioStreamMP3
 @export var bgmTitle : AudioStreamMP3
 #-------------------------------------------------------------------------------
 const submitInput: String = "ui_accept"

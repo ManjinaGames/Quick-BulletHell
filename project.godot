@@ -19,10 +19,6 @@ config/icon="res://icon.svg"
 
 singleton="*res://Nodes/Singleton/Singleton.tscn"
 
-[debug]
-
-gdscript/warnings/unused_signal=0
-
 [display]
 
 window/stretch/mode="canvas_items"

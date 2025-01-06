@@ -58,10 +58,10 @@ gameUI_lives,Lives,Vidas,Vidas,生きる,Leben
 gameUI_power,Power,Poder,Pode,できる,Power
 gameUI_maxScore,Max-Score,Máx.Puntuación,Pontuação máxima,最大スコア,Max-Score
 gameUI_score,Score,Puntuación,Pontuação,句読点,Score
-cardName_ID00,Go to deck,Ir al Mazo,Vá para o convés,デッキへ移動,Gehe an Deck
-cardDescription_ID00,"Don't buy anything, close the flea market.","No compres nada, cierra el mercadillo.","Não compre nada, feche o mercado de pulgas.",何も買わないで、フリーマーケットを閉めてください。,"Kaufe nichts, schließe den Flohmarkt."
-cardName_ID01,Life Card,Carta de vida,Carta de Vida,命のカード,Lebenskarte
-cardDescription_ID01,"Gives you 1 more life upon purchase.
+name_card_id_0,Go to deck,Ir al Mazo,Vá para o convés,デッキへ移動,Gehe an Deck
+desc_card_id_0,"Don't buy anything, close the flea market.","No compres nada, cierra el mercadillo.","Não compre nada, feche o mercado de pulgas.",何も買わないで、フリーマーケットを閉めてください。,"Kaufe nichts, schließe den Flohmarkt."
+name_card_id_1,Life Card,Carta de vida,Carta de Vida,命のカード,Lebenskarte
+desc_card_id_1,"Gives you 1 more life upon purchase.
 
 A simple and useful card.
 You're not sure whose life is contained within it,
@@ -86,8 +86,8 @@ Eine einfache und nützliche Karte.
 Du bist dir nicht sicher, wessen Leben darin steckt,
 aber lass es uns einfach dankbar annehmen.
 *Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden“"
-cardName_ID02,Spell Card,Carta de hechizo,Carta de Magia,スペルのカード,Zauberkarte
-cardDescription_ID02,"It's... a little unclear what differentiates a ""Spell"" ""Card"" from a ""Spell Card"".
+name_card_id_2,Spell Card,Carta de hechizo,Carta de Magia,スペルのカード,Zauberkarte
+desc_card_id_2,"It's... a little unclear what differentiates a ""Spell"" ""Card"" from a ""Spell Card"".
 Its effect is plain, but it helps you out a bit.
 Sure is plain, though.
 *Activates upon purchase; cannot be equipped by default","No está muy claro qué diferencia una ""Carta de hechizo"" de una ""Carta de hechizo"".
@@ -105,8 +105,8 @@ Claro que é simples, no entanto.
 Ihre Wirkung ist klar, aber sie hilft dir ein wenig.
 Aber sie ist klar.
 *Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden“"
-cardName_ID03,Money Comes and Goes On its Own,El dinero va y viene por sí solo,O dinheiro vem e vai sozinho,勝手に天下の回り物,Geld kommt und geht von selbst
-cardDescription_ID03,"Nazrin's ability to give you more money.
+name_card_id_3,Money Comes and Goes On its Own,El dinero va y viene por sí solo,O dinheiro vem e vai sozinho,勝手に天下の回り物,Geld kommt und geht von selbst
+desc_card_id_3,"Nazrin's ability to give you more money.
 
 She gathered up everything that was lying around nearby.
 This card is basically a cheque-cashing item.
@@ -130,8 +130,8 @@ Esta carta é basicamente um item para descontar cheques.
 Sie sammelte alles auf, was in der Nähe herumlag.
 Diese Karte ist im Grunde ein Gegenstand zum Einlösen von Schecks.
 *Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden“"
-cardName_ID04,Ringo-Brand Dango,Dango de la marca Ringo,Dango da Marca Ringo,鈴瑚印の団子,Ringo-Brand-Dango
-cardDescription_ID04,"Ringo's ability to considerably increase your Power.
+name_card_id_4,Ringo-Brand Dango,Dango de la marca Ringo,Dango da Marca Ringo,鈴瑚印の団子,Ringo-Brand-Dango
+desc_card_id_4,"Ringo's ability to considerably increase your Power.
 
 Ya can't fight on an empty stomach!
 How about some Ringo-brand dango?
@@ -155,8 +155,8 @@ Que tal um pouco de Dango da marca Ringo?
 Man kann nicht mit leerem Magen kämpfen!
 Wie wär’s mit etwas Ringo-Brand-Dango? dango?
 *Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden"""
-cardName_ID05,Phoenix's Tail,Cola de Fénix,Phoenix's Tail,不死鳥の尾,Phoenix's Tail
-cardDescription_ID05,"Fujiwara no Mokou's ability to increase your lives by 3.
+name_card_id_5,Phoenix's Tail,Cola de Fénix,Phoenix's Tail,不死鳥の尾,Phoenix's Tail
+desc_card_id_5,"Fujiwara no Mokou's ability to increase your lives by 3.
 Extremely strong, with no strings attached; no ability could be more powerful.
 
 Offense... Defense... Evasion... Memorization...
@@ -185,8 +185,8 @@ Extrem stark, ohne Bedingungen; keine Fähigkeit könnte mächtiger sein.
 Angriff... Verteidigung... Ausweichen... Auswendiglernen...
 Aus der Sicht eines Unsterblichen sind sie alle nichts weiter als Regeln für ein kleines Spiel!
 *Wird beim Kauf aktiviert; kann standardmäßig nicht ausgerüstet werden"""
-cardName_ID06,Yin-Yang Orb,Orbe Yin-Yang,Yin-Yang Orb,陰陽玉,Yin-Yang Orb
-cardDescription_ID06,"Reimu Hakurei's ability to shoot homing bullets at enemies.
+name_card_id_6,Yin-Yang Orb,Orbe Yin-Yang,Yin-Yang Orb,陰陽玉,Yin-Yang Orb
+desc_card_id_6,"Reimu Hakurei's ability to shoot homing bullets at enemies.
 A useful card that can beef up your attack power in a simple way.
 
 When exactly did this ability get copied?
@@ -206,8 +206,8 @@ Quando exatamente essa habilidade foi copiada?
 Eine nützliche Karte, die deine Angriffskraft auf einfache Weise steigern kann.
 Wann genau wurde diese Fähigkeit kopiert?
 Es ist beängstigend, wenn man bedenkt, dass so etwas im Umlauf ist...“"
-cardName_ID07,Mini-Hakkero,Mini-Hakkero,Mini-Hakkero,ミニ八卦炉,Mini-Hakkero
-cardDescription_ID07,"Type: Equipment Card
+name_card_id_7,Mini-Hakkero,Mini-Hakkero,Mini-Hakkero,ミニ八卦炉,Mini-Hakkero
+desc_card_id_7,"Type: Equipment Card
 Marisa Kirisame's ability to shoot a laser.
 One of the highest-firepower Equipment Cards there is.
 
@@ -231,8 +231,8 @@ Marisa Kirisames Fähigkeit, einen Laser abzufeuern.
 Eine der Ausrüstungskarten mit der höchsten Feuerkraft, die es gibt.
 Es gibt viele Menschen und Youkai, die versuchen wollten,
 mit einem Laser zu schießen, daher ist es eine ziemlich beliebte Karte."""
-cardName_ID08,Maid Knife,Maid Knife,Faca de empregada,メイドナイフ,Dienstmädchenmesser
-cardDescription_ID08,"Sakuya Izayoi's ability to throw knives.
+name_card_id_8,Maid Knife,Maid Knife,Faca de empregada,メイドナイフ,Dienstmädchenmesser
+desc_card_id_8,"Sakuya Izayoi's ability to throw knives.
 Throwing knives that can be shot left and right.
 
 
@@ -253,8 +253,8 @@ até que consiga mirar e acertar as fadas.","投げナイフを撃つ十六夜�
 Wurfmesser, die nach links und rechts geschossen werden können.
 Sie sind nicht qualifiziert, ein Dienstmädchen zu sein,
 bis Sie zielen und die Feen treffen können."""
-cardName_ID09,Safe Return Amulet,Safe Return Amulet,Amuleto de retorno seguro,無事かえるお守り,Amulett für sichere Rückkehr
-cardDescription_ID09,"The Moriya Shrine's popular amulet.
+name_card_id_9,Safe Return Amulet,Safe Return Amulet,Amuleto de retorno seguro,無事かえるお守り,Amulett für sichere Rückkehr
+desc_card_id_9,"The Moriya Shrine's popular amulet.
 Can shoot exploding frog shots.
 One of Sanae Kochiya's abilities...
 or rather, something Suwako gave to her.
@@ -275,8 +275,8 @@ Kann explodierende Froschschüsse abfeuern.
 Eine von Sanae Kochiyas Fähigkeiten …
 oder vielmehr etwas, das Suwako ihr gegeben hat.
 Ein Glücksbringer, der Ihre sichere Heimkehr gewährleistet."""
-cardName_ID10,Shed Snakeskin Amulet,Shed Snakeskin Amulet,Amuleto de pele de cobra,蛇の抜け殻入りお守り,Amulett für abgeworfene Schlangenhaut
-cardDescription_ID10,"Can shoot snake bullets that bite at the enemies.
+name_card_id_10,Shed Snakeskin Amulet,Shed Snakeskin Amulet,Amuleto de pele de cobra,蛇の抜け殻入りお守り,Amulett für abgeworfene Schlangenhaut
+desc_card_id_10,"Can shoot snake bullets that bite at the enemies.
 One of Sanae Kochiya's abilities...
 
 

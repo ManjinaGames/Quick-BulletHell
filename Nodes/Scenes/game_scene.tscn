@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=45 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -9,44 +9,44 @@
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
+[ext_resource type="Texture2D" uid="uid://dsiggugs8jlh7" path="res://Assets/Skybox/SunsetSky.png" id="6_ydsod"]
 [ext_resource type="Texture2D" uid="uid://csodrfq23rym8" path="res://Assets/Sprites/money.png" id="7_hia1k"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Player_Script.gd" id="9_4cqcx"]
 [ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="9_7l1bi"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="13_x786h"]
-[ext_resource type="Resource" uid="uid://qd50ywh4rm84" path="res://Resources/Cards/00.tres" id="14_4qbfb"]
-[ext_resource type="Resource" uid="uid://djt1b5rhqntqr" path="res://Resources/Cards/01.tres" id="15_k2dx3"]
+[ext_resource type="Resource" uid="uid://qd50ywh4rm84" path="res://Resources/Cards/card_id_0.tres" id="14_4qbfb"]
+[ext_resource type="Resource" uid="uid://djt1b5rhqntqr" path="res://Resources/Cards/card_id_1.tres" id="15_k2dx3"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/game_over_menu.gd" id="15_ou6t6"]
-[ext_resource type="Resource" uid="uid://c4upbg36ku38m" path="res://Resources/Cards/02.tres" id="16_hovb2"]
-[ext_resource type="Resource" uid="uid://dbdg5uol4v182" path="res://Resources/Cards/03.tres" id="17_dadln"]
-[ext_resource type="Resource" uid="uid://d1cw7163jesar" path="res://Resources/Cards/04.tres" id="18_chr6o"]
+[ext_resource type="Resource" uid="uid://c4upbg36ku38m" path="res://Resources/Cards/card_id_2.tres" id="16_hovb2"]
+[ext_resource type="Resource" uid="uid://dbdg5uol4v182" path="res://Resources/Cards/card_id_3.tres" id="17_dadln"]
+[ext_resource type="Resource" uid="uid://d1cw7163jesar" path="res://Resources/Cards/card_id_4.tres" id="18_chr6o"]
 [ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
 [ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="19_jc3d8"]
 [ext_resource type="PackedScene" uid="uid://kthlaqw0sk1v" path="res://Nodes/Prefabs/card_button_prefab.tscn" id="20_4usgd"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Dialogue_Menu.gd" id="20_kjtdd"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
-[ext_resource type="Resource" uid="uid://cs8k68pjwilyr" path="res://Resources/Cards/05.tres" id="20_yckle"]
+[ext_resource type="Resource" uid="uid://cs8k68pjwilyr" path="res://Resources/Cards/card_id_5.tres" id="20_yckle"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
 [ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="21_fdfmj"]
-[ext_resource type="Resource" uid="uid://vu8vaq1lluis" path="res://Resources/Cards/06.tres" id="21_ukb5v"]
+[ext_resource type="Resource" uid="uid://vu8vaq1lluis" path="res://Resources/Cards/card_id_6.tres" id="21_ukb5v"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
-[ext_resource type="Resource" uid="uid://c1d5igf3ydly" path="res://Resources/Cards/07.tres" id="22_rdkvm"]
-[ext_resource type="Resource" uid="uid://83bpwe10k3bh" path="res://Resources/Cards/08.tres" id="23_r1lby"]
-[ext_resource type="Resource" uid="uid://c1cgdoa1sedbu" path="res://Resources/Cards/09.tres" id="24_4hole"]
-[ext_resource type="Resource" uid="uid://djhrbng5jq3sr" path="res://Resources/Cards/10.tres" id="25_w1v0v"]
+[ext_resource type="Resource" uid="uid://c1d5igf3ydly" path="res://Resources/Cards/card_id_7.tres" id="22_rdkvm"]
+[ext_resource type="Resource" uid="uid://83bpwe10k3bh" path="res://Resources/Cards/card_id_8.tres" id="23_r1lby"]
+[ext_resource type="Resource" uid="uid://c1cgdoa1sedbu" path="res://Resources/Cards/card_id_9.tres" id="24_4hole"]
+[ext_resource type="Resource" uid="uid://djhrbng5jq3sr" path="res://Resources/Cards/card_id_10.tres" id="25_w1v0v"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_aoj2f"]
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_cw1e3"]
+panorama = ExtResource("6_ydsod")
 
-[sub_resource type="Sky" id="Sky_f5lym"]
-sky_material = SubResource("ProceduralSkyMaterial_aoj2f")
+[sub_resource type="Sky" id="Sky_fcioh"]
+sky_material = SubResource("PanoramaSkyMaterial_cw1e3")
 
 [sub_resource type="Environment" id="Environment_q1y1w"]
 background_mode = 2
-sky = SubResource("Sky_f5lym")
-tonemap_mode = 2
+sky = SubResource("Sky_fcioh")
+sky_rotation = Vector3(0, 0, 1.5708)
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_jmjr4"]
 color = Color(1, 1, 1, 1)
@@ -99,10 +99,13 @@ grazeLayer = 4
 magnetLayer = 8
 enemyLayer = 2
 
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(576, 324)
+
 [node name="World3D" type="Node3D" parent="."]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D"]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+transform = Transform3D(-0.850308, -0.330336, 0.4097, 0.164236, 0.573044, 0.802899, -0.500003, 0.749999, -0.433011, 0.437671, 1.57956, -0.325333)
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World3D"]
@@ -112,11 +115,7 @@ environment = SubResource("Environment_q1y1w")
 size = Vector2i(2048, 2048)
 
 [node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 1.5, 1.5)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="World3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -1.25)
-size = Vector3(48, 0.5, 18.5)
+transform = Transform3D(1, 0, 0, 0, 0.998135, 0.0610485, 0, -0.0610485, 0.998135, 0, 1.6, 1.6)
 
 [node name="House" parent="World3D" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, 0)
@@ -147,6 +146,10 @@ transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -6)
 
 [node name="House10" parent="World3D" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -8)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -4.75)
+size = Vector3(15, 0.5, 15.5)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

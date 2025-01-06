@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://vu8vaq1lluis"]
+
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_4t2ec"]
+[ext_resource type="Texture2D" uid="uid://b4ucibryd3a40" path="res://Assets/Images/Cards/128px-REIMU_OP_max.png" id="1_gcqw7"]
+
+[resource]
+script = ExtResource("1_4t2ec")
+price = 600
+maxHold = 6
+artwork = ExtResource("1_gcqw7")

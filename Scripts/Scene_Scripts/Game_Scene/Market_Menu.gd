@@ -24,7 +24,7 @@ var singleton: Singleton
 @export var yesButton: Button
 @export var noButton: Button
 const buttonSize: Vector2 = Vector2(200, 250)
-signal closeMarket
+var isMarketOpen: bool = false
 #endregion
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
@@ -45,7 +45,9 @@ func OpenMarket():
 	buyMenu.show()
 	confirmMenu.hide()
 	show()
-	await closeMarket
+	isMarketOpen = true
+	while(isMarketOpen):
+		await gameScene.frame
 #-------------------------------------------------------------------------------
 func CreateCardMarket() ->void:
 	DeleteCardButtons()
@@ -97,12 +99,12 @@ func GetCardText_ID(_cr:CardResource) -> String:
 	var _s: String = _cr.resource_path.get_file().trim_suffix('.tres')
 	return _s
 #-------------------------------------------------------------------------------
-func GetCardText_Name(_id: String) -> String:
-	var _s: String = tr("cardName_ID"+_id)
+func GetCardText_Name(_id:String) -> String:
+	var _s: String = tr("name_"+_id)
 	return _s
 #-------------------------------------------------------------------------------
-func GetCardText_Description(_id: String) -> String:
-	var _s: String = tr("cardDescription_ID"+_id)
+func GetCardText_Description(_id:String) -> String:
+	var _s: String = tr("desc_"+_id)
 	return _s
 #endregion
 #-------------------------------------------------------------------------------
@@ -110,7 +112,7 @@ func GetCardText_Description(_id: String) -> String:
 func CardButton_Selected(_cr:CardResource) -> void:
 	var _id: String = GetCardText_ID(_cr)
 	var _s: String = "[center][font_size=35]"+ GetCardText_Name(_id) + "[/font_size][font_size=20]\n"
-	_s += "ID: " + _id + "\n"
+	_s += _id+"\n"
 	_s += GetCardText_Description(_id)
 	description.text = _s
 	singleton.CommonSelected()
@@ -158,7 +160,7 @@ func CardButton_Canceled() -> void:
 func ConfirmMenu_YesButton_Submited(_cr:CardResource):
 	DeleteCardButtons()
 	hide()
-	closeMarket.emit()
+	isMarketOpen = false
 	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func ConfirmMenu_YesButton_Canceled():
