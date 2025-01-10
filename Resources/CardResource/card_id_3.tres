@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://co5sjibjahar7"]
+
+[ext_resource type="Texture2D" uid="uid://dnbg0qmux8j2f" path="res://Assets/Images/Cards/128px-PENDULUM_max.png" id="1_lue3h"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="2_3nmfy"]
+
+[resource]
+script = ExtResource("2_3nmfy")
+price = 300
+maxHold = 3
+artwork = ExtResource("1_lue3h")

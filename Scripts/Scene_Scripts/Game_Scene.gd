@@ -22,6 +22,7 @@ var timer: int
 #-------------------------------------------------------------------------------
 @export var enemy_Prefab: PackedScene
 @export var enemyBullet_Prefab: PackedScene
+@export var bulletDictionary: Dictionary
 @export var item_Prefab: PackedScene
 #-------------------------------------------------------------------------------
 @export var maxScoreLabel_title: RichTextLabel
@@ -447,8 +448,8 @@ func Stage1() -> void:
 	#await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
 	#await WaveOfEnemies_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
 	await CreateBoss1()
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
 	await StageCommon("Stage 1 Completed",1,0)
 #-------------------------------------------------------------------------------
 func CreateBoss1() -> void:
@@ -456,18 +457,19 @@ func CreateBoss1() -> void:
 	#-------------------------------------------------------------------------------
 	myGAME_STATE = GAME_STATE.IN_DIALOGUE
 	dialogueMenu.OpenDialogue()
-	await dialogueMenu.ReadDialogue()
+	var _dialogue: String = dialogueMenu.GetSubBossDialogueID(1)
+	await dialogueMenu.ReadDialogue(_dialogue, 0, 4)
 	#-------------------------------------------------------------------------------
 	var _boss: Enemy = CreateBoss(0, 0)
-	await Move_Towards_Old(_boss, width*0.5, height*0.25, 30)
+	await Move_Towards_Override(_boss, width*0.5, height*0.25, 30)
 	#-------------------------------------------------------------------------------
-	await dialogueMenu.ReadDialogue()
+	await dialogueMenu.ReadDialogue(_dialogue, 4, 8)
 	dialogueMenu.CloseDialogue()
 	Enter_GameState()
 	#-------------------------------------------------------------------------------
 	singleton.PlayBGM(singleton.bgmBoss1)
-	await BossAttack(_boss, 60, "Boss Attack 1", Stage1_Boss1_UM1_SubAttack1, 5)
-	await BossAttack_and_Market(_boss, 60, "Boss SpellCard 1", Stage1_Boss1_UM1_SubAttack1, 10)
+	await BossAttack(_boss, 160, "Boss Attack 1", Stage1_Boss1_UM1_SubAttack1, 35)
+	await BossAttack_and_Market(_boss, 160, "Boss SpellCard 1", Stage1_Boss1_UM1_SubAttack1, 10)
 	
 	#await BossAttack(_boss, 20, "Boss Attack 1", Stage1_Boss1_UM1_SubAttack1, 5)
 	#await BossAttack_and_Market(_boss, 30, "Boss SpellCard 2", Stage1_Boss1_UM1_SubAttack1, 10)
@@ -480,7 +482,7 @@ func CreateBoss1() -> void:
 	#-------------------------------------------------------------------------------
 	myGAME_STATE = GAME_STATE.IN_CUTIN
 	await Frame(60)
-	await Move_Towards_Old(_boss, width, 0, 30)
+	await Move_Towards_Override(_boss, width, 0, 30)
 	#-------------------------------------------------------------------------------
 	Death_Enemy(_boss)
 #-------------------------------------------------------------------------------
@@ -505,10 +507,11 @@ func Stage1_Wave1_UM1_Enemy1(_x:float, _y:float, _mirror:float):
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 10)
 	Stage1_Wave1_UM1_Enemy1_Fire1(_enemy)
-	await Move_VDir_VAccel(_enemy, 5, 90, -0.05, 0)
-	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, 0.2*_mirror, 120)
-	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.2*_mirror, 0.05, 4)
-	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.2*_mirror, 180)
+	Move_VDir_Set(_enemy, 5, 90)
+	await Move_VDir_VAccel(_enemy, -0.05, 0)
+	await Move_VDir_DirAccel(_enemy, 0.2*_mirror, 120)
+	await Move_VDir_DirAccel_VAccel(_enemy, -0.2*_mirror, 0.05, 4)
+	await Move_VDir_DirAccel(_enemy, -0.2*_mirror, 180)
 	#-------------------------------------------------------------------------------
 	var _revenge: Callable = func():Stage1_Wave1_UM1_Enemy1_Fire2(_enemy, _mirror)
 	DestroyEnemy_WithRevenge(_enemy, 5, _revenge)
@@ -518,7 +521,7 @@ func Stage1_Wave1_UM1_Enemy1_Fire1(_enemy:Enemy):
 	for _i in 7:
 		if(!Obj2D_IsInGame(_enemy)):
 			return
-		CreateShotA1(_enemy.position.x, _enemy.position.y, 6, AngleToPlayer(_enemy), 1)
+		CreateShotA1(_enemy.position.x, _enemy.position.y, 6, AngleToPlayer(_enemy), "ArrowHead_Bullet", 1)
 		await Frame_InGame(10)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_UM1_Enemy1_Fire2(_enemy:Enemy, _mirror:float):
@@ -528,7 +531,7 @@ func Stage1_Wave1_UM1_Enemy1_Fire2(_enemy:Enemy, _mirror:float):
 	var _pendiente: float = _cone/(_max+1)*_mirror
 	for _i in _max:
 		var _dir: float = _origen+_pendiente*(_i+1)
-		CreateShotA1(_enemy.position.x, _enemy.position.y, 3+0.3*_i, _dir, 0)
+		CreateShotA1(_enemy.position.x, _enemy.position.y, 3+0.3*_i, _dir, "ArrowHead_Bullet", 0)
 #-------------------------------------------------------------------------------
 func Stage1_Wave2_UM1():
 	while(myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
@@ -553,10 +556,11 @@ func Stage1_Wave2_UM1_Enemy1(_x:float, _y:float, _mirror:float):
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 10)
 	Stage1_Wave2_UM1_Enemy1_Fire1(_enemy, _mirror)
-	await Move_VDir_DirAccel(_enemy, 2, 90, 0, 60)
-	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.5*_mirror, 120)
-	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.01*_mirror, 0.01, 4)
-	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.01*_mirror, 60)
+	Move_VDir_Set(_enemy, 2, 90)
+	await Move_VDir_DirAccel(_enemy, 0, 60)
+	await Move_VDir_DirAccel(_enemy, -0.5*_mirror, 120)
+	await Move_VDir_DirAccel_VAccel(_enemy, -0.01*_mirror, 0.01, 4)
+	await Move_VDir_DirAccel(_enemy, -0.01*_mirror, 60)
 	#-------------------------------------------------------------------------------
 	DestroyEnemy(_enemy, 5)
 #-------------------------------------------------------------------------------
@@ -572,23 +576,26 @@ func Stage1_Wave2_UM1_Enemy1_Fire1(_enemy:Enemy, _mirror:float):
 			return
 		for _j in _max2:
 			_origen = AngleToPlayer(_enemy)-_cone/2*_mirror
-			CreateShotA1(_enemy.position.x, _enemy.position.y, 5, _origen+_pendiente*(_j+1), 2)
+			CreateShotA1(_enemy.position.x, _enemy.position.y, 5, _origen+_pendiente*(_j+1), "ArrowHead_Bullet", 2)
 		await Frame_InGame(60)
 #-------------------------------------------------------------------------------
 func Stage1_Boss1_UM1_SubAttack1(_boss:Enemy):
-	Stage1_Boss1_UM1_SubAttack1_Fire1(_boss)
+	await Stage1_Boss1_UM1_SubAttack1_Fire1(_boss)
 #-------------------------------------------------------------------------------
 func Stage1_Boss1_UM1_SubAttack1_Fire1(_boss:Enemy):
-	var _max1: float = 10
+	var _max1: float = 6
 	var _max2: float = 36
-	var _dir: float = 0
-	var _rad: float = width*0.1
+	var _rad: float = width*0
 	var _mirror: float = 1
-	var _vel: float
-	var _dV: float
+	var _velLimit: float
+	var _velLimit_Max: float = 5
+	var _velLimit_Min: float = 1
+	#-------------------------------------------------------------------------------
 	while(Obj2D_IsInGame(_boss)):
-		_vel = 6
-		_dV = (1-_vel)/_max1
+		_velLimit = _velLimit_Max
+		var _dir: float = randf_range(0, 360)
+		var _ang: float = 0
+		#-------------------------------------------------------------------------------
 		for _i in _max1:
 			if(!Obj2D_IsInGame(_boss)):
 				return
@@ -597,16 +604,27 @@ func Stage1_Boss1_UM1_SubAttack1_Fire1(_boss:Enemy):
 				var _dir2: float = deg_to_rad(_dir)
 				var _x: float = _boss.position.x + _rad * cos(_dir2)
 				var _y: float = _boss.position.y + _rad * sin(_dir2)
-				CreateShotA2(_x, _y, _vel, _dir+90*_mirror,0.2*_mirror, 600, 2)
+				Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x, _y, 3, _dir+_ang, _mirror, _velLimit, int(_i))
 				_dir += 360/_max2
-				#-------------------------------------------------------------------------------
-			_vel += _dV
-			await Frame_InGame(5)
 			#-------------------------------------------------------------------------------
+			_ang -= 2*_mirror
+			_velLimit += (_velLimit_Min-_velLimit_Max)/_max1
+			await Frame_InGame(5)
+		#-------------------------------------------------------------------------------
 		_mirror *=-1
-		await Frame_InGame(120)
+		await Frame_InGame(90)
 		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x:float, _y:float, _vel:float, _dir:float, _mirror:float, _velLimit:float, _type:int):
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, "Rice_Bullet", _type)
+	await Move_VDir_VAccel(_bullet, -0.05, 0.05)
+	var _timer: float = 15
+	var _dirAccel1: float = (135*_mirror) / _timer
+	await Move_VDir_DirAccel(_bullet, _dirAccel1, _timer)
+	var _dirAccel2: float = 0.3 * _mirror
+	await Move_VDir_DirAccel_VAccel(_bullet, _dirAccel2, 0.05, _velLimit)
+	await Move_VDir_DirAccel(_bullet, _dirAccel2, 150)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1_BlackMarket():
 	while(myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
@@ -640,11 +658,12 @@ func Stage1_Enemy1_BlackMarket(_x:float, _y:float, _mirror:float):
 	#-------------------------------------------------------------------------------
 	var _enemy: Enemy = CreateEnemy(_x, _y, 25)
 	Stage1_Enemy1_Fire1_BlackMarket(_enemy)
-	await Move_VDir_DirAccel(_enemy, 5, 90-90*_mirror, -0.1*_mirror, 60*1)
-	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.1*_mirror, -0.05, 1)
-	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -1.5*_mirror, 60*1)
-	await Move_VDir_DirAccel_VAccel(_enemy, _enemy.vel, _enemy.dir, -0.1*_mirror, 0.06, 3)
-	await Move_VDir_DirAccel(_enemy, _enemy.vel, _enemy.dir, -0.1*_mirror, 60*1)
+	Move_VDir_Set(_enemy, 5, 90-90*_mirror)
+	await Move_VDir_DirAccel(_enemy, -0.1*_mirror, 60*1)
+	await Move_VDir_DirAccel_VAccel(_enemy, -0.1*_mirror, -0.05, 1)
+	await Move_VDir_DirAccel(_enemy, -1.5*_mirror, 60*1)
+	await Move_VDir_DirAccel_VAccel(_enemy, -0.1*_mirror, 0.06, 3)
+	await Move_VDir_DirAccel(_enemy, -0.1*_mirror, 60*1)
 	await Move_VDir(_enemy, _enemy.vel, _enemy.dir, 60*2)
 	#-------------------------------------------------------------------------------
 	DestroyEnemy(_enemy, 20)
@@ -654,7 +673,7 @@ func Stage1_Enemy1_Fire1_BlackMarket(_enemy:Enemy):
 	for _i in 4:
 		if(!Obj2D_IsInGame(_enemy)):
 			return
-		CreateShotA1(_enemy.position.x, _enemy.position.y, randf_range(3,4), 90+randf_range(-5,5), 1)
+		CreateShotA1(_enemy.position.x, _enemy.position.y, randf_range(3,4), 90+randf_range(-5,5), "ArrowHead_Bullet", 1)
 		await Frame_InGame(10)
 #-------------------------------------------------------------------------------
 func Stage1_Wave1():
@@ -686,7 +705,7 @@ func Stage1_Enemy1_Fire(_enemy:Enemy, _num:int) -> void:
 		#-------------------------------------------------------------------------------
 		_dir = -_cone/2
 		for _j in _num:
-			var _bullet: Bullet = CreateShotA1(_enemy.position.x, _enemy.position.y, 4, AngleToPlayer(_enemy)+_dir, 1)
+			var _bullet: Bullet = CreateShotA1(_enemy.position.x, _enemy.position.y, 4, AngleToPlayer(_enemy)+_dir, "ArrowHead_Bullet", 1)
 			#Move_Vaccel(_bullet, -0.04, 1)
 			_dir += _cone/float(_num-1)
 		await Frame_InGame(15)
@@ -790,7 +809,9 @@ func WaveOfEnemies_and_Market(_s:String, _c:Callable, _time:int):
 	Enter_GameState()
 #-------------------------------------------------------------------------------
 func WaveOfEnemies(_s:String, _c:Callable, _time:int):
+	myGAME_STATE = GAME_STATE.IN_CUTIN
 	await ShowBanner(_s)
+	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
 	_c.call()
 	await StartTimer(_time)
 #-------------------------------------------------------------------------------
@@ -865,23 +886,23 @@ func Enter_GameState():
 #endregion
 #-------------------------------------------------------------------------------
 #region CREATE ENEMY BULLET
-func CreateShotA1(_x:float, _y:float, _vel:float, _dir:float, _frame:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
+func CreateShotA1(_x:float, _y:float, _vel:float, _dir:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
 	return _bullet
 #-------------------------------------------------------------------------------
-func CreateShotA2(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _maxTimer:float, _frame:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
-	await Move_VDir_DirAccel(_bullet, _vel, _dir, _dirAccel, _maxTimer)
+func CreateShotA2(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _maxTimer:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
+	await Move_VDir_DirAccel(_bullet, _dirAccel, _maxTimer)
 	return _bullet
 #-------------------------------------------------------------------------------
-func CreateShotA3(_x:float, _y:float, _vel:float, _dir:float, _vAccel:float, _VLimit:float, _frame:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
-	await Move_VDir_VAccel(_bullet, _vel, _dir, _vAccel, _VLimit)
+func CreateShotA3(_x:float, _y:float, _vel:float, _dir:float, _vAccel:float, _VLimit:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
+	await Move_VDir_VAccel(_bullet, _vAccel, _VLimit)
 	return _bullet
 #-------------------------------------------------------------------------------
-func CreateShotA4(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _vAccel:float, _VLimit:float, _frame:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _frame)
-	await Move_VDir_DirAccel_VAccel(_bullet, _vel, _dir, _dirAccel, _vAccel, _VLimit)
+func CreateShotA4(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _vAccel:float, _VLimit:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
+	await Move_VDir_DirAccel_VAccel(_bullet, _dirAccel, _vAccel, _VLimit)
 	return _bullet
 #endregion
 #-------------------------------------------------------------------------------
@@ -894,7 +915,7 @@ func CreateDisabledEnemyBullets(_num:int):
 		_bullet.hide()
 		content.add_child(_bullet)
 #-------------------------------------------------------------------------------
-func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float, _frame:int) -> Bullet:
+func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float, _type:String, _color:int) -> Bullet:
 	var _bullet: Bullet
 	if(enemyBulletsDisabled.size()>0):
 		_bullet = enemyBulletsDisabled[0]
@@ -908,21 +929,30 @@ func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float, _frame:int) -
 	_bullet.rotation = deg_to_rad(_dir + 90.0)
 	_bullet.vel = _vel
 	_bullet.dir = _dir
-	_bullet.frame = _frame
+	#-------------------------------------------------------------------------------
+	var _bulletResource: BulletResource = bulletDictionary[_type]
+	_bullet.texture = _bulletResource.texture
+	_bullet.offset = _bulletResource.offset
+	_bullet.flip_h = _bulletResource.frame.x
+	_bullet.flip_v = _bulletResource.frame.y
+	_bullet.size = _bulletResource.size
+	_bullet.frame = _color
+	_bullet.flip_v = false
+	#-------------------------------------------------------------------------------
 	_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.ALIVE
 	#-------------------------------------------------------------------------------
-	Bullet_Movement_VDir(_bullet)
+	Bullet_Movement_VDir_Update(_bullet)
 	#-------------------------------------------------------------------------------
 	return _bullet
 #-------------------------------------------------------------------------------
-func Bullet_Movement_VDir(_bullet:Bullet) -> void:
+func Bullet_Movement_VDir_Update(_bullet:Bullet) -> void:
 	Bullet_Movement_Update(_bullet, Bullet_Movement_VDir_Set)
 #-------------------------------------------------------------------------------
 func Bullet_Movement_VDir_Set(_bullet:Bullet):
 	Obj2D_Set_Common_VDir(_bullet)
 	Bullet_Movement_Set(_bullet)
 #-------------------------------------------------------------------------------
-func Bullet_Movement_VXY(_bullet:Bullet) -> void:
+func Bullet_Movement_VXY_Update(_bullet:Bullet) -> void:
 	Bullet_Movement_Update(_bullet, Bullet_Movement_VXY_Set)
 #-------------------------------------------------------------------------------
 func Bullet_Movement_VXY_Set(_bullet:Bullet):
@@ -988,7 +1018,7 @@ func PlayerRespawn(_player:Player):
 	_player.magnet.shape.disabled = false
 	_player.graze.shape.disabled = false
 	_player.show()
-	await PlayerInvincible(_player, 60)
+	await PlayerInvincible(_player, 90)
 	#-------------------------------------------------------------------------------
 	_player.hitBox.shape.disabled = false
 	_player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
@@ -1143,7 +1173,7 @@ func Move_Towards(_obj2D:Object2D, _x2:float, _y2:float, _maxTimer:float) -> voi
 		await frame
 	_obj2D.vel = 0
 #-------------------------------------------------------------------------------
-func Move_Towards_Old(_obj2D:Object2D, _x:float, _y:float,_maxTimer:float) -> void:
+func Move_Towards_Override(_obj2D:Object2D, _x:float, _y:float,_maxTimer:float) -> void:
 	var _dx: float = (_x-_obj2D.position.x)/float(_maxTimer)
 	var _dy: float = (_y-_obj2D.position.y)/float(_maxTimer)
 	var _timer: float = 0
@@ -1152,11 +1182,14 @@ func Move_Towards_Old(_obj2D:Object2D, _x:float, _y:float,_maxTimer:float) -> vo
 		_obj2D.position += Vector2(_dx, _dy) * deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
-func Move_VDir(_obj2D:Object2D, _vel:float, _dir:float, _maxTimer:float) -> void:
+func Move_VDir_Set(_obj2D:Object2D, _vel:float, _dir:float) -> void:
 	if(!Obj2D_IsInGame(_obj2D)):
 		return
 	_obj2D.vel = _vel
 	_obj2D.dir = _dir
+#-------------------------------------------------------------------------------
+func Move_VDir(_obj2D:Object2D, _vel:float, _dir:float, _maxTimer:float) -> void:
+	Move_VDir_Set(_obj2D, _vel, _dir)
 	#-------------------------------------------------------------------------------
 	var _timer: float = 0
 	while(_timer < _maxTimer):
@@ -1165,12 +1198,7 @@ func Move_VDir(_obj2D:Object2D, _vel:float, _dir:float, _maxTimer:float) -> void
 		_timer += deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
-func Move_VDir_DirAccel(_obj2D:Object2D, _vel:float, _dir:float, _dirAccel:float, _maxTimer:float) -> void:
-	if(!Obj2D_IsInGame(_obj2D)):
-		return
-	_obj2D.vel = _vel
-	_obj2D.dir = _dir
-	#-------------------------------------------------------------------------------
+func Move_VDir_DirAccel(_obj2D:Object2D, _dirAccel:float, _maxTimer:float) -> void:
 	var _timer: float = 0
 	while(_timer < _maxTimer):
 		if(!Obj2D_IsInGame(_obj2D)):
@@ -1179,43 +1207,27 @@ func Move_VDir_DirAccel(_obj2D:Object2D, _vel:float, _dir:float, _dirAccel:float
 		_obj2D.dir += _dirAccel * deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
-func Move_VDir_VAccel(_obj2D:Object2D, _vel:float, _dir:float, _velAccel:float, _velLimit:float) -> void:
-	if(!Obj2D_IsInGame(_obj2D)):
-		return
-	_obj2D.vel = _vel
-	_obj2D.dir = _dir
+func Move_VDir_VAccel(_obj2D:Object2D, _velAccel:float, _velLimit:float) -> void:
+	var _callable:Callable = func(_obj2Db:Object2D):
+		_obj2Db.vel += _velAccel * deltaTimeScale
 	#-------------------------------------------------------------------------------
-	if(_velAccel < 0):
-		while(Obj2D_IsInGame(_obj2D)):
-			if(_obj2D.vel < _velLimit):
-				_obj2D.vel = _velLimit
-				return
-			else:
-				_obj2D.vel += _velAccel * deltaTimeScale
-			await frame
-	elif(_velAccel > 0):
-		while(Obj2D_IsInGame(_obj2D)):
-			if(_obj2D.vel > _velLimit):
-				_obj2D.vel = _velLimit
-				return
-			else:
-				_obj2D.vel += _velAccel * deltaTimeScale
-			await frame
+	await Move_VDir_DirAccel_VAccel_Common(_obj2D, _callable, _velAccel, _velLimit)
 #-------------------------------------------------------------------------------
-func Move_VDir_DirAccel_VAccel(_obj2D:Object2D, _vel:float, _dir:float, _dirAccel:float, _velAccel:float, _velLimit:float) -> void:
-	if(!Obj2D_IsInGame(_obj2D)):
-		return
-	_obj2D.vel = _vel
-	_obj2D.dir = _dir
+func Move_VDir_DirAccel_VAccel(_obj2D:Object2D, _dirAccel:float, _velAccel:float, _velLimit:float) -> void:
+	var _callable:Callable = func(_obj2Db:Object2D):
+		_obj2Db.dir += _dirAccel * deltaTimeScale
+		_obj2Db.vel += _velAccel * deltaTimeScale
 	#-------------------------------------------------------------------------------
+	await Move_VDir_DirAccel_VAccel_Common(_obj2D, _callable, _velAccel, _velLimit)
+#-------------------------------------------------------------------------------
+func Move_VDir_DirAccel_VAccel_Common(_obj2D:Object2D, _callable:Callable, _velAccel:float, _velLimit:float) -> void:
 	if(_velAccel < 0):
 		while(Obj2D_IsInGame(_obj2D)):
 			if(_obj2D.vel < _velLimit):
 				_obj2D.vel = _velLimit
 				return
 			else:
-				_obj2D.dir += _dirAccel * deltaTimeScale
-				_obj2D.vel += _velAccel * deltaTimeScale
+				_callable.call(_obj2D)
 			await frame
 	elif(_velAccel > 0):
 		while(Obj2D_IsInGame(_obj2D)):
@@ -1223,8 +1235,7 @@ func Move_VDir_DirAccel_VAccel(_obj2D:Object2D, _vel:float, _dir:float, _dirAcce
 				_obj2D.vel = _velLimit
 				return
 			else:
-				_obj2D.dir += _dirAccel * deltaTimeScale
-				_obj2D.vel += _velAccel * deltaTimeScale
+				_callable.call(_obj2D)
 			await frame
 #-------------------------------------------------------------------------------
 func Obj2D_Set_Common_VDir(_obj2D:Object2D) -> void:
@@ -1288,17 +1299,17 @@ func Frame(_maxTimer:int) -> void:
 func Frame_WithBoss(_boss:Enemy, _maxTimer:int) -> void:
 	var _timer: float = 0
 	while(_timer < _maxTimer):
-		_timer += deltaTimeScale
 		if(_boss.myOBJECT2D_STATE == Enemy.OBJECT2D_STATE.DEATH):
 			return
+		_timer += deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
 func Frame_InGame(_maxTimer:int) -> void:
 	var _timer: float = 0
 	while(_timer < _maxTimer):
-		_timer += deltaTimeScale
 		if(myGAME_STATE != GAME_STATE.IN_GAMEPLAY):
 			return
+		_timer += deltaTimeScale
 		await frame
 #-------------------------------------------------------------------------------
 func WaitEnemyDeath(_enemy:Enemy):

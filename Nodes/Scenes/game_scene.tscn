@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=50 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -8,34 +8,51 @@
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Collider_Script.gd" id="4_1isya"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/BulletResource.gd" id="5_5ick3"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
+[ext_resource type="Texture2D" uid="uid://d24jdxnpb0gbm" path="res://Assets/Sprites/RiceBullet.png" id="6_f7nn8"]
 [ext_resource type="Texture2D" uid="uid://dsiggugs8jlh7" path="res://Assets/Skybox/SunsetSky.png" id="6_ydsod"]
+[ext_resource type="Texture2D" uid="uid://db00buwxk3mf2" path="res://Assets/Sprites/Enemy Bullet 1.png" id="7_6l0j7"]
 [ext_resource type="Texture2D" uid="uid://csodrfq23rym8" path="res://Assets/Sprites/money.png" id="7_hia1k"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Player_Script.gd" id="9_4cqcx"]
-[ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="9_7l1bi"]
+[ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="12_7k8wf"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="13_x786h"]
-[ext_resource type="Resource" uid="uid://qd50ywh4rm84" path="res://Resources/Cards/card_id_0.tres" id="14_4qbfb"]
-[ext_resource type="Resource" uid="uid://djt1b5rhqntqr" path="res://Resources/Cards/card_id_1.tres" id="15_k2dx3"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/game_over_menu.gd" id="15_ou6t6"]
-[ext_resource type="Resource" uid="uid://c4upbg36ku38m" path="res://Resources/Cards/card_id_2.tres" id="16_hovb2"]
-[ext_resource type="Resource" uid="uid://dbdg5uol4v182" path="res://Resources/Cards/card_id_3.tres" id="17_dadln"]
-[ext_resource type="Resource" uid="uid://d1cw7163jesar" path="res://Resources/Cards/card_id_4.tres" id="18_chr6o"]
 [ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
 [ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="19_jc3d8"]
 [ext_resource type="PackedScene" uid="uid://kthlaqw0sk1v" path="res://Nodes/Prefabs/card_button_prefab.tscn" id="20_4usgd"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Dialogue_Menu.gd" id="20_kjtdd"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
-[ext_resource type="Resource" uid="uid://cs8k68pjwilyr" path="res://Resources/Cards/card_id_5.tres" id="20_yckle"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
 [ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="21_fdfmj"]
-[ext_resource type="Resource" uid="uid://vu8vaq1lluis" path="res://Resources/Cards/card_id_6.tres" id="21_ukb5v"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
-[ext_resource type="Resource" uid="uid://c1d5igf3ydly" path="res://Resources/Cards/card_id_7.tres" id="22_rdkvm"]
-[ext_resource type="Resource" uid="uid://83bpwe10k3bh" path="res://Resources/Cards/card_id_8.tres" id="23_r1lby"]
-[ext_resource type="Resource" uid="uid://c1cgdoa1sedbu" path="res://Resources/Cards/card_id_9.tres" id="24_4hole"]
-[ext_resource type="Resource" uid="uid://djhrbng5jq3sr" path="res://Resources/Cards/card_id_10.tres" id="25_w1v0v"]
+[ext_resource type="Resource" uid="uid://csasmpd5xy6p8" path="res://Resources/CardResource/card_id_1.tres" id="22_tvi2b"]
+[ext_resource type="Resource" uid="uid://8wxbbqpburxk" path="res://Resources/CardResource/card_id_2.tres" id="23_8sruy"]
+[ext_resource type="Resource" uid="uid://co5sjibjahar7" path="res://Resources/CardResource/card_id_3.tres" id="24_6tc7e"]
+[ext_resource type="Resource" uid="uid://6gpuwujswukr" path="res://Resources/CardResource/card_id_4.tres" id="25_fk7ec"]
+[ext_resource type="Resource" uid="uid://duefxpag1hfad" path="res://Resources/CardResource/card_id_5.tres" id="26_k3xl8"]
+[ext_resource type="Resource" uid="uid://kux7amworcoy" path="res://Resources/CardResource/card_id_6.tres" id="27_nhl4m"]
+[ext_resource type="Resource" uid="uid://der2t4bqfr5lt" path="res://Resources/CardResource/card_id_7.tres" id="28_x70ex"]
+[ext_resource type="Resource" uid="uid://d7pldop6tx4w" path="res://Resources/CardResource/card_id_8.tres" id="29_fgxyw"]
+[ext_resource type="Resource" uid="uid://dyt20me1g5yhc" path="res://Resources/CardResource/card_id_9.tres" id="30_fqqv2"]
+[ext_resource type="Resource" uid="uid://ccjxn1bt21ycu" path="res://Resources/CardResource/card_id_10.tres" id="31_1tjso"]
+[ext_resource type="Resource" uid="uid://qi05t41jnvqo" path="res://Resources/CardResource/card_id_0.tres" id="32_lna85"]
+
+[sub_resource type="Resource" id="Resource_tlea4"]
+script = ExtResource("5_5ick3")
+texture = ExtResource("6_f7nn8")
+frame = Vector2(16, 1)
+size = Vector2(2, 4)
+offset = Vector2(0, 0)
+
+[sub_resource type="Resource" id="Resource_fbv1d"]
+script = ExtResource("5_5ick3")
+texture = ExtResource("7_6l0j7")
+frame = Vector2(16, 1)
+size = Vector2(2, 4)
+offset = Vector2(0, -3.5)
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_cw1e3"]
 panorama = ExtResource("6_ydsod")
@@ -79,6 +96,10 @@ player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player_Prefab")
 playerExplotion = ExtResource("2_pa18e")
 enemy_Prefab = ExtResource("2_acyb6")
 enemyBullet_Prefab = ExtResource("3_5om1x")
+bulletDictionary = {
+"ArrowHead_Bullet": SubResource("Resource_fbv1d"),
+"Rice_Bullet": SubResource("Resource_tlea4")
+}
 item_Prefab = ExtResource("4_7dwg7")
 maxScoreLabel_title = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel")
 maxScoreLabel_Num = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel2")
@@ -246,9 +267,16 @@ layout_mode = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/MarginContainer"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/normal_font_size = 10
 bbcode_enabled = true
-text = "aaaaaaaa."
+text = "Debug Information.
+Debug Information.
+Debug Information.
+Debug Information.
+Debug Information.
+
+Debug Information.
+Debug Information."
 fit_content = true
 
 [node name="RightUI_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
@@ -445,7 +473,7 @@ layout_mode = 2
 z_index = 10
 position = Vector2(302, 559)
 scale = Vector2(2, 2)
-texture = ExtResource("9_7l1bi")
+texture = ExtResource("12_7k8wf")
 offset = Vector2(-1.5, 1)
 hframes = 8
 vframes = 3
@@ -659,8 +687,8 @@ buyMenu = NodePath("VBoxContainer/Buy_Menu")
 scrollContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer")
 cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
 cardPrefab = ExtResource("20_4usgd")
-cardCatalogue = Array[ExtResource("13_x786h")]([ExtResource("15_k2dx3"), ExtResource("16_hovb2"), ExtResource("17_dadln"), ExtResource("18_chr6o"), ExtResource("20_yckle"), ExtResource("21_ukb5v"), ExtResource("22_rdkvm"), ExtResource("23_r1lby"), ExtResource("24_4hole"), ExtResource("25_w1v0v")])
-deckResource = ExtResource("14_4qbfb")
+cardCatalogue = Array[ExtResource("13_x786h")]([ExtResource("22_tvi2b"), ExtResource("23_8sruy"), ExtResource("24_6tc7e"), ExtResource("25_fk7ec"), ExtResource("26_k3xl8"), ExtResource("27_nhl4m"), ExtResource("28_x70ex"), ExtResource("29_fgxyw"), ExtResource("30_fqqv2"), ExtResource("31_1tjso")])
+deckResource = ExtResource("32_lna85")
 description = NodePath("VBoxContainer/Buy_Menu/MarginContainer2/RichTextLabel")
 confirmCard_Panel = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel")
 confirmCard_Artwork = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer/TextureRect")

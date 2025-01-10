@@ -11,7 +11,7 @@ enum PLAYER_STATE{ALIVE, DEATH, INVINCIBLE}
 const normalSpeed: float = 7.0
 const focusSpeed: float = 3.5
 #-------------------------------------------------------------------------------
-var maxLives: int = 8
-var maxPower: int = 4
+var maxLives: int = 80
+var maxPower: int = 40
 #endregion
 #-------------------------------------------------------------------------------

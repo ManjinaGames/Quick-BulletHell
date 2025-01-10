@@ -23,6 +23,10 @@ singleton="*res://Nodes/Singleton/Singleton.tscn"
 
 window/stretch/mode="canvas_items"
 
+[dotnet]
+
+project/assembly_name="Quick-BulletHell"
+
 [input]
 
 ui_accept={

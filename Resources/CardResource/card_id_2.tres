@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://8wxbbqpburxk"]
+
+[ext_resource type="Texture2D" uid="uid://c58r32hi6sk7s" path="res://Assets/Images/Cards/128px-BOMB_max.png" id="1_otbo6"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="2_iltco"]
+
+[resource]
+script = ExtResource("2_iltco")
+price = 200
+maxHold = 2
+artwork = ExtResource("1_otbo6")

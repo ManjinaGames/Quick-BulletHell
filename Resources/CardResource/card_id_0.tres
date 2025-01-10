@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://qi05t41jnvqo"]
+
+[ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="1_3sxkm"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="2_b0s3l"]
+
+[resource]
+script = ExtResource("2_b0s3l")
+price = 0
+maxHold = 0
+artwork = ExtResource("1_3sxkm")

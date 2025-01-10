@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://6gpuwujswukr"]
+
+[ext_resource type="Texture2D" uid="uid://b4caede2pkmjj" path="res://Assets/Images/Cards/128px-DANGO_max.png" id="1_m8ylq"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="2_ux5lt"]
+
+[resource]
+script = ExtResource("2_ux5lt")
+price = 400
+maxHold = 4
+artwork = ExtResource("1_m8ylq")

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://d7pldop6tx4w"]
+
+[ext_resource type="Texture2D" uid="uid://3qua7i5a5kq0" path="res://Assets/Images/Cards/128px-SAKUYA_OP_max.png" id="1_pjawx"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="2_0vveb"]
+
+[resource]
+script = ExtResource("2_0vveb")
+price = 800
+maxHold = 8
+artwork = ExtResource("1_pjawx")
