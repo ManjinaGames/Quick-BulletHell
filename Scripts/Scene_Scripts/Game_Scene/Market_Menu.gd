@@ -10,8 +10,8 @@ var singleton: Singleton
 @export var cardContainer: HBoxContainer
 @export var cardPrefab: PackedScene
 @export var cardButton: Array[Button]
-@export var cardCatalogue: Array[CardResource]
-@export var deckResource: CardResource
+@export var cardDictionary: Dictionary
+@export var deckTexture: Texture2D
 @export var description: RichTextLabel
 #-------------------------------------------------------------------------------
 @export_group("Confirm Menu Properties")
@@ -36,12 +36,12 @@ func Start():
 	hide()
 #endregion
 #-------------------------------------------------------------------------------
-#region CREATE CARDS FUNCTIONS
+#region CREATE MARKET FUNCTIONS
 func OpenMarket():
 	CreateCardMarket()
 	singleton.MoveToFirstButton(cardButton)
 	scrollContainer.custom_minimum_size = buttonSize
-	scrollContainer.scroll_horizontal = 0	#NOTA: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
+	scrollContainer.scroll_horizontal = 0	#NOTA IMPORTANTE: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
 	buyMenu.show()
 	confirmMenu.hide()
 	show()
@@ -52,30 +52,8 @@ func OpenMarket():
 func CreateCardMarket() ->void:
 	DeleteCardButtons()
 	CreateDeckButton()
-	for _cr in cardCatalogue:
-		CreateCardButton(_cr)
-#-------------------------------------------------------------------------------
-func CreateCardButton(_cr: CardResource):
-	var _cb : CardButton = CreateCardButton_Common(_cr)
-	singleton.SetButton(_cb, func():CardButton_Selected(_cr), func():CardButton_Subited(_cr, _cb), CardButton_Canceled)
-	_cb.hold.text = GetCardText_Hold(_cr)
-	_cb.price.text = GetCardText_Price(_cr)
-#-------------------------------------------------------------------------------
-func CreateDeckButton():
-	var _cb : CardButton = CreateCardButton_Common(deckResource)
-	singleton.SetButton(_cb, func():CardButton_Selected(deckResource), func():DeckButton_Submit(deckResource, _cb), func():DeckButton_Canceled(deckResource, _cb))
-	_cb.hold.text = ""
-	_cb.price.text = ""
-#-------------------------------------------------------------------------------
-func CreateCardButton_Common(_cr: CardResource) -> CardButton:
-	var _cb : CardButton = cardPrefab.instantiate() as CardButton
-	_cb.custom_minimum_size = buttonSize
-	if(singleton.useCustomButton):
-		_cb.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
-	_cb.artwork.texture = _cr.artwork
-	cardContainer.add_child(_cb)
-	cardButton.append(_cb)
-	return _cb
+	for _key in cardDictionary:
+		CreateCardButton(cardDictionary[_key])
 #-------------------------------------------------------------------------------
 func DeleteCardButtons() -> void:
 	for _cb in cardButton:
@@ -87,6 +65,32 @@ func ClearContainer():
 	for _child in cardContainer.get_children():
 		_child.queue_free()
 #-------------------------------------------------------------------------------
+func CreateCardButton(_cr: CardResource):
+	var _cb : CardButton = CreateCardButton_Common(_cr.artwork)
+	#-------------------------------------------------------------------------------
+	var _selected: Callable = func():CardButton_Selected(GetCardText_ID(_cr))
+	var _submited: Callable = func():CardButton_Subited(_cr, _cb)
+	singleton.SetButton(_cb, _selected, _submited, CardButton_Canceled)
+	#-------------------------------------------------------------------------------
+	_cb.hold.text = GetCardText_Hold(_cr)
+	_cb.price.text = GetCardText_Price(_cr)
+#-------------------------------------------------------------------------------
+func CreateDeckButton():
+	var _cb : CardButton = CreateCardButton_Common(deckTexture)
+	singleton.SetButton(_cb, func():CardButton_Selected("card_id_0"), func():DeckButton_Submit(_cb), func():DeckButton_Canceled(_cb))
+	_cb.hold.text = ""
+	_cb.price.text = ""
+#-------------------------------------------------------------------------------
+func CreateCardButton_Common(_texture: Texture2D) -> CardButton:
+	var _cb : CardButton = cardPrefab.instantiate() as CardButton
+	_cb.custom_minimum_size = buttonSize
+	if(singleton.useCustomButton):
+		_cb.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
+	_cb.artwork.texture = _texture
+	cardContainer.add_child(_cb)
+	cardButton.append(_cb)
+	return _cb
+#-------------------------------------------------------------------------------
 func GetCardText_Hold(_cr:CardResource) -> String:
 	var _s: String = str(_cr.maxHold) + " / " + str(_cr.maxHold)
 	return _s
@@ -96,7 +100,7 @@ func GetCardText_Price(_cr:CardResource) -> String:
 	return _s
 #-------------------------------------------------------------------------------
 func GetCardText_ID(_cr:CardResource) -> String:
-	var _s: String = _cr.resource_path.get_file().trim_suffix('.tres')
+	var _s: String = cardDictionary.find_key(_cr)
 	return _s
 #-------------------------------------------------------------------------------
 func GetCardText_Name(_id:String) -> String:
@@ -109,8 +113,7 @@ func GetCardText_Description(_id:String) -> String:
 #endregion
 #-------------------------------------------------------------------------------
 #region CARD BUTTON FUNCTIONS
-func CardButton_Selected(_cr:CardResource) -> void:
-	var _id: String = GetCardText_ID(_cr)
+func CardButton_Selected(_id:String) -> void:
 	var _s: String = "[center][font_size=35]"+ GetCardText_Name(_id) + "[/font_size][font_size=20]\n"
 	_s += _id+"\n"
 	_s += GetCardText_Description(_id)
@@ -121,30 +124,34 @@ func CardButton_Subited(_cr:CardResource, _cb:CardButton) -> void:
 	confirmCard_Hold.text = GetCardText_Hold(_cr)
 	confirmCard_Price.text = GetCardText_Price(_cr)
 	confirmCard_Title.text = "Do You Want to Buy This Card?"
-	CardButton_Submit_Common(_cr, _cb)
+	#-------------------------------------------------------------------------------
+	var _submit: Callable = func(): ConfirmMenu_Card_YesButton_Submited(_cr)
+	CardButton_Submit_Common(_cr.artwork, _cb, _submit)
 	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
-func DeckButton_Submit(_cr:CardResource, _cb:CardButton) -> void:
-	DeckButton_Common(_cr, _cb)
+func DeckButton_Submit(_cb:CardButton) -> void:
+	DeckButton_Common(_cb)
 	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
-func DeckButton_Canceled(_cr:CardResource, _cb:CardButton) -> void:
-	DeckButton_Common(_cr, _cb)
+func DeckButton_Canceled(_cb:CardButton) -> void:
+	DeckButton_Common(_cb)
 	singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
-func DeckButton_Common(_cr:CardResource, _cb:CardButton) -> void:
+func DeckButton_Common(_cb:CardButton) -> void:
 	confirmCard_Hold.text = ""
 	confirmCard_Price.text = ""
 	confirmCard_Title.text = "Do You Want to Quit the Market?"
-	CardButton_Submit_Common(_cr, _cb)
+	#-------------------------------------------------------------------------------
+	var _submit: Callable = func(): ConfirmMenu_Deck_YesButton_Submited()
+	CardButton_Submit_Common(deckTexture, _cb, _submit)
 #-------------------------------------------------------------------------------
-func CardButton_Submit_Common(_cr:CardResource, _cb:CardButton) -> void:
+func CardButton_Submit_Common(_texture:Texture2D, _cb:CardButton, _callable:Callable) -> void:
 	confirmCard_Panel.custom_minimum_size = buttonSize
-	confirmCard_Artwork.texture = _cr.artwork
+	confirmCard_Artwork.texture = _texture
 	#-------------------------------------------------------------------------------
 	singleton.DisconnectButton(yesButton)
 	singleton.DisconnectButton(noButton)
-	singleton.SetButton(yesButton, singleton.CommonSelected, func():ConfirmMenu_YesButton_Submited(_cr), ConfirmMenu_YesButton_Canceled)
+	singleton.SetButton(yesButton, singleton.CommonSelected, _callable, ConfirmMenu_YesButton_Canceled)
 	singleton.SetButton(noButton, singleton.CommonSelected, func():ConfirmMenu_NoButton_Submited(_cb), func():ConfirmMenu_NoButton_Canceled(_cb))
 	#-------------------------------------------------------------------------------
 	buyMenu.hide()
@@ -157,7 +164,14 @@ func CardButton_Canceled() -> void:
 #endregion
 #-------------------------------------------------------------------------------
 #region CONFIRM MENU FUNCTIONS
-func ConfirmMenu_YesButton_Submited(_cr:CardResource):
+func ConfirmMenu_Card_YesButton_Submited(_cr:CardResource):
+	DeleteCardButtons()
+	print(GetCardText_Name(GetCardText_ID(_cr))+" was added to your bag.")
+	hide()
+	isMarketOpen = false
+	singleton.CommonSubmited()
+#-------------------------------------------------------------------------------
+func ConfirmMenu_Deck_YesButton_Submited():
 	DeleteCardButtons()
 	hide()
 	isMarketOpen = false
@@ -179,5 +193,9 @@ func ConfurmMenu_NoButton_Common(_cb:CardButton):
 	confirmMenu.hide()
 	buyMenu.show()
 	singleton.MoveToButton(_cb)
+#endregion
+#-------------------------------------------------------------------------------
+#region DECK BUTTON FUNCTIONS
+#-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------

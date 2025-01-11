@@ -4,7 +4,6 @@ class_name Dialogue_Menu
 var singleton: Singleton
 #-------------------------------------------------------------------------------
 @export var gameScene: Game_Scene
-@export var dialogueText: Array[String]
 @export var dialogueLabel: RichTextLabel
 #-------------------------------------------------------------------------------
 var isNextPress: bool = false

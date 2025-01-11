@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=59 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -25,27 +25,19 @@
 [ext_resource type="PackedScene" uid="uid://kthlaqw0sk1v" path="res://Nodes/Prefabs/card_button_prefab.tscn" id="20_4usgd"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Dialogue_Menu.gd" id="20_kjtdd"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
+[ext_resource type="Texture2D" uid="uid://qe0pv72mqbir" path="res://Assets/Images/Cards/128px-EXTEND_max.png" id="21_4ffrs"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
 [ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="21_fdfmj"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
-[ext_resource type="Resource" uid="uid://csasmpd5xy6p8" path="res://Resources/CardResource/card_id_1.tres" id="22_tvi2b"]
-[ext_resource type="Resource" uid="uid://8wxbbqpburxk" path="res://Resources/CardResource/card_id_2.tres" id="23_8sruy"]
-[ext_resource type="Resource" uid="uid://co5sjibjahar7" path="res://Resources/CardResource/card_id_3.tres" id="24_6tc7e"]
-[ext_resource type="Resource" uid="uid://6gpuwujswukr" path="res://Resources/CardResource/card_id_4.tres" id="25_fk7ec"]
-[ext_resource type="Resource" uid="uid://duefxpag1hfad" path="res://Resources/CardResource/card_id_5.tres" id="26_k3xl8"]
-[ext_resource type="Resource" uid="uid://kux7amworcoy" path="res://Resources/CardResource/card_id_6.tres" id="27_nhl4m"]
-[ext_resource type="Resource" uid="uid://der2t4bqfr5lt" path="res://Resources/CardResource/card_id_7.tres" id="28_x70ex"]
-[ext_resource type="Resource" uid="uid://d7pldop6tx4w" path="res://Resources/CardResource/card_id_8.tres" id="29_fgxyw"]
-[ext_resource type="Resource" uid="uid://dyt20me1g5yhc" path="res://Resources/CardResource/card_id_9.tres" id="30_fqqv2"]
-[ext_resource type="Resource" uid="uid://ccjxn1bt21ycu" path="res://Resources/CardResource/card_id_10.tres" id="31_1tjso"]
-[ext_resource type="Resource" uid="uid://qi05t41jnvqo" path="res://Resources/CardResource/card_id_0.tres" id="32_lna85"]
-
-[sub_resource type="Resource" id="Resource_tlea4"]
-script = ExtResource("5_5ick3")
-texture = ExtResource("6_f7nn8")
-frame = Vector2(16, 1)
-size = Vector2(2, 4)
-offset = Vector2(0, 0)
+[ext_resource type="Texture2D" uid="uid://c58r32hi6sk7s" path="res://Assets/Images/Cards/128px-BOMB_max.png" id="23_3pa5v"]
+[ext_resource type="Texture2D" uid="uid://dnbg0qmux8j2f" path="res://Assets/Images/Cards/128px-PENDULUM_max.png" id="24_twmry"]
+[ext_resource type="Texture2D" uid="uid://b4caede2pkmjj" path="res://Assets/Images/Cards/128px-DANGO_max.png" id="25_t2tp4"]
+[ext_resource type="Texture2D" uid="uid://84sppv73pgra" path="res://Assets/Images/Cards/128px-MOKOU_max.png" id="26_atbp3"]
+[ext_resource type="Texture2D" uid="uid://b4ucibryd3a40" path="res://Assets/Images/Cards/128px-REIMU_OP_max.png" id="27_f8i0h"]
+[ext_resource type="Texture2D" uid="uid://bm2lkcurpb1h" path="res://Assets/Images/Cards/128px-MARISA_OP_max.png" id="28_ufm3c"]
+[ext_resource type="Texture2D" uid="uid://3qua7i5a5kq0" path="res://Assets/Images/Cards/128px-SAKUYA_OP_max.png" id="29_oh0xr"]
+[ext_resource type="Texture2D" uid="uid://dlamm8byjhs2v" path="res://Assets/Images/Cards/128px-SANAE_OP_max.png" id="30_j07uq"]
+[ext_resource type="Texture2D" uid="uid://b0ey41rilqy10" path="res://Assets/Images/Cards/128px-SANAE_OP2_max.png" id="31_2vbc3"]
 
 [sub_resource type="Resource" id="Resource_fbv1d"]
 script = ExtResource("5_5ick3")
@@ -53,6 +45,13 @@ texture = ExtResource("7_6l0j7")
 frame = Vector2(16, 1)
 size = Vector2(2, 4)
 offset = Vector2(0, -3.5)
+
+[sub_resource type="Resource" id="Resource_tlea4"]
+script = ExtResource("5_5ick3")
+texture = ExtResource("6_f7nn8")
+frame = Vector2(16, 1)
+size = Vector2(2, 4)
+offset = Vector2(0, 0)
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_cw1e3"]
 panorama = ExtResource("6_ydsod")
@@ -82,6 +81,66 @@ radius = 64.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
 radius = 6.0
+
+[sub_resource type="Resource" id="Resource_nwqne"]
+script = ExtResource("13_x786h")
+price = 100
+maxHold = 1
+artwork = ExtResource("21_4ffrs")
+
+[sub_resource type="Resource" id="Resource_k3vtl"]
+script = ExtResource("13_x786h")
+price = 1000
+maxHold = 10
+artwork = ExtResource("31_2vbc3")
+
+[sub_resource type="Resource" id="Resource_24log"]
+script = ExtResource("13_x786h")
+price = 200
+maxHold = 2
+artwork = ExtResource("23_3pa5v")
+
+[sub_resource type="Resource" id="Resource_oux5a"]
+script = ExtResource("13_x786h")
+price = 300
+maxHold = 3
+artwork = ExtResource("24_twmry")
+
+[sub_resource type="Resource" id="Resource_8yq2a"]
+script = ExtResource("13_x786h")
+price = 400
+maxHold = 4
+artwork = ExtResource("25_t2tp4")
+
+[sub_resource type="Resource" id="Resource_lnw2j"]
+script = ExtResource("13_x786h")
+price = 500
+maxHold = 5
+artwork = ExtResource("26_atbp3")
+
+[sub_resource type="Resource" id="Resource_epfxh"]
+script = ExtResource("13_x786h")
+price = 600
+maxHold = 6
+artwork = ExtResource("27_f8i0h")
+
+[sub_resource type="Resource" id="Resource_ul4ns"]
+script = ExtResource("13_x786h")
+price = 700
+maxHold = 7
+artwork = ExtResource("28_ufm3c")
+
+[sub_resource type="Resource" id="Resource_rfbil"]
+script = ExtResource("13_x786h")
+price = 800
+maxHold = 8
+artwork = ExtResource("29_oh0xr")
+
+[sub_resource type="Resource" id="Resource_ononi"]
+script = ExtResource("13_x786h")
+price = 900
+maxHold = 9
+artwork = ExtResource("30_j07uq")
 
 [node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
@@ -687,8 +746,19 @@ buyMenu = NodePath("VBoxContainer/Buy_Menu")
 scrollContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer")
 cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
 cardPrefab = ExtResource("20_4usgd")
-cardCatalogue = Array[ExtResource("13_x786h")]([ExtResource("22_tvi2b"), ExtResource("23_8sruy"), ExtResource("24_6tc7e"), ExtResource("25_fk7ec"), ExtResource("26_k3xl8"), ExtResource("27_nhl4m"), ExtResource("28_x70ex"), ExtResource("29_fgxyw"), ExtResource("30_fqqv2"), ExtResource("31_1tjso")])
-deckResource = ExtResource("32_lna85")
+cardDictionary = {
+"card_id_1": SubResource("Resource_nwqne"),
+"card_id_10": SubResource("Resource_k3vtl"),
+"card_id_2": SubResource("Resource_24log"),
+"card_id_3": SubResource("Resource_oux5a"),
+"card_id_4": SubResource("Resource_8yq2a"),
+"card_id_5": SubResource("Resource_lnw2j"),
+"card_id_6": SubResource("Resource_epfxh"),
+"card_id_7": SubResource("Resource_ul4ns"),
+"card_id_8": SubResource("Resource_rfbil"),
+"card_id_9": SubResource("Resource_ononi")
+}
+deckTexture = ExtResource("21_fdfmj")
 description = NodePath("VBoxContainer/Buy_Menu/MarginContainer2/RichTextLabel")
 confirmCard_Panel = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel")
 confirmCard_Artwork = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer/TextureRect")
@@ -887,7 +957,6 @@ z_index = 30
 layout_mode = 2
 script = ExtResource("20_kjtdd")
 gameScene = NodePath("../../..")
-dialogueText = Array[String](["11111111111111111", "2222222222222222222222", "3333333333333333", "444444444444444444444", "555555555555555555"])
 dialogueLabel = NodePath("MarginContainer/PanelContainer/MarginContainer/RichTextLabel")
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Dialogue_Menu"]

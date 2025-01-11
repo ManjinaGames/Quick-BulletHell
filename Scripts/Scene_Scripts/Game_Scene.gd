@@ -444,9 +444,9 @@ func Choreography() -> void:
 #-------------------------------------------------------------------------------
 #region STAGE 1
 func Stage1() -> void:
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
+	await WaveOfEnemies_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
 	await CreateBoss1()
 	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
 	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
@@ -469,14 +469,14 @@ func CreateBoss1() -> void:
 	#-------------------------------------------------------------------------------
 	singleton.PlayBGM(singleton.bgmBoss1)
 	await BossAttack(_boss, 160, "Boss Attack 1", Stage1_Boss1_UM1_SubAttack1, 35)
-	await BossAttack_and_Market(_boss, 160, "Boss SpellCard 1", Stage1_Boss1_UM1_SubAttack1, 10)
-	
+	await BossAttack_and_Market(_boss, 5, "Boss SpellCard 1", Stage1_Boss1_UM1_SubAttack1, 10)
+	#-------------------------------------------------------------------------------
 	#await BossAttack(_boss, 20, "Boss Attack 1", Stage1_Boss1_UM1_SubAttack1, 5)
 	#await BossAttack_and_Market(_boss, 30, "Boss SpellCard 2", Stage1_Boss1_UM1_SubAttack1, 10)
-	
+	#-------------------------------------------------------------------------------
 	#await BossAttack(_boss, 20, "Boss Attack 3", Stage1_Boss1_UM1_SubAttack1, 15)
 	#await BossAttack_and_Market(_boss, 15, "Boss SpellCard 3", Stage1_Boss1_UM1_SubAttack1, 15)
-	
+	#-------------------------------------------------------------------------------
 	await BossAttack(_boss, 22, "Boss Attack 4", Stage1_Boss1_UM1_SubAttack1, 15)
 	await BossAttack(_boss, 20, "Boss SpellCard 4", Stage1_Boss1_UM1_SubAttack1, 15)
 	#-------------------------------------------------------------------------------
