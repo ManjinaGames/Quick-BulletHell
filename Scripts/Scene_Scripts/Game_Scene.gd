@@ -444,9 +444,9 @@ func Choreography() -> void:
 #-------------------------------------------------------------------------------
 #region STAGE 1
 func Stage1() -> void:
-	await WaveOfEnemies_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
-	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
-	await WaveOfEnemies_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
+	#await WaveOfEnemies_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
+	#await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
+	#await WaveOfEnemies_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
 	await CreateBoss1()
 	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
 	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
@@ -582,38 +582,50 @@ func Stage1_Wave2_UM1_Enemy1_Fire1(_enemy:Enemy, _mirror:float):
 func Stage1_Boss1_UM1_SubAttack1(_boss:Enemy):
 	await Stage1_Boss1_UM1_SubAttack1_Fire1(_boss)
 #-------------------------------------------------------------------------------
+func Stage1_Boss1_UM1_SubAttack1_Movement(_boss:Enemy):
+	var _x: float = randf_range(width*0.4, width*0.6)
+	var _y: float = randf_range(height*0.2, height*0.25)
+	await Move_Towards(_boss, _x, _y, 90)
+#-------------------------------------------------------------------------------
 func Stage1_Boss1_UM1_SubAttack1_Fire1(_boss:Enemy):
-	var _max1: float = 6
-	var _max2: float = 36
+	#-------------------------------------------------------------------------------
+	while(Obj2D_IsInGame(_boss)):
+		await Stage1_Boss1_UM1_SubAttack1_Fire2(_boss)
+		await Stage1_Boss1_UM1_SubAttack1_Movement(_boss)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Stage1_Boss1_UM1_SubAttack1_Fire2(_boss:Enemy):
+	var _max1: float = 2
+	var _max2: float = 6
+	var _max3: float = 24
 	var _rad: float = width*0
 	var _mirror: float = 1
 	var _velLimit: float
 	var _velLimit_Max: float = 5
 	var _velLimit_Min: float = 1
 	#-------------------------------------------------------------------------------
-	while(Obj2D_IsInGame(_boss)):
+	for _i in _max1:
 		_velLimit = _velLimit_Max
 		var _dir: float = randf_range(0, 360)
 		var _ang: float = 0
 		#-------------------------------------------------------------------------------
-		for _i in _max1:
+		for _j in _max2:
 			if(!Obj2D_IsInGame(_boss)):
 				return
 			#-------------------------------------------------------------------------------
-			for _j in _max2:
+			for _k in _max3:
 				var _dir2: float = deg_to_rad(_dir)
 				var _x: float = _boss.position.x + _rad * cos(_dir2)
 				var _y: float = _boss.position.y + _rad * sin(_dir2)
-				Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x, _y, 3, _dir+_ang, _mirror, _velLimit, int(_i))
-				_dir += 360/_max2
+				Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x, _y, 3, _dir+_ang, _mirror, _velLimit, int(_j))
+				_dir += 360/_max3
 			#-------------------------------------------------------------------------------
 			_ang -= 2*_mirror
-			_velLimit += (_velLimit_Min-_velLimit_Max)/_max1
+			_velLimit += (_velLimit_Min-_velLimit_Max)/_max2
 			await Frame_InGame(5)
 		#-------------------------------------------------------------------------------
 		_mirror *=-1
-		await Frame_InGame(90)
-		#-------------------------------------------------------------------------------
+	await Frame_InGame(60)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x:float, _y:float, _vel:float, _dir:float, _mirror:float, _velLimit:float, _type:int):
