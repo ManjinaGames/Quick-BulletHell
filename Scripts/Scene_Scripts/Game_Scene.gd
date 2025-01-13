@@ -23,6 +23,7 @@ var timer: int
 @export var enemy_Prefab: PackedScene
 @export var enemyBullet_Prefab: PackedScene
 @export var bulletDictionary: Dictionary
+var maxColor: int = 15
 @export var item_Prefab: PackedScene
 #-------------------------------------------------------------------------------
 @export var maxScoreLabel_title: RichTextLabel
@@ -54,13 +55,15 @@ var itemsDisabled: Array[Item]
 @export_flags_2d_physics var enemyLayer: int
 #-------------------------------------------------------------------------------
 var height: float
-#-------------------------------------------------------------------------------
 var width: float
 #-------------------------------------------------------------------------------
-var playerMaxX: float
-var playerMinX: float
-var playerMaxY: float
-var playerMinY: float
+var playerLimitsX: Vector2
+var playerLimitsY: Vector2
+#-------------------------------------------------------------------------------
+var enemyLimitsX: Vector2
+var enemyLimitsY: Vector2
+#-------------------------------------------------------------------------------
+var bossStartingPosition: Vector2
 #-------------------------------------------------------------------------------
 var lifePoints: int
 var powerPoints: int
@@ -137,8 +140,8 @@ func PlayerMovement() -> void:
 			myPosition += input_dir * player.focusSpeed * deltaTimeScale
 		else:
 			myPosition += input_dir * player.normalSpeed * deltaTimeScale
-		myPosition.x = clampf(myPosition.x, playerMinX, playerMaxX)
-		myPosition.y = clampf(myPosition.y, playerMinY, playerMaxY)
+		myPosition.x = clampf(myPosition.x, playerLimitsX.x, playerLimitsX.y)
+		myPosition.y = clampf(myPosition.y, playerLimitsY.x, playerLimitsY.y)
 		player.position = myPosition
 #endregion
 #-------------------------------------------------------------------------------
@@ -189,23 +192,28 @@ func CanPlayerShoot() -> bool:
 #-------------------------------------------------------------------------------
 func PlayerShoot1(_x:float, _y:float, _vel:float, _dir:float) -> void:
 	var _bullet = CreatePlayerBullet(_x, _y, _vel, _dir)
+	#-------------------------------------------------------------------------------
+	var _shape_rid: RID = Colliding_CreateShapeRid(_bullet)
+	var _query: PhysicsShapeQueryParameters2D = Colliding_SetPhysicsShapeQueryParameters2D(_bullet, _shape_rid, enemyLayer)
+	#-------------------------------------------------------------------------------
 	while(_bullet != null):
 		if(0 <= _bullet.position.x and _bullet.position.x <= width):
 			if(0 <= _bullet.position.y and _bullet.position.y <= height):
-				var _result: Array[Dictionary] = Colliding(_bullet, enemyLayer)
+				var _result: Array[Dictionary] = Colliding_GetResult(_bullet, _query)
 				if(_result):
 					ShootedEnemy(_result[0]["collider"].get_parent())
-					DestroyPlayerBullet(_bullet)
+					DestroyPlayerBullet(_bullet, _shape_rid)
 					break
 				var _dir2: float = deg_to_rad(_bullet.dir)
 				_bullet.position += Vector2(_bullet.vel*cos(_dir2), _bullet.vel*sin(_dir2)) * deltaTimeScale
 				await frame
 			else:
-				DestroyPlayerBullet(_bullet)
+				DestroyPlayerBullet(_bullet, _shape_rid)
 				break
 		else:
-			DestroyPlayerBullet(_bullet)
+			DestroyPlayerBullet(_bullet, _shape_rid)
 			break
+	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func CreatePlayerBullet(_x:float, _y:float, _vel:float, _dir:float) -> Bullet:
 	var _bullet : Bullet
@@ -225,8 +233,9 @@ func CreatePlayerBullet(_x:float, _y:float, _vel:float, _dir:float) -> Bullet:
 	_bullet.frame = 9
 	return _bullet
 #-------------------------------------------------------------------------------
-func DestroyPlayerBullet(_bullet:Bullet) -> void:
+func DestroyPlayerBullet(_bullet:Bullet, _shape_rid: RID) -> void:
 	_bullet.hide()
+	Colliding_DeleteShapeRid(_shape_rid)
 	_bullet.position = Vector2.ZERO
 	playerBulletsEnabled.erase(_bullet)
 	playerBulletsDisabled.push_back(_bullet)
@@ -250,10 +259,13 @@ func SetGameLimits() -> void:
 	width = content.size.x
 	#-------------------------------------------------------------------------------
 	var _offSet: float = 10
-	playerMinX = _offSet
-	playerMaxX = width-_offSet
-	playerMinY = _offSet
-	playerMaxY = height-_offSet
+	playerLimitsX = Vector2(_offSet, width-_offSet)
+	playerLimitsY = Vector2(_offSet, height-_offSet)
+	#-------------------------------------------------------------------------------
+	enemyLimitsX = Vector2(width*-0.1, width*1.1)
+	enemyLimitsY = Vector2(height*-0.5, height*1.1)
+	#-------------------------------------------------------------------------------
+	bossStartingPosition = Vector2(width*0.5, height*0.25)
 #-------------------------------------------------------------------------------
 func CenterX(_f:float) -> float:
 	var _x: float = width*0.5+width*0.5*_f
@@ -314,6 +326,9 @@ func SpawnItem(_x:float, _y:float, _velY: float) -> void:
 	var _maxVelY: float = 3.0
 	var _magnetVel: float = 8.0
 	#-------------------------------------------------------------------------------
+	var _shape_rid: RID = Colliding_CreateShapeRid(_item)
+	var _query: PhysicsShapeQueryParameters2D = Colliding_SetPhysicsShapeQueryParameters2D(_item, _shape_rid, magnetLayer)
+	#-------------------------------------------------------------------------------
 	while(_item != null):
 		match(_item.myITEM_STATE):
 			Item.ITEM_STATE.SPIN:
@@ -328,13 +343,13 @@ func SpawnItem(_x:float, _y:float, _velY: float) -> void:
 				if(_item.position.y <= height):
 					ItemMovement_Fall(_item, _maxVelY)
 					#-------------------------------------------------------------------------------
-					var _result: Array[Dictionary] = Colliding(_item, magnetLayer)
+					var _result: Array[Dictionary] = Colliding_GetResult(_item, _query)
 					if(_result and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
 						_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
 					elif(!CanPlayerShoot() and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
 						_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
 				else:
-					DestroyItem(_item)
+					DestroyItem(_item, _shape_rid)
 					return
 			#-------------------------------------------------------------------------------
 			Item.ITEM_STATE.IMANTED:
@@ -348,7 +363,7 @@ func SpawnItem(_x:float, _y:float, _velY: float) -> void:
 					moneyPoints += 1
 					SetScore()
 					SetMoney()
-					DestroyItem(_item)
+					DestroyItem(_item, _shape_rid)
 					return
 			#-------------------------------------------------------------------------------
 		#-------------------------------------------------------------------------------
@@ -386,8 +401,9 @@ func CreateItem(_x:float, _y:float, _velY:float) -> Item:
 	_item.myITEM_STATE = Item.ITEM_STATE.SPIN
 	return _item
 #-------------------------------------------------------------------------------
-func DestroyItem(_item:Item) -> void:
+func DestroyItem(_item:Item, _shape_rid: RID) -> void:
 	_item.hide()
+	Colliding_DeleteShapeRid(_shape_rid)
 	_item.position = Vector2.ZERO
 	itemsEnabled.erase(_item)
 	itemsDisabled.push_back(_item)
@@ -451,41 +467,9 @@ func Stage1() -> void:
 	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
 	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
 	await StageCommon("Stage 1 Completed",1,0)
+#endregion
 #-------------------------------------------------------------------------------
-func CreateBoss1() -> void:
-	await ShowBanner("Enter Boss 1")
-	#-------------------------------------------------------------------------------
-	myGAME_STATE = GAME_STATE.IN_DIALOGUE
-	dialogueMenu.OpenDialogue()
-	var _dialogue: String = dialogueMenu.GetSubBossDialogueID(1)
-	await dialogueMenu.ReadDialogue(_dialogue, 0, 4)
-	#-------------------------------------------------------------------------------
-	var _boss: Enemy = CreateBoss(0, 0)
-	await Move_Towards_Override(_boss, width*0.5, height*0.25, 30)
-	#-------------------------------------------------------------------------------
-	await dialogueMenu.ReadDialogue(_dialogue, 4, 8)
-	dialogueMenu.CloseDialogue()
-	Enter_GameState()
-	#-------------------------------------------------------------------------------
-	singleton.PlayBGM(singleton.bgmBoss1)
-	await BossAttack(_boss, 160, "Boss Attack 1", Stage1_Boss1_UM1_SubAttack1, 35)
-	await BossAttack_and_Market(_boss, 5, "Boss SpellCard 1", Stage1_Boss1_UM1_SubAttack1, 10)
-	#-------------------------------------------------------------------------------
-	#await BossAttack(_boss, 20, "Boss Attack 1", Stage1_Boss1_UM1_SubAttack1, 5)
-	#await BossAttack_and_Market(_boss, 30, "Boss SpellCard 2", Stage1_Boss1_UM1_SubAttack1, 10)
-	#-------------------------------------------------------------------------------
-	#await BossAttack(_boss, 20, "Boss Attack 3", Stage1_Boss1_UM1_SubAttack1, 15)
-	#await BossAttack_and_Market(_boss, 15, "Boss SpellCard 3", Stage1_Boss1_UM1_SubAttack1, 15)
-	#-------------------------------------------------------------------------------
-	await BossAttack(_boss, 22, "Boss Attack 4", Stage1_Boss1_UM1_SubAttack1, 15)
-	await BossAttack(_boss, 20, "Boss SpellCard 4", Stage1_Boss1_UM1_SubAttack1, 15)
-	#-------------------------------------------------------------------------------
-	myGAME_STATE = GAME_STATE.IN_CUTIN
-	await Frame(60)
-	await Move_Towards_Override(_boss, width, 0, 30)
-	#-------------------------------------------------------------------------------
-	Death_Enemy(_boss)
-#-------------------------------------------------------------------------------
+#region STAGE 1 - WAVE 1
 func Stage1_Wave1_UM1():
 	while(myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
 		await Stage1_Wave1_UM1_Enemies(-height*0.1*2, 1)
@@ -532,7 +516,9 @@ func Stage1_Wave1_UM1_Enemy1_Fire2(_enemy:Enemy, _mirror:float):
 	for _i in _max:
 		var _dir: float = _origen+_pendiente*(_i+1)
 		CreateShotA1(_enemy.position.x, _enemy.position.y, 3+0.3*_i, _dir, "ArrowHead_Bullet", 0)
+#endregion
 #-------------------------------------------------------------------------------
+#region STAGE 1 - WAVE 2
 func Stage1_Wave2_UM1():
 	while(myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
 		Stage1_Wave2_UM1_Enemies(-height*0.1, 1)
@@ -578,33 +564,67 @@ func Stage1_Wave2_UM1_Enemy1_Fire1(_enemy:Enemy, _mirror:float):
 			_origen = AngleToPlayer(_enemy)-_cone/2*_mirror
 			CreateShotA1(_enemy.position.x, _enemy.position.y, 5, _origen+_pendiente*(_j+1), "ArrowHead_Bullet", 2)
 		await Frame_InGame(60)
+#endregion
 #-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubAttack1(_boss:Enemy):
-	await Stage1_Boss1_UM1_SubAttack1_Fire1(_boss)
+#region STAGE 1 - BOSS 1
+func CreateBoss1() -> void:
+	await ShowBanner("Enter Boss 1")
+	#-------------------------------------------------------------------------------
+	myGAME_STATE = GAME_STATE.IN_DIALOGUE
+	dialogueMenu.OpenDialogue()
+	var _dialogue: String = dialogueMenu.GetSubBossDialogueID(1)
+	await dialogueMenu.ReadDialogue(_dialogue, 0, 4)
+	#-------------------------------------------------------------------------------
+	var _boss: Enemy = CreateBoss(0, 0)
+	await Move_Towards_Override(_boss, bossStartingPosition.x, bossStartingPosition.y, 30)
+	#-------------------------------------------------------------------------------
+	await dialogueMenu.ReadDialogue(_dialogue, 4, 8)
+	dialogueMenu.CloseDialogue()
+	Enter_GameState()
+	#-------------------------------------------------------------------------------
+	singleton.PlayBGM(singleton.bgmBoss1)
+	await Boss_Spellcard(_boss, 160, "Boss Attack 1", Stage1_Boss1_UM1_SubSpellcard1, 35)
+	await BossAttack_and_Market(_boss, 160, "Boss SpellCard 1", Stage1_Boss1_UM1_Spellcard1, 35)
+	#-------------------------------------------------------------------------------
+	#await Boss_Spellcard(_boss, 20, "Boss Attack 1", Stage1_Boss1_UM1_SubSpellcard1, 5)
+	#await BossAttack_and_Market(_boss, 30, "Boss SpellCard 2", Stage1_Boss1_UM1_SubSpellcard1, 10)
+	#-------------------------------------------------------------------------------
+	#await Boss_Spellcard(_boss, 20, "Boss Attack 3", Stage1_Boss1_UM1_SubSpellcard1, 15)
+	#await BossAttack_and_Market(_boss, 15, "Boss SpellCard 3", Stage1_Boss1_UM1_SubSpellcard1, 15)
+	#-------------------------------------------------------------------------------
+	await Boss_Spellcard(_boss, 22, "Boss Attack 4", Stage1_Boss1_UM1_SubSpellcard1, 15)
+	await Boss_Spellcard(_boss, 20, "Boss SpellCard 4", Stage1_Boss1_UM1_SubSpellcard1, 15)
+	#-------------------------------------------------------------------------------
+	myGAME_STATE = GAME_STATE.IN_CUTIN
+	await Frame(60)
+	await Move_Towards_Override(_boss, width, 0, 30)
+	#-------------------------------------------------------------------------------
+	Death_Enemy(_boss)
+#endregion
 #-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubAttack1_Movement(_boss:Enemy):
+#region STAGE 1 - BOSS 1 - SUB SPELLCARD 1
+func Stage1_Boss1_UM1_SubSpellcard1(_boss:Enemy):
+	while(Obj2D_IsInGame(_boss)):
+		await Stage1_Boss1_UM1_SubSpellcard1_Fire1(_boss)
+		await Stage1_Boss1_UM1_SubSpellcard1_Movement(_boss)
+#-------------------------------------------------------------------------------
+func Stage1_Boss1_UM1_SubSpellcard1_Movement(_boss:Enemy):
 	var _x: float = randf_range(width*0.4, width*0.6)
 	var _y: float = randf_range(height*0.2, height*0.25)
-	await Move_Towards(_boss, _x, _y, 90)
+	await Move_Towards(_boss, _x, _y, 45)
+	await Frame_InGame(45)
 #-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubAttack1_Fire1(_boss:Enemy):
-	#-------------------------------------------------------------------------------
-	while(Obj2D_IsInGame(_boss)):
-		await Stage1_Boss1_UM1_SubAttack1_Fire2(_boss)
-		await Stage1_Boss1_UM1_SubAttack1_Movement(_boss)
-	#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubAttack1_Fire2(_boss:Enemy):
-	var _max1: float = 2
+func Stage1_Boss1_UM1_SubSpellcard1_Fire1(_boss:Enemy):
+	var _max1: float = 24
 	var _max2: float = 6
-	var _max3: float = 24
+	var _max3: float = 2
 	var _rad: float = width*0
 	var _mirror: float = 1
 	var _velLimit: float
 	var _velLimit_Max: float = 5
 	var _velLimit_Min: float = 1
 	#-------------------------------------------------------------------------------
-	for _i in _max1:
+	for _k in _max3:
 		_velLimit = _velLimit_Max
 		var _dir: float = randf_range(0, 360)
 		var _ang: float = 0
@@ -613,12 +633,13 @@ func Stage1_Boss1_UM1_SubAttack1_Fire2(_boss:Enemy):
 			if(!Obj2D_IsInGame(_boss)):
 				return
 			#-------------------------------------------------------------------------------
-			for _k in _max3:
+			for _i in _max1:
 				var _dir2: float = deg_to_rad(_dir)
 				var _x: float = _boss.position.x + _rad * cos(_dir2)
 				var _y: float = _boss.position.y + _rad * sin(_dir2)
-				Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x, _y, 3, _dir+_ang, _mirror, _velLimit, int(_j))
-				_dir += 360/_max3
+				var _color: int = int(_j) % maxColor
+				Stage1_Boss1_UM1_SubSpellcard1_Fire1_Bullet1(_x, _y, 3, _dir+_ang, _mirror, _velLimit, _color)
+				_dir += 360/_max1
 			#-------------------------------------------------------------------------------
 			_ang -= 2*_mirror
 			_velLimit += (_velLimit_Min-_velLimit_Max)/_max2
@@ -628,8 +649,8 @@ func Stage1_Boss1_UM1_SubAttack1_Fire2(_boss:Enemy):
 	await Frame_InGame(60)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x:float, _y:float, _vel:float, _dir:float, _mirror:float, _velLimit:float, _type:int):
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, "Rice_Bullet", _type)
+func Stage1_Boss1_UM1_SubSpellcard1_Fire1_Bullet1(_x:float, _y:float, _vel:float, _dir:float, _mirror:float, _velLimit:float, _type:int):
+	var _bullet: Bullet = CreateEnemyBullet_A(_x, _y, _vel, _dir, "Rice_Bullet", _type)
 	await Move_VDir_VAccel(_bullet, -0.05, 0.05)
 	var _timer: float = 15
 	var _dirAccel1: float = (135*_mirror) / _timer
@@ -637,12 +658,43 @@ func Stage1_Boss1_UM1_SubAttack1_Fire1_Bullet1(_x:float, _y:float, _vel:float, _
 	var _dirAccel2: float = 0.3 * _mirror
 	await Move_VDir_DirAccel_VAccel(_bullet, _dirAccel2, 0.05, _velLimit)
 	await Move_VDir_DirAccel(_bullet, _dirAccel2, 150)
+#endregion
 #-------------------------------------------------------------------------------
-func Stage1_Wave1_BlackMarket():
-	while(myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
-		await Stage1_Enemies1_BlackMarket(1)
-		await Stage1_Enemies1_BlackMarket(-1)
+#region STAGE 1 - BOSS 1 - SPELLCARD 1
+func Stage1_Boss1_UM1_Spellcard1(_boss:Enemy):
+	while(Obj2D_IsInGame(_boss)):
+		await Stage1_Boss1_UM1_Spellcard1_Fire1(_boss)
+		await Stage1_Boss1_UM1_SubSpellcard1_Movement(_boss)
 #-------------------------------------------------------------------------------
+func Stage1_Boss1_UM1_Spellcard1_Fire1(_boss:Enemy):
+	var _max1: float = 16
+	var _max2: float = 23
+	var _rad: float = width*0
+	#-------------------------------------------------------------------------------
+	for _j in _max2:
+		if(!Obj2D_IsInGame(_boss)):
+			return
+		#-------------------------------------------------------------------------------
+		var _dir: float = randf_range(-10, 10)
+		var _vel: float = randf_range(5, 7)
+		var _velLimitY: float = randf_range(4, 6)
+		#-------------------------------------------------------------------------------
+		for _i in _max1:
+			var _dir2: float = deg_to_rad(_dir)
+			var _x: float = _boss.position.x + _rad * cos(_dir2)
+			var _y: float = _boss.position.y + _rad * sin(_dir2)
+			var _velX: float = _vel * cos(_dir2)
+			var _velY: float = _vel * sin(_dir2)
+			var _color: int = int(_j) % maxColor
+			CreateShotB2(_x, _y, _velX, _velY, 0, 0.1, _velX, _velLimitY, "ArrowHead_Bullet", _color)
+			_dir -= 180/(_max1-1)
+		#-------------------------------------------------------------------------------
+		await Frame_InGame(5)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 1 - MISC
 func InfiniteEnemySpawn():
 	while(myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
 		await InfiniteEnemySpawn2()
@@ -653,6 +705,11 @@ func InfiniteEnemySpawn2():
 	Move_Towards(_enemy, width*0.5, height*0.2, 30)
 	await WaitEnemyDeath(_enemy)
 	DestroyEnemy(_enemy, 20)
+#-------------------------------------------------------------------------------
+func Stage1_Wave1_BlackMarket():
+	while(myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
+		await Stage1_Enemies1_BlackMarket(1)
+		await Stage1_Enemies1_BlackMarket(-1)
 #-------------------------------------------------------------------------------
 func Stage1_Enemies1_BlackMarket(_mirror:float):
 	for _i in 12:
@@ -828,11 +885,11 @@ func WaveOfEnemies(_s:String, _c:Callable, _time:int):
 	await StartTimer(_time)
 #-------------------------------------------------------------------------------
 func BossAttack_and_Market(_boss:Enemy, _hp:int, _s:String, _c:Callable, _timer:int):
-	await BossAttack(_boss, _hp, _s, _c, _timer)
+	await Boss_Spellcard(_boss, _hp, _s, _c, _timer)
 	await OpenMarket()
 	Enter_GameState()
 #-------------------------------------------------------------------------------
-func BossAttack(_boss:Enemy, _hp:int, _s:String, _c1:Callable, _timer:int):
+func Boss_Spellcard(_boss:Enemy, _hp:int, _s:String, _c1:Callable, _timer:int):
 	myGAME_STATE = GAME_STATE.IN_CUTIN
 	await ShowBanner(_s)
 	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
@@ -841,6 +898,7 @@ func BossAttack(_boss:Enemy, _hp:int, _s:String, _c1:Callable, _timer:int):
 	await StartTimer_WithBoss(_boss, _timer)
 	Deactivate_Enemy(_boss)
 	Enemy_SpawnItems(_boss, _boss.position.x, _boss.position.y, 20)
+	await Move_Towards_Override(_boss, bossStartingPosition.x, bossStartingPosition.y, 30)
 #-------------------------------------------------------------------------------
 func StartTimer(_time:int):
 	var _maxTimer: String = "s / "+str(_time)+"s"
@@ -899,48 +957,74 @@ func Enter_GameState():
 #-------------------------------------------------------------------------------
 #region CREATE ENEMY BULLET
 func CreateShotA1(_x:float, _y:float, _vel:float, _dir:float, _type:String, _color:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
+	var _bullet: Bullet = CreateEnemyBullet_A(_x, _y, _vel, _dir, _type, _color)
 	return _bullet
 #-------------------------------------------------------------------------------
 func CreateShotA2(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _maxTimer:float, _type:String, _color:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
+	var _bullet: Bullet = CreateEnemyBullet_A(_x, _y, _vel, _dir, _type, _color)
 	await Move_VDir_DirAccel(_bullet, _dirAccel, _maxTimer)
 	return _bullet
 #-------------------------------------------------------------------------------
 func CreateShotA3(_x:float, _y:float, _vel:float, _dir:float, _vAccel:float, _VLimit:float, _type:String, _color:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
+	var _bullet: Bullet = CreateEnemyBullet_A(_x, _y, _vel, _dir, _type, _color)
 	await Move_VDir_VAccel(_bullet, _vAccel, _VLimit)
 	return _bullet
 #-------------------------------------------------------------------------------
 func CreateShotA4(_x:float, _y:float, _vel:float, _dir:float, _dirAccel:float, _vAccel:float, _VLimit:float, _type:String, _color:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet(_x, _y, _vel, _dir, _type, _color)
+	var _bullet: Bullet = CreateEnemyBullet_A(_x, _y, _vel, _dir, _type, _color)
 	await Move_VDir_DirAccel_VAccel(_bullet, _dirAccel, _vAccel, _VLimit)
+	return _bullet
+#-------------------------------------------------------------------------------
+func CreateShotB1(_x:float, _y:float, _velX:float, _velY:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet_B(_x, _y, _velX, _velY, _type, _color)
+	return _bullet
+#-------------------------------------------------------------------------------
+func CreateShotB2(_x:float, _y:float, _velX:float, _velY:float, _velXAccel:float, _velYAccel:float, _velXLimit:float, _velYLimit:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet_B(_x, _y, _velX, _velY, _type, _color)
+	await Move_VXY_Accel(_bullet, _velX, _velY, _velXAccel, _velYAccel, _velXLimit, _velYLimit)
 	return _bullet
 #endregion
 #-------------------------------------------------------------------------------
 #region ENEMY BULLET FUNCTIONS
 func CreateDisabledEnemyBullets(_num:int):
 	for _i in _num:
-		var _bullet: Bullet = enemyBullet_Prefab.instantiate() as Bullet
-		_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.DEATH
+		var _bullet: Bullet = EnemyBulletsCreation_Common()
 		enemyBulletsDisabled.push_back(_bullet)
+		_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.DEATH
 		_bullet.hide()
-		content.add_child(_bullet)
 #-------------------------------------------------------------------------------
-func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float, _type:String, _color:int) -> Bullet:
+func CreateEnemyBullet_A(_x:float, _y:float, _vel:float, _dir:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet_AB_Common(_x, _y, _type, _color)
+	#-------------------------------------------------------------------------------
+	_bullet.vel = _vel
+	_bullet.dir = _dir
+	#-------------------------------------------------------------------------------
+	#Bullet_Movement_VDir_Set(_bullet)
+	Bullet_Movement_VDir_Update(_bullet)
+	#-------------------------------------------------------------------------------
+	return _bullet
+#-------------------------------------------------------------------------------
+func CreateEnemyBullet_B(_x:float, _y:float, _velX:float, _velY:float, _type:String, _color:int) -> Bullet:
+	var _bullet: Bullet = CreateEnemyBullet_AB_Common(_x, _y, _type, _color)
+	#-------------------------------------------------------------------------------
+	_bullet.velX = _velX
+	_bullet.velY = _velY
+	#-------------------------------------------------------------------------------
+	#Bullet_Movement_VXY_Set(_bullet)
+	Bullet_Movement_VXY_Update(_bullet)
+	#-------------------------------------------------------------------------------
+	return _bullet
+#-------------------------------------------------------------------------------
+func CreateEnemyBullet_AB_Common(_x:float, _y:float, _type:String, _color:int) -> Bullet:
 	var _bullet: Bullet
 	if(enemyBulletsDisabled.size()>0):
 		_bullet = enemyBulletsDisabled[0]
 		enemyBulletsDisabled.erase(_bullet)
 		_bullet.show()
 	else:
-		_bullet = enemyBullet_Prefab.instantiate() as Bullet
-		content.add_child(_bullet)
+		_bullet = EnemyBulletsCreation_Common()
 	enemyBulletsEnabled.push_back(_bullet)
 	_bullet.position = Vector2(_x, _y)
-	_bullet.rotation = deg_to_rad(_dir + 90.0)
-	_bullet.vel = _vel
-	_bullet.dir = _dir
 	#-------------------------------------------------------------------------------
 	var _bulletResource: BulletResource = bulletDictionary[_type]
 	_bullet.texture = _bulletResource.texture
@@ -953,8 +1037,17 @@ func CreateEnemyBullet(_x:float, _y:float, _vel:float, _dir:float, _type:String,
 	#-------------------------------------------------------------------------------
 	_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.ALIVE
 	#-------------------------------------------------------------------------------
-	Bullet_Movement_VDir_Update(_bullet)
+	return _bullet
+#-------------------------------------------------------------------------------
+func EnemyBulletsCreation_Common() -> Bullet:
+	var _bullet: Bullet = enemyBullet_Prefab.instantiate() as Bullet
 	#-------------------------------------------------------------------------------
+	_bullet.set_physics_process(false)
+	_bullet.set_process(false)
+	_bullet.set_process_input(false)
+	_bullet.set_process_internal(false)
+	#-------------------------------------------------------------------------------
+	content.add_child(_bullet)
 	return _bullet
 #-------------------------------------------------------------------------------
 func Bullet_Movement_VDir_Update(_bullet:Bullet) -> void:
@@ -977,18 +1070,24 @@ func Bullet_Movement_Set(_bullet:Bullet):
 #-------------------------------------------------------------------------------
 func Bullet_Movement_Update(_bullet:Bullet, _callable: Callable) -> void:
 	var _isGrazed: bool = false
+	#-------------------------------------------------------------------------------
+	var _shape_rid: RID = Colliding_CreateShapeRid(_bullet)
+	var _query: PhysicsShapeQueryParameters2D = Colliding_SetPhysicsShapeQueryParameters2D(_bullet, _shape_rid, grazeLayer)
+	#-------------------------------------------------------------------------------
 	while(Obj2D_IsInGame(_bullet)):
-		if(0 <= _bullet.position.x and _bullet.position.x <= width):
-			if(0 <= _bullet.position.y and _bullet.position.y <= height):
+		if(enemyLimitsX.x <= _bullet.position.x and _bullet.position.x <= enemyLimitsX.y):
+			if(enemyLimitsY.x <= _bullet.position.y and _bullet.position.y <= enemyLimitsY.y):
 				if(!_isGrazed):
-					var _resultB: Array[Dictionary] = Colliding(_bullet, grazeLayer)
-					if(_resultB):
+					_query.collision_mask = grazeLayer
+					var _resultA: Array[Dictionary] = Colliding_GetResult(_bullet, _query)
+					if(_resultA):
 						SpawnItem(_bullet.position.x, _bullet.position.y, -4)
 						_isGrazed = true
 				#-------------------------------------------------------------------------------
-				var _result: Array[Dictionary] = Colliding(_bullet, playerLayer)
-				if(_result):
-					ShootedPlayer(_result[0]["collider"].get_parent(), _bullet)
+				_query.collision_mask = playerLayer
+				var _resultB: Array[Dictionary] = Colliding_GetResult(_bullet, _query)
+				if(_resultB):
+					ShootedPlayer(_resultB[0]["collider"].get_parent(), _bullet)
 					break
 				#-------------------------------------------------------------------------------
 				_callable.call(_bullet)
@@ -999,10 +1098,11 @@ func Bullet_Movement_Update(_bullet:Bullet, _callable: Callable) -> void:
 		else:
 			break
 	#-------------------------------------------------------------------------------
-	Destroy_EnemyBullet(_bullet)
+	Destroy_EnemyBullet(_bullet, _shape_rid)
 #-------------------------------------------------------------------------------
-func Destroy_EnemyBullet(_bullet:Bullet) -> void:
+func Destroy_EnemyBullet(_bullet:Bullet, _shape_rid:RID) -> void:
 	_bullet.hide()
+	Colliding_DeleteShapeRid(_shape_rid)
 	_bullet.position = Vector2.ZERO
 	_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.DEATH
 	enemyBulletsEnabled.erase(_bullet)
@@ -1028,10 +1128,10 @@ func PlayerRespawn(_player:Player):
 	#-------------------------------------------------------------------------------
 	_player.myPLAYER_STATE = Player.PLAYER_STATE.INVINCIBLE
 	_player.magnet.shape.disabled = false
-	_player.graze.shape.disabled = false
 	_player.show()
 	await PlayerInvincible(_player, 90)
 	#-------------------------------------------------------------------------------
+	_player.graze.shape.disabled = false
 	_player.hitBox.shape.disabled = false
 	_player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
 #-------------------------------------------------------------------------------
@@ -1249,6 +1349,55 @@ func Move_VDir_DirAccel_VAccel_Common(_obj2D:Object2D, _callable:Callable, _velA
 			else:
 				_callable.call(_obj2D)
 			await frame
+	else:
+		return
+#-------------------------------------------------------------------------------
+func Move_VXY_Set(_obj2D:Object2D, _velX:float, _velY:float):
+	if(!Obj2D_IsInGame(_obj2D)):
+		return
+	_obj2D.velX = _velX
+	_obj2D.velY = _velY
+#-------------------------------------------------------------------------------
+func Move_VXY(_obj2D:Object2D, _velX:float, _velY:float, _maxTimer:float) -> void:
+	Move_VXY_Set(_obj2D, _velX, _velY)
+	#-------------------------------------------------------------------------------
+	var _timer: float = 0
+	while(_timer < _maxTimer):
+		if(!Obj2D_IsInGame(_obj2D)):
+			return
+		_timer += deltaTimeScale
+		await frame
+#-------------------------------------------------------------------------------
+func Move_VXY_Accel(_obj2D:Object2D, _velX:float, _velY:float, _velXAccel:float, _velYAccel:float, _velXLimit:float, _velYLimit:float) -> void:
+	#-------------------------------------------------------------------------------
+	while(Obj2D_IsInGame(_obj2D)):
+		if(_velXAccel < 0):
+			if(_obj2D.velX < _velXLimit):
+				_obj2D.velX = _velXLimit
+			else:
+				_obj2D.velX += _velXAccel * deltaTimeScale
+		elif(_velXAccel > 0):
+			if(_obj2D.velX > _velXLimit):
+				_obj2D.velX = _velXLimit
+			else:
+				_obj2D.velX += _velXAccel * deltaTimeScale
+		#-------------------------------------------------------------------------------
+		if(_velYAccel < 0):
+			if(_obj2D.velY < _velYLimit):
+				_obj2D.velY = _velYLimit
+			else:
+				_obj2D.velY += _velYAccel * deltaTimeScale
+		elif(_velYAccel > 0):
+			if(_obj2D.velY > _velYLimit):
+				_obj2D.velY = _velYLimit
+			else:
+				_obj2D.velY += _velYAccel * deltaTimeScale
+		#-------------------------------------------------------------------------------
+		if(_obj2D.velX == _velXLimit or _velXAccel == 0):
+			if(_obj2D.velY == _velYLimit or _velYAccel == 0):
+				return
+		#-------------------------------------------------------------------------------
+		await frame
 #-------------------------------------------------------------------------------
 func Obj2D_Set_Common_VDir(_obj2D:Object2D) -> void:
 	var _dir: float = deg_to_rad(_obj2D.dir)
@@ -1285,22 +1434,28 @@ func GetAngleXY(_dx: float, _dy: float) -> float:
 #endregion
 #-------------------------------------------------------------------------------
 #region COMMON FUNCTIONS
-func Colliding(_sprite:Sprite2D, _layer) -> Array[Dictionary]:
+func Colliding_CreateShapeRid(_obj2D:Object2D) -> RID:
 	var _shape_rid :RID = PhysicsServer2D.rectangle_shape_create()
-	var _half_extents :Vector2 = _sprite.size
+	var _half_extents :Vector2 = _obj2D.size
 	PhysicsServer2D.shape_set_data(_shape_rid, _half_extents)
-	#-------------------------------------------------------------------------------
+	return _shape_rid
+#-------------------------------------------------------------------------------
+func Colliding_SetPhysicsShapeQueryParameters2D(_obj2D:Object2D, _shape_rid:RID, _layer) -> PhysicsShapeQueryParameters2D:
 	var _query :PhysicsShapeQueryParameters2D = PhysicsShapeQueryParameters2D.new()
 	_query.shape_rid = _shape_rid
+	_query.collide_with_areas = false
 	_query.collide_with_bodies = true
 	_query.collision_mask = _layer
-	_query.transform = _sprite.get_global_transform()
-	#-------------------------------------------------------------------------------
-	#var _direct_space_state :PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	_query.transform = _obj2D.get_global_transform()
+	return _query
+#-------------------------------------------------------------------------------
+func Colliding_GetResult(_obj2D:Object2D, _query:PhysicsShapeQueryParameters2D) -> Array[Dictionary]:
+	_query.transform = _obj2D.get_global_transform()
 	var _result :Array[Dictionary] = _direct_space_state.intersect_shape(_query, 1)
-	#-------------------------------------------------------------------------------
-	PhysicsServer2D.free_rid(_shape_rid)
 	return _result
+#-------------------------------------------------------------------------------
+func Colliding_DeleteShapeRid(_shape_rid:RID) -> void:
+	PhysicsServer2D.free_rid(_shape_rid)
 #-------------------------------------------------------------------------------
 func Frame(_maxTimer:int) -> void:
 	var _timer: float = 0
