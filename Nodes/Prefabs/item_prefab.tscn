@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b2r2t7rrfwiys"]
 
 [ext_resource type="Texture2D" uid="uid://csodrfq23rym8" path="res://Assets/Sprites/money.png" id="1_dbh33"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Item_Script.gd" id="2_88yrc"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Item_Script.gd" id="2_88yrc"]
 
 [node name="Item_Prefab" type="Sprite2D"]
 modulate = Color(1, 1, 1, 0.607843)

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://kthlaqw0sk1v"]
 
 [ext_resource type="Texture2D" uid="uid://ci4jfw2wl4k36" path="res://Assets/Images/Cards/128px-ALICE_OP_max.png" id="1_1ly6d"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/cardButton_Script.gd" id="1_3uemk"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/cardButton_Script.gd" id="1_3uemk"]
 
 [node name="cardButton" type="Button" node_paths=PackedStringArray("artwork", "hold", "price")]
 custom_minimum_size = Vector2(198, 250)

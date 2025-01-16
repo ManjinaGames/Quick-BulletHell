@@ -1,29 +1,30 @@
-[gd_scene load_steps=59 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=61 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
 [ext_resource type="PackedScene" uid="uid://dsbbbpoj74b1r" path="res://Nodes/Prefabs/Player_Explotion.tscn" id="2_pa18e"]
 [ext_resource type="PackedScene" uid="uid://cspvg8uimw0jt" path="res://Nodes/Prefabs/bullet_prefab.tscn" id="3_5om1x"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Collider_Script.gd" id="4_1isya"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Collider_Script.gd" id="4_1isya"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/BulletResource.gd" id="5_5ick3"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
-[ext_resource type="Texture2D" uid="uid://d24jdxnpb0gbm" path="res://Assets/Sprites/RiceBullet.png" id="6_f7nn8"]
+[ext_resource type="Texture2D" uid="uid://d24jdxnpb0gbm" path="res://Assets/Sprites/Bullets/Rice_Bullet.png" id="6_f7nn8"]
 [ext_resource type="Texture2D" uid="uid://dsiggugs8jlh7" path="res://Assets/Skybox/SunsetSky.png" id="6_ydsod"]
-[ext_resource type="Texture2D" uid="uid://db00buwxk3mf2" path="res://Assets/Sprites/Enemy Bullet 1.png" id="7_6l0j7"]
+[ext_resource type="Texture2D" uid="uid://db00buwxk3mf2" path="res://Assets/Sprites/Bullets/Arrowhead_Bullet.png" id="7_6l0j7"]
 [ext_resource type="Texture2D" uid="uid://csodrfq23rym8" path="res://Assets/Sprites/money.png" id="7_hia1k"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Pause_Menu.gd" id="8_q0g70"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Market_Menu.gd" id="9_3u2qh"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Player_Script.gd" id="9_4cqcx"]
+[ext_resource type="Texture2D" uid="uid://vhryeklkmvmt" path="res://Assets/Sprites/Bullets/Ball1_Bullet.png" id="8_24by6"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Pause_Menu.gd" id="8_q0g70"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Market_Menu.gd" id="9_3u2qh"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Player_Script.gd" id="9_4cqcx"]
 [ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="12_7k8wf"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="13_x786h"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/game_over_menu.gd" id="15_ou6t6"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/game_over_menu.gd" id="15_ou6t6"]
 [ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
 [ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="19_jc3d8"]
 [ext_resource type="PackedScene" uid="uid://kthlaqw0sk1v" path="res://Nodes/Prefabs/card_button_prefab.tscn" id="20_4usgd"]
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Dialogue_Menu.gd" id="20_kjtdd"]
+[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Dialogue_Menu.gd" id="20_kjtdd"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
 [ext_resource type="Texture2D" uid="uid://qe0pv72mqbir" path="res://Assets/Images/Cards/128px-EXTEND_max.png" id="21_4ffrs"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
@@ -45,6 +46,13 @@ texture = ExtResource("7_6l0j7")
 frame = Vector2(16, 1)
 size = Vector2(2, 4)
 offset = Vector2(0, -3.5)
+
+[sub_resource type="Resource" id="Resource_cjkxh"]
+script = ExtResource("5_5ick3")
+texture = ExtResource("8_24by6")
+frame = Vector2(16, 1)
+size = Vector2(4, 4)
+offset = Vector2(0, 0)
 
 [sub_resource type="Resource" id="Resource_tlea4"]
 script = ExtResource("5_5ick3")
@@ -154,9 +162,10 @@ content = NodePath("CanvasLayer/Window_MarginContainer/Content")
 player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player_Prefab")
 playerExplotion = ExtResource("2_pa18e")
 enemy_Prefab = ExtResource("2_acyb6")
-enemyBullet_Prefab = ExtResource("3_5om1x")
+bullet_Prefab = ExtResource("3_5om1x")
 bulletDictionary = {
 "ArrowHead_Bullet": SubResource("Resource_fbv1d"),
+"Ball1_Bullet": SubResource("Resource_cjkxh"),
 "Rice_Bullet": SubResource("Resource_tlea4")
 }
 item_Prefab = ExtResource("4_7dwg7")
@@ -197,37 +206,39 @@ size = Vector2i(2048, 2048)
 [node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 0.998135, 0.0610485, 0, -0.0610485, 0.998135, 0, 1.6, 1.6)
 
-[node name="House" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="Stage4" type="Node3D" parent="World3D"]
+
+[node name="House" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, 0)
 
-[node name="House2" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House2" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -2)
 
-[node name="House3" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House3" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -4)
 
-[node name="House4" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House4" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -6)
 
-[node name="House5" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House5" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -8)
 
-[node name="House6" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House6" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, 0)
 
-[node name="House7" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House7" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -2)
 
-[node name="House8" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House8" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -4)
 
-[node name="House9" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House9" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -6)
 
-[node name="House10" parent="World3D" instance=ExtResource("5_xpyxf")]
+[node name="House10" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
 transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -8)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="World3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="World3D/Stage4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -4.75)
 size = Vector3(15, 0.5, 15.5)
 

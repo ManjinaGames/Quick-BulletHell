@@ -21,7 +21,7 @@ var timer: int
 @export var playerExplotion: PackedScene
 #-------------------------------------------------------------------------------
 @export var enemy_Prefab: PackedScene
-@export var enemyBullet_Prefab: PackedScene
+@export var bullet_Prefab: PackedScene
 @export var bulletDictionary: Dictionary
 var maxColor: int = 15
 @export var item_Prefab: PackedScene
@@ -168,14 +168,6 @@ func PauseOff():
 #endregion
 #-------------------------------------------------------------------------------
 #region PLAYER BULLET FUNCTIONS
-func CreateDisabledPlayerBullets(_num:int):
-	for _i in _num:
-		var _bullet: Bullet = enemyBullet_Prefab.instantiate() as Bullet
-		playerBulletsDisabled.push_back(_bullet)
-		_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.DEATH
-		_bullet.hide()
-		content.add_child(_bullet)
-#-------------------------------------------------------------------------------
 func PlayerShoot() -> void:
 	while(CanPlayerShoot()):
 		if(Input.is_action_pressed("input_Shoot") and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
@@ -191,47 +183,31 @@ func CanPlayerShoot() -> bool:
 		return false
 #-------------------------------------------------------------------------------
 func PlayerShoot1(_x:float, _y:float, _vel:float, _dir:float) -> void:
-	var _bullet = CreatePlayerBullet(_x, _y, _vel, _dir)
+	var _bullet: Bullet = ObjectPooling_CreateBullet(playerBulletsEnabled, playerBulletsDisabled, _x, _y, "ArrowHead_Bullet", 9)
+	_bullet.vel = 16
+	_bullet.dir = -90
 	#-------------------------------------------------------------------------------
 	var _shape_rid: RID = Colliding_CreateShapeRid(_bullet)
 	var _query: PhysicsShapeQueryParameters2D = Colliding_SetPhysicsShapeQueryParameters2D(_bullet, _shape_rid, enemyLayer)
 	#-------------------------------------------------------------------------------
-	while(_bullet != null):
+	while(is_instance_valid(_bullet)):
 		if(0 <= _bullet.position.x and _bullet.position.x <= width):
 			if(0 <= _bullet.position.y and _bullet.position.y <= height):
 				var _result: Array[Dictionary] = Colliding_GetResult(_bullet, _query)
 				if(_result):
 					ShootedEnemy(_result[0]["collider"].get_parent())
 					DestroyPlayerBullet(_bullet, _shape_rid)
-					break
-				var _dir2: float = deg_to_rad(_bullet.dir)
-				_bullet.position += Vector2(_bullet.vel*cos(_dir2), _bullet.vel*sin(_dir2)) * deltaTimeScale
+					return
+				#-------------------------------------------------------------------------------
+				Bullet_Movement_VDir_Set(_bullet)
 				await frame
 			else:
 				DestroyPlayerBullet(_bullet, _shape_rid)
-				break
+				return
 		else:
 			DestroyPlayerBullet(_bullet, _shape_rid)
-			break
+			return
 	#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-func CreatePlayerBullet(_x:float, _y:float, _vel:float, _dir:float) -> Bullet:
-	var _bullet : Bullet
-	if(playerBulletsDisabled.size()>0):
-		_bullet = playerBulletsDisabled[0]
-		playerBulletsDisabled.erase(_bullet)
-		_bullet.show()
-	else:
-		_bullet = enemyBullet_Prefab.instantiate() as Bullet
-		content.add_child(_bullet)
-	playerBulletsEnabled.push_back(_bullet)
-	_bullet.position = Vector2(_x, _y)
-	_bullet.rotation = deg_to_rad(_dir + 90.0)
-	_bullet.vel = _vel
-	_bullet.dir = _dir
-	_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.ALIVE
-	_bullet.frame = 9
-	return _bullet
 #-------------------------------------------------------------------------------
 func DestroyPlayerBullet(_bullet:Bullet, _shape_rid: RID) -> void:
 	_bullet.hide()
@@ -322,14 +298,14 @@ func SpawnItems(_x:float, _y:float, _rad:float, _num:int) -> void:
 		SpawnItem(_x2, _y2, -3)
 #-------------------------------------------------------------------------------
 func SpawnItem(_x:float, _y:float, _velY: float) -> void:
-	var _item: Item = CreateItem(_x, _y, _velY)
+	var _item: Item = ObjectPooling_CreateItem(_x, _y, _velY)
 	var _maxVelY: float = 3.0
 	var _magnetVel: float = 8.0
 	#-------------------------------------------------------------------------------
 	var _shape_rid: RID = Colliding_CreateShapeRid(_item)
 	var _query: PhysicsShapeQueryParameters2D = Colliding_SetPhysicsShapeQueryParameters2D(_item, _shape_rid, magnetLayer)
 	#-------------------------------------------------------------------------------
-	while(_item != null):
+	while(is_instance_valid(_item)):
 		match(_item.myITEM_STATE):
 			Item.ITEM_STATE.SPIN:
 				if(_item.velY <= 0):
@@ -379,26 +355,29 @@ func ItemMovement_Fall(_item:Item, _maxVelY:float):
 #-------------------------------------------------------------------------------
 func CreateDisabledItem(_num:int):
 	for _i in _num:
-		var _item: Item = item_Prefab.instantiate() as Item
+		var _item: Item = CreateItem_OfNothing()
 		itemsDisabled.push_back(_item)
 		_item.hide()
-		content.add_child(_item)
 #-------------------------------------------------------------------------------
-func CreateItem(_x:float, _y:float, _velY:float) -> Item:
+func ObjectPooling_CreateItem(_x:float, _y:float, _velY:float) -> Item:
 	var _item : Item
 	if(itemsDisabled.size()>0):
 		_item = itemsDisabled[0]
 		itemsDisabled.erase(_item)
 		_item.show()
 	else:
-		_item = item_Prefab.instantiate() as Item
-		content.add_child(_item)
+		_item = CreateItem_OfNothing()
 	itemsEnabled.push_back(_item)
 	_x = clamp(_x, 0, width)
 	_item.position = Vector2(_x, _y)
 	_item.velY = _velY
 	_item.rotation = randf_range(0, 360)
 	_item.myITEM_STATE = Item.ITEM_STATE.SPIN
+	return _item
+#-------------------------------------------------------------------------------
+func CreateItem_OfNothing() -> Item:
+	var _item: Item = item_Prefab.instantiate() as Item
+	SetNothingness_Common(_item)
 	return _item
 #-------------------------------------------------------------------------------
 func DestroyItem(_item:Item, _shape_rid: RID) -> void:
@@ -414,8 +393,8 @@ func BeginGame() -> void:
 	SetGameLimits()
 	#-------------------------------------------------------------------------------
 	CreateDisabledItem(200)
-	CreateDisabledPlayerBullets(50)
-	CreateDisabledEnemyBullets(5000)
+	CreateDisabledBullets(playerBulletsDisabled, 50)
+	CreateDisabledBullets(enemyBulletsDisabled, 2000)
 	#-------------------------------------------------------------------------------
 	SetScore()
 	SetMoney()
@@ -433,7 +412,7 @@ func BeginGame() -> void:
 	player.position = Vector2(width*0.5, height*0.85)
 	player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
 	#-------------------------------------------------------------------------------
-	Enter_GameState()
+	Enter_GameState_InGameplay()
 	Choreography()
 #-------------------------------------------------------------------------------
 func Choreography() -> void:
@@ -453,19 +432,40 @@ func Choreography() -> void:
 		6:
 			await Stage7()
 		7:
-			await Stage8()
+			await StageRougeLike()
 		8:
-			await Stage9()
+			await StageBossRush()
 #endregion
 #-------------------------------------------------------------------------------
 #region STAGE 1
 func Stage1() -> void:
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
-	#await WaveOfEnemies_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
-	await CreateBoss1()
-	await WaveOfEnemies_and_Market("Wave of Enemies N°1", Stage1_Wave1_UM1, 30)
-	await WaveOfEnemies_and_Market("Wave of Enemies N°2", Stage1_Wave2_UM1, 30)
+	#-------------------------------------------------------------------------------
+	await EnemyWave_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
+	await EnemyWave_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
+	await EnemyWave_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
+	#-------------------------------------------------------------------------------
+	var _boss1: Enemy = await EnterBoss_and_Dialogue(1)
+	Enter_GameState_InGameplay()
+	await BossPhase(_boss1, 20, "Boss 1: Attack N°1", Stage1_Boss1_Spellcard_1_1, 35)
+	await BossPhase_and_Market(_boss1, 20, "Boss 1: SpellCard N°1", Stage1_Boss1_Spellcard_1_2, 35)
+	#-------------------------------------------------------------------------------
+	myGAME_STATE = GAME_STATE.IN_CUTIN
+	await DestroyBoss_Exit1(_boss1)
+	await Nothing_and_Market()
+	#-------------------------------------------------------------------------------
+	await EnemyWave_and_Market("Wave of Enemies N°4", Stage1_Wave1_UM1, 30)
+	await EnemyWave_and_Market("Wave of Enemies N°5", Stage1_Wave2_UM1, 30)
+	#-------------------------------------------------------------------------------
+	var _boss2: Enemy = await EnterBoss_and_Dialogue(1)
+	singleton.PlayBGM(singleton.bgmBoss1)
+	Enter_GameState_InGameplay()
+	await BossPhase(_boss2, 20, "Boss 2: Attack N°1", Stage1_Boss2_Spellcard_1_1, 35)
+	await BossPhase_and_Market(_boss2, 20, "Boss 2: SpellCard N°1", Stage1_Boss2_Spellcard_1_2, 35)
+	await BossPhase(_boss2, 20, "Boss 2: Attack N°2", Stage1_Boss2_Spellcard_2_1, 35)
+	await BossPhase(_boss2, 20, "Boss 2: SpellCard N°2", Stage1_Boss2_Spellcard_2_2, 35)
+	#-------------------------------------------------------------------------------
+	myGAME_STATE = GAME_STATE.IN_CUTIN
+	await DestroyBoss_Exit1(_boss2)
 	await StageCommon("Stage 1 Completed",1,0)
 #endregion
 #-------------------------------------------------------------------------------
@@ -566,90 +566,63 @@ func Stage1_Wave2_UM1_Enemy1_Fire1(_enemy:Enemy, _mirror:float):
 		await Frame_InGame(60)
 #endregion
 #-------------------------------------------------------------------------------
-#region STAGE 1 - BOSS 1
-func CreateBoss1() -> void:
-	await ShowBanner("Enter Boss 1")
-	#-------------------------------------------------------------------------------
-	myGAME_STATE = GAME_STATE.IN_DIALOGUE
-	dialogueMenu.OpenDialogue()
-	var _dialogue: String = dialogueMenu.GetSubBossDialogueID(1)
-	await dialogueMenu.ReadDialogue(_dialogue, 0, 4)
-	#-------------------------------------------------------------------------------
-	var _boss: Enemy = CreateBoss(0, 0)
-	await Move_Towards_Override(_boss, bossStartingPosition.x, bossStartingPosition.y, 30)
-	#-------------------------------------------------------------------------------
-	await dialogueMenu.ReadDialogue(_dialogue, 4, 8)
-	dialogueMenu.CloseDialogue()
-	Enter_GameState()
-	#-------------------------------------------------------------------------------
-	singleton.PlayBGM(singleton.bgmBoss1)
-	await Boss_Spellcard(_boss, 160, "Boss Attack 1", Stage1_Boss1_UM1_SubSpellcard1, 35)
-	await BossAttack_and_Market(_boss, 160, "Boss SpellCard 1", Stage1_Boss1_UM1_Spellcard1, 35)
-	#-------------------------------------------------------------------------------
-	#await Boss_Spellcard(_boss, 20, "Boss Attack 1", Stage1_Boss1_UM1_SubSpellcard1, 5)
-	#await BossAttack_and_Market(_boss, 30, "Boss SpellCard 2", Stage1_Boss1_UM1_SubSpellcard1, 10)
-	#-------------------------------------------------------------------------------
-	#await Boss_Spellcard(_boss, 20, "Boss Attack 3", Stage1_Boss1_UM1_SubSpellcard1, 15)
-	#await BossAttack_and_Market(_boss, 15, "Boss SpellCard 3", Stage1_Boss1_UM1_SubSpellcard1, 15)
-	#-------------------------------------------------------------------------------
-	await Boss_Spellcard(_boss, 22, "Boss Attack 4", Stage1_Boss1_UM1_SubSpellcard1, 15)
-	await Boss_Spellcard(_boss, 20, "Boss SpellCard 4", Stage1_Boss1_UM1_SubSpellcard1, 15)
-	#-------------------------------------------------------------------------------
-	myGAME_STATE = GAME_STATE.IN_CUTIN
-	await Frame(60)
-	await Move_Towards_Override(_boss, width, 0, 30)
-	#-------------------------------------------------------------------------------
-	Death_Enemy(_boss)
+#region STAGE 1 - BOSS 1 - SPELLCARD 1-1
+func Stage1_Boss1_Spellcard_1_1(_boss:Enemy):
+	pass
 #endregion
 #-------------------------------------------------------------------------------
-#region STAGE 1 - BOSS 1 - SUB SPELLCARD 1
-func Stage1_Boss1_UM1_SubSpellcard1(_boss:Enemy):
-	while(Obj2D_IsInGame(_boss)):
-		await Stage1_Boss1_UM1_SubSpellcard1_Fire1(_boss)
-		await Stage1_Boss1_UM1_SubSpellcard1_Movement(_boss)
+#region STAGE 1 - BOSS 1 - SPELLCARD 1-2
+func Stage1_Boss1_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
 #-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubSpellcard1_Movement(_boss:Enemy):
-	var _x: float = randf_range(width*0.4, width*0.6)
-	var _y: float = randf_range(height*0.2, height*0.25)
-	await Move_Towards(_boss, _x, _y, 45)
-	await Frame_InGame(45)
-#-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubSpellcard1_Fire1(_boss:Enemy):
-	var _max1: float = 24
-	var _max2: float = 6
-	var _max3: float = 2
-	var _rad: float = width*0
+#region STAGE 1 - BOSS 2 - SPELLCARD 1-1
+func Stage1_Boss2_Spellcard_1_1(_boss:Enemy):
+	print("Stage1_Boss2_Spellcard_1_1")
 	var _mirror: float = 1
-	var _velLimit: float
+	while(Obj2D_IsInGame(_boss)):
+		for _i in 2:
+			await Stage1_Boss2_Spellcard_1_1_Fire1(_boss, 24, _mirror)
+			_mirror *=-1
+			await Frame_InGame(15)
+		_mirror *=-1
+		await Stage1_Boss2_Spellcard_1_1_Movement(_boss)
+#-------------------------------------------------------------------------------
+func Stage1_Boss2_Spellcard_1_1_Movement(_boss:Enemy):
+	var _x: float = randf_range(width*0.4, width*0.6)
+	var _y: float = randf_range(height*0.2, height*0.3)
+	await Frame_InGame(20)
+	await Move_Towards(_boss, _x, _y, 50)
+	await Frame_InGame(20)
+#-------------------------------------------------------------------------------
+func Stage1_Boss2_Spellcard_1_1_Fire1(_boss:Enemy, _max1:float, _mirror:float):
+	var _max2: float = 6
+	var _rad: float = width*0
 	var _velLimit_Max: float = 5
 	var _velLimit_Min: float = 1
 	#-------------------------------------------------------------------------------
-	for _k in _max3:
-		_velLimit = _velLimit_Max
-		var _dir: float = randf_range(0, 360)
-		var _ang: float = 0
+	var _velLimit: float = _velLimit_Max
+	var _dir: float = randf_range(0, 360)
+	var _ang: float = 0
+	#-------------------------------------------------------------------------------
+	for _j in _max2:
+		if(!Obj2D_IsInGame(_boss)):
+			return
 		#-------------------------------------------------------------------------------
-		for _j in _max2:
-			if(!Obj2D_IsInGame(_boss)):
-				return
-			#-------------------------------------------------------------------------------
-			for _i in _max1:
-				var _dir2: float = deg_to_rad(_dir)
-				var _x: float = _boss.position.x + _rad * cos(_dir2)
-				var _y: float = _boss.position.y + _rad * sin(_dir2)
-				var _color: int = int(_j) % maxColor
-				Stage1_Boss1_UM1_SubSpellcard1_Fire1_Bullet1(_x, _y, 3, _dir+_ang, _mirror, _velLimit, _color)
-				_dir += 360/_max1
-			#-------------------------------------------------------------------------------
-			_ang -= 2*_mirror
-			_velLimit += (_velLimit_Min-_velLimit_Max)/_max2
-			await Frame_InGame(5)
+		for _i in _max1:
+			var _dir2: float = deg_to_rad(_dir)
+			var _x: float = _boss.position.x + _rad * cos(_dir2)
+			var _y: float = _boss.position.y + _rad * sin(_dir2)
+			var _color: int = int(_j) % maxColor
+			Stage1_Boss2_Spellcard_1_1_Fire1_Bullet1(_x, _y, 3, _dir+_ang, _mirror, _velLimit, _color)
+			_dir += 360/_max1
 		#-------------------------------------------------------------------------------
-		_mirror *=-1
-	await Frame_InGame(60)
+		_ang -= 2*_mirror
+		_velLimit += (_velLimit_Min-_velLimit_Max)/_max2
+		await Frame_InGame(5)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_SubSpellcard1_Fire1_Bullet1(_x:float, _y:float, _vel:float, _dir:float, _mirror:float, _velLimit:float, _type:int):
+func Stage1_Boss2_Spellcard_1_1_Fire1_Bullet1(_x:float, _y:float, _vel:float, _dir:float, _mirror:float, _velLimit:float, _type:int):
 	var _bullet: Bullet = CreateEnemyBullet_A(_x, _y, _vel, _dir, "Rice_Bullet", _type)
 	await Move_VDir_VAccel(_bullet, -0.05, 0.05)
 	var _timer: float = 15
@@ -660,24 +633,25 @@ func Stage1_Boss1_UM1_SubSpellcard1_Fire1_Bullet1(_x:float, _y:float, _vel:float
 	await Move_VDir_DirAccel(_bullet, _dirAccel2, 150)
 #endregion
 #-------------------------------------------------------------------------------
-#region STAGE 1 - BOSS 1 - SPELLCARD 1
-func Stage1_Boss1_UM1_Spellcard1(_boss:Enemy):
+#region STAGE 1 - BOSS 2 - SPELLCARD 1-2
+func Stage1_Boss2_Spellcard_1_2(_boss:Enemy):
+	print("Stage1_Boss2_Spellcard_1_2")
 	while(Obj2D_IsInGame(_boss)):
-		await Stage1_Boss1_UM1_Spellcard1_Fire1(_boss)
-		await Stage1_Boss1_UM1_SubSpellcard1_Movement(_boss)
+		await Stage1_Boss2_Spellcard_1_2_Fire1(_boss)
+		await Stage1_Boss2_Spellcard_1_1_Movement(_boss)
 #-------------------------------------------------------------------------------
-func Stage1_Boss1_UM1_Spellcard1_Fire1(_boss:Enemy):
+func Stage1_Boss2_Spellcard_1_2_Fire1(_boss:Enemy):
 	var _max1: float = 16
-	var _max2: float = 23
+	var _max2: float = 25
 	var _rad: float = width*0
 	#-------------------------------------------------------------------------------
 	for _j in _max2:
 		if(!Obj2D_IsInGame(_boss)):
 			return
 		#-------------------------------------------------------------------------------
-		var _dir: float = randf_range(-10, 10)
-		var _vel: float = randf_range(5, 7)
-		var _velLimitY: float = randf_range(4, 6)
+		var _dir: float = randf_range(-15, 15)
+		var _vel: float = randf_range(4, 7)
+		var _velLimitY: float = randf_range(1, 6)
 		#-------------------------------------------------------------------------------
 		for _i in _max1:
 			var _dir2: float = deg_to_rad(_dir)
@@ -686,12 +660,27 @@ func Stage1_Boss1_UM1_Spellcard1_Fire1(_boss:Enemy):
 			var _velX: float = _vel * cos(_dir2)
 			var _velY: float = _vel * sin(_dir2)
 			var _color: int = int(_j) % maxColor
-			CreateShotB2(_x, _y, _velX, _velY, 0, 0.1, _velX, _velLimitY, "ArrowHead_Bullet", _color)
+			CreateShotB2(_x, _y, _velX, _velY, 0, 0.1, _velX, _velLimitY, "Ball1_Bullet", _color)
 			_dir -= 180/(_max1-1)
 		#-------------------------------------------------------------------------------
 		await Frame_InGame(5)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 1 - BOSS 2 - SPELLCARD 2-1
+func Stage1_Boss2_Spellcard_2_1(_boss:Enemy):
+	print("Stage1_Boss2_Spellcard_2_1")
+	while(Obj2D_IsInGame(_boss)):
+		Stage1_Boss2_Spellcard_1_1_Fire1(_boss, 12, 1)
+		await Stage1_Boss2_Spellcard_1_1_Fire1(_boss, 12, -1)
+		await Frame_InGame(15)
+		await Stage1_Boss2_Spellcard_1_1_Movement(_boss)
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 1 - BOSS 2 - SPELLCARD 2-2
+func Stage1_Boss2_Spellcard_2_2(_boss:Enemy):
+	print("Stage1_Boss2_Spellcard_2_2")
 #endregion
 #-------------------------------------------------------------------------------
 #region STAGE 1 - MISC
@@ -809,7 +798,7 @@ func Stage1_Enemy3(_x:float, _y:float, _mirror:float) -> void:
 	var _radX: float = width*0.1*2.5
 	var _rotX: float = 90+90*_mirror
 	var _x2: float = 0
-	while(_enemy != null):
+	while(is_instance_valid(_enemy)):
 		if(_y < height and Obj2D_IsInGame(_enemy)):
 			_rotX += 4 * deltaTimeScale
 			_x2 = _x+_radX*sin(deg_to_rad(_rotX))
@@ -824,28 +813,384 @@ func Stage1_Enemy3(_x:float, _y:float, _mirror:float) -> void:
 #region STAGE 2
 func Stage2():
 	await StageCommon("Stage 2 Completed",2,1)
+#endregion
 #-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 1 - SPELLCARD 1-1
+func Stage2_Boss1_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 1 - SPELLCARD 1-2
+func Stage2_Boss1_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 2 - SPELLCARD 1-1
+func Stage2_Boss2_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 2 - SPELLCARD 1-2
+func Stage2_Boss2_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 2 - SPELLCARD 1-1
+func Stage2_Boss2_Spellcard_2_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 2 - SPELLCARD 1-2
+func Stage2_Boss2_Spellcard_2_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 2 - SPELLCARD 1-1
+func Stage2_Boss2_Spellcard_3_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 2 - BOSS 2 - SPELLCARD 1-2
+func Stage2_Boss2_Spellcard_3_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3
 func Stage3():
 	await StageCommon("Stage 3 Completed",3,2)
+#endregion
 #-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 1 - SPELLCARD 1-1
+func Stage3_Boss1_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 1 - SPELLCARD 1-2
+func Stage3_Boss1_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 2 - SPELLCARD 1-1
+func Stage3_Boss2_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 2 - SPELLCARD 1-2
+func Stage3_Boss2_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 2 - SPELLCARD 2-1
+func Stage3_Boss2_Spellcard_2_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 2 - SPELLCARD 2-2
+func Stage3_Boss2_Spellcard_2_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 2 - SPELLCARD 3-1
+func Stage3_Boss2_Spellcard_3_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 3 - BOSS 2 - SPELLCARD 3-2
+func Stage3_Boss2_Spellcard_3_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4
 func Stage4():
 	await StageCommon("Stage 4 Completed",4,3)
+#endregion
 #-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 1 - SPELLCARD 1-1
+func Stage4_Boss1_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 1 - SPELLCARD 1-2
+func Stage4_Boss1_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 2 - SPELLCARD 1-1
+func Stage4_Boss2_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 2 - SPELLCARD 1-2
+func Stage4_Boss2_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 2 - SPELLCARD 2-1
+func Stage4_Boss2_Spellcard_2_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 2 - SPELLCARD 2-2
+func Stage4_Boss2_Spellcard_2_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 2 - SPELLCARD 3-1
+func Stage4_Boss2_Spellcard_3_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 4 - BOSS 2 - SPELLCARD 3-2
+func Stage4_Boss2_Spellcard_3_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5
 func Stage5():
 	await StageCommon("Stage 5 Completed",5,4)
+#endregion
 #-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 1 - SPELLCARD 1-1
+func Stage5_Boss1_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 1 - SPELLCARD 1-2
+func Stage5_Boss1_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 1-1
+func Stage5_Boss2_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 1-2
+func Stage5_Boss2_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 2-1
+func Stage5_Boss2_Spellcard_2_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 2-2
+func Stage5_Boss2_Spellcard_2_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 3-1
+func Stage5_Boss2_Spellcard_3_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 3-2
+func Stage5_Boss2_Spellcard_3_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 4-1
+func Stage5_Boss2_Spellcard_4_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 5 - BOSS 2 - SPELLCARD 4-2
+func Stage5_Boss2_Spellcard_4_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6
 func Stage6():
 	await StageCommon("Stage Final Completed",6,5)
+#endregion
 #-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 1 - SPELLCARD 1-1
+func Stage6_Boss1_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 1 - SPELLCARD 1-2
+func Stage6_Boss1_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 1-1
+func Stage6_Boss2_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 1-2
+func Stage6_Boss2_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 2-1
+func Stage6_Boss2_Spellcard_2_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 2-2
+func Stage6_Boss2_Spellcard_2_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 3-1
+func Stage6_Boss2_Spellcard_3_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 3-2
+func Stage6_Boss2_Spellcard_3_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 4-1
+func Stage6_Boss2_Spellcard_4_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 4-2
+func Stage6_Boss2_Spellcard_4_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 5-1
+func Stage6_Boss2_Spellcard_5_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 5-2
+func Stage6_Boss2_Spellcard_5_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 6-1
+func Stage6_Boss2_Spellcard_6_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 6 - BOSS 2 - SPELLCARD 6-2
+func Stage6_Boss2_Spellcard_6_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7
 func Stage7():
 	await StageCommon("Stage Extra Completed",7,6)
+#endregion
 #-------------------------------------------------------------------------------
-func Stage8():
+#region STAGE 7 - BOSS 1 - SPELLCARD 1-1
+func Stage7_Boss1_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 1 - SPELLCARD 1-2
+func Stage7_Boss1_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 1-1
+func Stage7_Boss2_Spellcard_1_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 1-2
+func Stage7_Boss2_Spellcard_1_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 2-1
+func Stage7_Boss2_Spellcard_2_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 2-2
+func Stage7_Boss2_Spellcard_2_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 3-1
+func Stage7_Boss2_Spellcard_3_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 3-2
+func Stage7_Boss2_Spellcard_3_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 4-1
+func Stage7_Boss2_Spellcard_4_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 4-2
+func Stage7_Boss2_Spellcard_4_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 5-1
+func Stage7_Boss2_Spellcard_5_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 5-2
+func Stage7_Boss2_Spellcard_5_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 6-1
+func Stage7_Boss2_Spellcard_6_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 6-2
+func Stage7_Boss2_Spellcard_6_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 7-1
+func Stage7_Boss2_Spellcard_7_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 7-2
+func Stage7_Boss2_Spellcard_7_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 8-1
+func Stage7_Boss2_Spellcard_8_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 8-2
+func Stage7_Boss2_Spellcard_8_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 9-1
+func Stage7_Boss2_Spellcard_9_1(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE 7 - BOSS 2 - SPELLCARD 9-2
+func Stage7_Boss2_Spellcard_9_2(_boss:Enemy):
+	pass
+#endregion
+#-------------------------------------------------------------------------------
+#region STAGE ROUGE-LIKE
+func StageRougeLike():
 	await StageCommon("Rogue-Like Mode Completed",8,7)
+#endregion
 #-------------------------------------------------------------------------------
-func Stage9():
+#region STAGE BOSS-RUSH
+func StageBossRush():
 	await StageCommon("Boss-Rush Mode Completed",8,8)
+#endregion
 #-------------------------------------------------------------------------------
+#region STAGE FUNCTIONS COMMON
 func StageCommon(_s:String, _enabled:int, _completed:int):
 	await ShowBanner(_s)
 	EnableStage(_enabled)
@@ -869,13 +1214,10 @@ func GoToMainScene():
 	singleton.PlayBGM(singleton.bgmTitle)
 	get_tree().set_deferred("paused", false)
 	get_tree().change_scene_to_file(singleton.mainScene_Path)
-#endregion
 #-------------------------------------------------------------------------------
-#region STAGE FUNCTIONS
-func WaveOfEnemies_and_Market(_s:String, _c:Callable, _time:int):
+func EnemyWave_and_Market(_s:String, _c:Callable, _time:int):
 	await WaveOfEnemies(_s, _c, _time)
-	await OpenMarket()
-	Enter_GameState()
+	await Nothing_and_Market()
 #-------------------------------------------------------------------------------
 func WaveOfEnemies(_s:String, _c:Callable, _time:int):
 	myGAME_STATE = GAME_STATE.IN_CUTIN
@@ -884,18 +1226,22 @@ func WaveOfEnemies(_s:String, _c:Callable, _time:int):
 	_c.call()
 	await StartTimer(_time)
 #-------------------------------------------------------------------------------
-func BossAttack_and_Market(_boss:Enemy, _hp:int, _s:String, _c:Callable, _timer:int):
-	await Boss_Spellcard(_boss, _hp, _s, _c, _timer)
-	await OpenMarket()
-	Enter_GameState()
+func BossPhase_and_Market(_boss:Enemy, _hp:int, _s:String, _c:Callable, _timer:int):
+	await BossPhase(_boss, _hp, _s, _c, _timer)
+	await Nothing_and_Market()
 #-------------------------------------------------------------------------------
-func Boss_Spellcard(_boss:Enemy, _hp:int, _s:String, _c1:Callable, _timer:int):
+func Nothing_and_Market():
+	await OpenMarket()
+	Enter_GameState_InGameplay()
+#-------------------------------------------------------------------------------
+func BossPhase(_boss:Enemy, _hp:int, _s:String, _c1:Callable, _timer:int):
 	myGAME_STATE = GAME_STATE.IN_CUTIN
 	await ShowBanner(_s)
 	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
 	Activate_Enemy(_boss, _hp)
 	_c1.call(_boss)
 	await StartTimer_WithBoss(_boss, _timer)
+	myGAME_STATE = GAME_STATE.IN_CUTIN
 	Deactivate_Enemy(_boss)
 	Enemy_SpawnItems(_boss, _boss.position.x, _boss.position.y, 20)
 	await Move_Towards_Override(_boss, bossStartingPosition.x, bossStartingPosition.y, 30)
@@ -950,9 +1296,39 @@ func OpenMarket():
 	myGAME_STATE = GAME_STATE.IN_MARKET
 	await marketMenu.OpenMarket()
 #-------------------------------------------------------------------------------
-func Enter_GameState():
+func Enter_GameState_InGameplay():
 	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
 	PlayerShoot()
+#endregion
+#-------------------------------------------------------------------------------
+#region BOSS FUNCTIONS COMMON
+func EnterBoss_and_Dialogue(_bossID:int) -> Enemy:
+	await ShowBanner("Enter Boss "+str(_bossID))
+	#-------------------------------------------------------------------------------
+	myGAME_STATE = GAME_STATE.IN_DIALOGUE
+	dialogueMenu.OpenDialogue()
+	var _bossDialogueID: String = dialogueMenu.GetSubBossDialogueID(_bossID)
+	await dialogueMenu.ReadDialogue(_bossDialogueID, 0, 4)
+	#-------------------------------------------------------------------------------
+	var _boss: Enemy = await CreateBoss_Enter1()
+	#-------------------------------------------------------------------------------
+	await dialogueMenu.ReadDialogue(_bossDialogueID, 4, 8)
+	dialogueMenu.CloseDialogue()
+	return _boss
+#-------------------------------------------------------------------------------
+func EnterBoss_and_Mute(_bossID:int) -> void:
+	await ShowBanner("Enter Boss "+str(_bossID))
+	var _boss: Enemy = await CreateBoss_Enter1()
+#-------------------------------------------------------------------------------
+func CreateBoss_Enter1() -> Enemy:
+	var _boss: Enemy = CreateBoss(0, 0)
+	await Move_Towards_Override(_boss, bossStartingPosition.x, bossStartingPosition.y, 30)
+	return _boss
+#-------------------------------------------------------------------------------
+func DestroyBoss_Exit1(_boss:Enemy):
+	await ShowBanner("Boss Defeated")
+	await Move_Towards_Override(_boss, width, 0, 30)
+	Death_Enemy(_boss)
 #endregion
 #-------------------------------------------------------------------------------
 #region CREATE ENEMY BULLET
@@ -986,44 +1362,42 @@ func CreateShotB2(_x:float, _y:float, _velX:float, _velY:float, _velXAccel:float
 #endregion
 #-------------------------------------------------------------------------------
 #region ENEMY BULLET FUNCTIONS
-func CreateDisabledEnemyBullets(_num:int):
+func CreateDisabledBullets(_bulletsDisabled:Array[Bullet], _num:int):
 	for _i in _num:
-		var _bullet: Bullet = EnemyBulletsCreation_Common()
-		enemyBulletsDisabled.push_back(_bullet)
+		var _bullet: Bullet = CreateBullet_OfNothing()
+		_bulletsDisabled.push_back(_bullet)
 		_bullet.myOBJECT2D_STATE = Bullet.OBJECT2D_STATE.DEATH
 		_bullet.hide()
 #-------------------------------------------------------------------------------
 func CreateEnemyBullet_A(_x:float, _y:float, _vel:float, _dir:float, _type:String, _color:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet_AB_Common(_x, _y, _type, _color)
+	var _bullet: Bullet = ObjectPooling_CreateBullet(enemyBulletsEnabled, enemyBulletsDisabled, _x, _y, _type, _color)
 	#-------------------------------------------------------------------------------
 	_bullet.vel = _vel
 	_bullet.dir = _dir
 	#-------------------------------------------------------------------------------
-	#Bullet_Movement_VDir_Set(_bullet)
 	Bullet_Movement_VDir_Update(_bullet)
 	#-------------------------------------------------------------------------------
 	return _bullet
 #-------------------------------------------------------------------------------
 func CreateEnemyBullet_B(_x:float, _y:float, _velX:float, _velY:float, _type:String, _color:int) -> Bullet:
-	var _bullet: Bullet = CreateEnemyBullet_AB_Common(_x, _y, _type, _color)
+	var _bullet: Bullet = ObjectPooling_CreateBullet(enemyBulletsEnabled, enemyBulletsDisabled, _x, _y, _type, _color)
 	#-------------------------------------------------------------------------------
 	_bullet.velX = _velX
 	_bullet.velY = _velY
 	#-------------------------------------------------------------------------------
-	#Bullet_Movement_VXY_Set(_bullet)
 	Bullet_Movement_VXY_Update(_bullet)
 	#-------------------------------------------------------------------------------
 	return _bullet
 #-------------------------------------------------------------------------------
-func CreateEnemyBullet_AB_Common(_x:float, _y:float, _type:String, _color:int) -> Bullet:
+func ObjectPooling_CreateBullet(_bulletsEnabled:Array[Bullet], _bulletsDisabled:Array[Bullet], _x:float, _y:float, _type:String, _color:int) -> Bullet:
 	var _bullet: Bullet
-	if(enemyBulletsDisabled.size()>0):
-		_bullet = enemyBulletsDisabled[0]
-		enemyBulletsDisabled.erase(_bullet)
+	if(_bulletsDisabled.size()>0):
+		_bullet = _bulletsDisabled[0]
+		_bulletsDisabled.erase(_bullet)
 		_bullet.show()
 	else:
-		_bullet = EnemyBulletsCreation_Common()
-	enemyBulletsEnabled.push_back(_bullet)
+		_bullet = CreateBullet_OfNothing()
+	_bulletsEnabled.push_back(_bullet)
 	_bullet.position = Vector2(_x, _y)
 	#-------------------------------------------------------------------------------
 	var _bulletResource: BulletResource = bulletDictionary[_type]
@@ -1039,16 +1413,17 @@ func CreateEnemyBullet_AB_Common(_x:float, _y:float, _type:String, _color:int) -
 	#-------------------------------------------------------------------------------
 	return _bullet
 #-------------------------------------------------------------------------------
-func EnemyBulletsCreation_Common() -> Bullet:
-	var _bullet: Bullet = enemyBullet_Prefab.instantiate() as Bullet
-	#-------------------------------------------------------------------------------
-	_bullet.set_physics_process(false)
-	_bullet.set_process(false)
-	_bullet.set_process_input(false)
-	_bullet.set_process_internal(false)
-	#-------------------------------------------------------------------------------
-	content.add_child(_bullet)
+func CreateBullet_OfNothing() -> Bullet:
+	var _bullet: Bullet = bullet_Prefab.instantiate() as Bullet
+	SetNothingness_Common(_bullet)
 	return _bullet
+#-------------------------------------------------------------------------------
+func SetNothingness_Common(_obj2D:Object2D):
+	_obj2D.set_physics_process(false)
+	_obj2D.set_process(false)
+	_obj2D.set_process_input(false)
+	_obj2D.set_process_internal(false)
+	content.add_child(_obj2D)
 #-------------------------------------------------------------------------------
 func Bullet_Movement_VDir_Update(_bullet:Bullet) -> void:
 	Bullet_Movement_Update(_bullet, Bullet_Movement_VDir_Set)
@@ -1154,6 +1529,7 @@ func PlayerInvincible(_player:Player, _maxTimer: float) -> void:
 		_timer += deltaTimeScale
 		_b = !_b
 		await Frame(2)
+	SetPlayerInvisible(_player, false)
 #-------------------------------------------------------------------------------
 func SetPlayerInvisible(_player:Player, _b:bool) -> void:
 	if(_b):
@@ -1409,8 +1785,8 @@ func Obj2D_Set_Common_VXY(_obj2D:Object2D) -> void:
 	_obj2D.vel = Vector2(_obj2D.velX, _obj2D.velY).length()
 #-------------------------------------------------------------------------------
 #NOTA IMPORTANTE: _obj2D no lo puedo definir porque aveces toma valor Null, y Godot no sabe que hacer cuando un parametro definido toma valor Null
-func Obj2D_IsInGame(_obj2D) -> bool:
-	if(_obj2D != null):
+func Obj2D_IsInGame(_obj2D: Variant) -> bool:
+	if(is_instance_valid(_obj2D)):
 		if(_obj2D.myOBJECT2D_STATE == Object2D.OBJECT2D_STATE.ALIVE and myGAME_STATE == GAME_STATE.IN_GAMEPLAY):
 			return true
 		else:
