@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=46 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -13,7 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://d24jdxnpb0gbm" path="res://Assets/Sprites/Bullets/Rice_Bullet.png" id="6_f7nn8"]
 [ext_resource type="Texture2D" uid="uid://dsiggugs8jlh7" path="res://Assets/Skybox/SunsetSky.png" id="6_ydsod"]
 [ext_resource type="Texture2D" uid="uid://db00buwxk3mf2" path="res://Assets/Sprites/Bullets/Arrowhead_Bullet.png" id="7_6l0j7"]
-[ext_resource type="Texture2D" uid="uid://csodrfq23rym8" path="res://Assets/Sprites/money.png" id="7_hia1k"]
 [ext_resource type="Texture2D" uid="uid://vhryeklkmvmt" path="res://Assets/Sprites/Bullets/Ball1_Bullet.png" id="8_24by6"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Market_Menu.gd" id="9_3u2qh"]
@@ -31,14 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="21_fdfmj"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
 [ext_resource type="Texture2D" uid="uid://c58r32hi6sk7s" path="res://Assets/Images/Cards/128px-BOMB_max.png" id="23_3pa5v"]
-[ext_resource type="Texture2D" uid="uid://dnbg0qmux8j2f" path="res://Assets/Images/Cards/128px-PENDULUM_max.png" id="24_twmry"]
-[ext_resource type="Texture2D" uid="uid://b4caede2pkmjj" path="res://Assets/Images/Cards/128px-DANGO_max.png" id="25_t2tp4"]
-[ext_resource type="Texture2D" uid="uid://84sppv73pgra" path="res://Assets/Images/Cards/128px-MOKOU_max.png" id="26_atbp3"]
-[ext_resource type="Texture2D" uid="uid://b4ucibryd3a40" path="res://Assets/Images/Cards/128px-REIMU_OP_max.png" id="27_f8i0h"]
-[ext_resource type="Texture2D" uid="uid://bm2lkcurpb1h" path="res://Assets/Images/Cards/128px-MARISA_OP_max.png" id="28_ufm3c"]
-[ext_resource type="Texture2D" uid="uid://3qua7i5a5kq0" path="res://Assets/Images/Cards/128px-SAKUYA_OP_max.png" id="29_oh0xr"]
-[ext_resource type="Texture2D" uid="uid://dlamm8byjhs2v" path="res://Assets/Images/Cards/128px-SANAE_OP_max.png" id="30_j07uq"]
-[ext_resource type="Texture2D" uid="uid://b0ey41rilqy10" path="res://Assets/Images/Cards/128px-SANAE_OP2_max.png" id="31_2vbc3"]
+[ext_resource type="Texture2D" uid="uid://dnbg0qmux8j2f" path="res://Assets/Images/Cards/128px-PENDULUM_max.png" id="24_yidum"]
 
 [sub_resource type="Resource" id="Resource_fbv1d"]
 script = ExtResource("5_5ick3")
@@ -82,75 +74,33 @@ thickness = 3
 viewport_path = NodePath("World3D/SubViewport")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cfppq"]
-radius = 128.0
+radius = 51.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qurjd"]
-radius = 64.0
+radius = 12.5
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
-radius = 6.0
+radius = 3.0
 
 [sub_resource type="Resource" id="Resource_nwqne"]
 script = ExtResource("13_x786h")
-price = 100
-maxHold = 1
+price = 150
+maxHold = 30
 artwork = ExtResource("21_4ffrs")
-
-[sub_resource type="Resource" id="Resource_k3vtl"]
-script = ExtResource("13_x786h")
-price = 1000
-maxHold = 10
-artwork = ExtResource("31_2vbc3")
 
 [sub_resource type="Resource" id="Resource_24log"]
 script = ExtResource("13_x786h")
-price = 200
-maxHold = 2
+price = 100
+maxHold = 30
 artwork = ExtResource("23_3pa5v")
 
-[sub_resource type="Resource" id="Resource_oux5a"]
+[sub_resource type="Resource" id="Resource_hjv2k"]
 script = ExtResource("13_x786h")
-price = 300
-maxHold = 3
-artwork = ExtResource("24_twmry")
+price = 50
+maxHold = 30
+artwork = ExtResource("24_yidum")
 
-[sub_resource type="Resource" id="Resource_8yq2a"]
-script = ExtResource("13_x786h")
-price = 400
-maxHold = 4
-artwork = ExtResource("25_t2tp4")
-
-[sub_resource type="Resource" id="Resource_lnw2j"]
-script = ExtResource("13_x786h")
-price = 500
-maxHold = 5
-artwork = ExtResource("26_atbp3")
-
-[sub_resource type="Resource" id="Resource_epfxh"]
-script = ExtResource("13_x786h")
-price = 600
-maxHold = 6
-artwork = ExtResource("27_f8i0h")
-
-[sub_resource type="Resource" id="Resource_ul4ns"]
-script = ExtResource("13_x786h")
-price = 700
-maxHold = 7
-artwork = ExtResource("28_ufm3c")
-
-[sub_resource type="Resource" id="Resource_rfbil"]
-script = ExtResource("13_x786h")
-price = 800
-maxHold = 8
-artwork = ExtResource("29_oh0xr")
-
-[sub_resource type="Resource" id="Resource_ononi"]
-script = ExtResource("13_x786h")
-price = 900
-maxHold = 9
-artwork = ExtResource("30_j07uq")
-
-[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
+[node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "difficultyLabel", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
 currentLayer = NodePath("CanvasLayer")
 pauseMenu = NodePath("CanvasLayer/Window_MarginContainer/Pause_Menu")
@@ -169,6 +119,7 @@ bulletDictionary = {
 "Rice_Bullet": SubResource("Resource_tlea4")
 }
 item_Prefab = ExtResource("4_7dwg7")
+difficultyLabel = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/Label")
 maxScoreLabel_title = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel")
 maxScoreLabel_Num = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel2")
 scoreLabel_title = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer2/MarginContainer/VBoxContainer/RichTextLabel")
@@ -256,7 +207,7 @@ expand_mode = 1
 [node name="LeftUI_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_right = 252.0
+offset_right = 262.0
 grow_vertical = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
@@ -354,9 +305,10 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -252.0
+offset_left = -262.0
 grow_horizontal = 0
 grow_vertical = 2
+size_flags_horizontal = 8
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
@@ -443,22 +395,6 @@ theme_override_font_sizes/normal_font_size = 24
 bbcode_enabled = true
 text = "[u]Money:[/u]"
 fit_content = true
-
-[node name="TextureRect" type="TextureRect" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer/RichTextLabel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -12.5
-offset_top = -12.5
-offset_right = 12.5
-offset_bottom = 12.5
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("7_hia1k")
-expand_mode = 1
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="CanvasLayer/RightUI_MarginContainer/RightUI_VBoxContainer/PanelContainer3/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -555,7 +491,6 @@ magnet = NodePath("Magnet_PlayerCollision")
 
 [node name="Magnet_PlayerCollision" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
 z_index = -1
-scale = Vector2(0.5, 0.5)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("4_1isya")
@@ -563,17 +498,16 @@ player = NodePath("..")
 sprite = NodePath("Magnet_Sprite2D")
 shape = NodePath("Magnet_CollisionShape2D")
 
-[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
-self_modulate = Color(0, 0, 1, 0.215686)
-scale = Vector2(0.995, 0.995)
-texture = ExtResource("5_0qyn6")
-
 [node name="Magnet_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
 shape = SubResource("CircleShape2D_cfppq")
 
+[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
+self_modulate = Color(0, 0, 1, 0.215686)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("5_0qyn6")
+
 [node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
 z_index = 1
-scale = Vector2(0.25, 0.25)
 collision_layer = 4
 collision_mask = 0
 script = ExtResource("4_1isya")
@@ -581,17 +515,16 @@ player = NodePath("..")
 sprite = NodePath("Graze_Sprite2D")
 shape = NodePath("Graze_CollisionShape2D")
 
-[node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
-self_modulate = Color(1, 0, 0, 0.215686)
-scale = Vector2(0.505, 0.505)
-texture = ExtResource("5_0qyn6")
-
 [node name="Graze_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
 shape = SubResource("CircleShape2D_qurjd")
 
+[node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
+self_modulate = Color(1, 0, 0, 0.215686)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("5_0qyn6")
+
 [node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
 z_index = 2
-scale = Vector2(0.5, 0.5)
 collision_mask = 0
 script = ExtResource("4_1isya")
 player = NodePath("..")
@@ -599,8 +532,8 @@ sprite = NodePath("Hitbox_Sprite2D")
 shape = NodePath("Hitbox_CollisionShape2D")
 
 [node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
-self_modulate = Color(0, 1, 0, 1)
-scale = Vector2(0.05, 0.05)
+self_modulate = Color(0, 1, 0, 0.803922)
+scale = Vector2(0.025, 0.025)
 texture = ExtResource("5_0qyn6")
 
 [node name="Hitbox_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
@@ -759,15 +692,8 @@ cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer
 cardPrefab = ExtResource("20_4usgd")
 cardDictionary = {
 "card_id_1": SubResource("Resource_nwqne"),
-"card_id_10": SubResource("Resource_k3vtl"),
 "card_id_2": SubResource("Resource_24log"),
-"card_id_3": SubResource("Resource_oux5a"),
-"card_id_4": SubResource("Resource_8yq2a"),
-"card_id_5": SubResource("Resource_lnw2j"),
-"card_id_6": SubResource("Resource_epfxh"),
-"card_id_7": SubResource("Resource_ul4ns"),
-"card_id_8": SubResource("Resource_rfbil"),
-"card_id_9": SubResource("Resource_ononi")
+"card_id_3": SubResource("Resource_hjv2k")
 }
 deckTexture = ExtResource("21_fdfmj")
 description = NodePath("VBoxContainer/Buy_Menu/MarginContainer2/RichTextLabel")

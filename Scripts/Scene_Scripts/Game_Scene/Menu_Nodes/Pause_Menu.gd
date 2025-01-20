@@ -62,7 +62,7 @@ func QuitGameButton_Subited() -> void:
 	get_tree().quit()
 #-------------------------------------------------------------------------------
 func AnyButton_Canceled() -> void:
-	singleton.MoveToButton(quitGame)
+	singleton.MoveToButton(goToTitle)
 	singleton.CommonCanceled()
 #endregion
 #-------------------------------------------------------------------------------

@@ -12,7 +12,7 @@ var singleton: Singleton
 func Start() -> void:
 	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
-	for _i in 4:
+	for _i in singleton.DIFFICULTY.size():
 		singleton.SetButton(button[_i], singleton.CommonSelected, func():DifficultyButton_Subited(_i), AnyButton_Canceled)
 	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 	hide()

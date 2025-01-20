@@ -39,9 +39,16 @@ func Start():
 #region CREATE MARKET FUNCTIONS
 func OpenMarket():
 	CreateCardMarket()
-	singleton.MoveToFirstButton(cardButton)
 	scrollContainer.custom_minimum_size = buttonSize
-	scrollContainer.scroll_horizontal = 0	#NOTA IMPORTANTE: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
+	#-------------------------------------------------------------------------------
+	var _i: int
+	if(cardButton.size()>0):
+		_i = 1
+	else:
+		_i = 0
+	singleton.MoveToButton(cardButton[_i])
+	scrollContainer.scroll_horizontal = int(buttonSize.x + cardContainer.get_theme_constant("separation")) * _i	#NOTA IMPORTANTE: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
+	#-------------------------------------------------------------------------------
 	buyMenu.show()
 	confirmMenu.hide()
 	show()
@@ -92,12 +99,20 @@ func CreateCardButton_Common(_texture: Texture2D) -> CardButton:
 	return _cb
 #-------------------------------------------------------------------------------
 func GetCardText_Hold(_cr:CardResource) -> String:
-	var _s: String = str(_cr.maxHold) + " / " + str(_cr.maxHold)
+	var _s: String = str(GetCard_Hold(_cr)) + " / " + str(_cr.maxHold)
 	return _s
 #-------------------------------------------------------------------------------
+func GetCard_Hold(_cr:CardResource) -> int:
+	var _i:int = _cr.maxHold - gameScene.cardInventory.get(_cr, 0)
+	return _i
+#-------------------------------------------------------------------------------
 func GetCardText_Price(_cr:CardResource) -> String:
-	var _s: String = "   " + str(_cr.price) + " $"
+	var _s: String = "   " + str(GetCard_Price(_cr)) + " $"
 	return _s
+#-------------------------------------------------------------------------------
+func GetCard_Price(_cr:CardResource) -> int:
+	var _i:int = _cr.price * (1 + gameScene.cardInventory.get(_cr, 0))
+	return _i
 #-------------------------------------------------------------------------------
 func GetCardText_ID(_cr:CardResource) -> String:
 	var _s: String = cardDictionary.find_key(_cr)
@@ -121,13 +136,16 @@ func CardButton_Selected(_id:String) -> void:
 	singleton.CommonSelected()
 #-------------------------------------------------------------------------------
 func CardButton_Subited(_cr:CardResource, _cb:CardButton) -> void:
-	confirmCard_Hold.text = GetCardText_Hold(_cr)
-	confirmCard_Price.text = GetCardText_Price(_cr)
-	confirmCard_Title.text = "Do You Want to Buy This Card?"
-	#-------------------------------------------------------------------------------
-	var _submit: Callable = func(): ConfirmMenu_Card_YesButton_Submited(_cr)
-	CardButton_Submit_Common(_cr.artwork, _cb, _submit)
-	singleton.CommonSubmited()
+	if(GetCard_Price(_cr) <= gameScene.moneyPoints and GetCard_Hold(_cr) > 0):
+		confirmCard_Hold.text = GetCardText_Hold(_cr)
+		confirmCard_Price.text = GetCardText_Price(_cr)
+		confirmCard_Title.text = "Do You Want to Buy This Card?"
+		#-------------------------------------------------------------------------------
+		var _submit: Callable = func(): ConfirmMenu_Card_YesButton_Submited(_cr)
+		CardButton_Submit_Common(_cr.artwork, _cb, _submit)
+		singleton.CommonSubmited()
+	else:
+		singleton.CommonCanceled()
 #-------------------------------------------------------------------------------
 func DeckButton_Submit(_cb:CardButton) -> void:
 	DeckButton_Common(_cb)
@@ -167,6 +185,7 @@ func CardButton_Canceled() -> void:
 func ConfirmMenu_Card_YesButton_Submited(_cr:CardResource):
 	DeleteCardButtons()
 	print(GetCardText_Name(GetCardText_ID(_cr))+" was added to your bag.")
+	CardBuy_Effect(_cr)
 	hide()
 	isMarketOpen = false
 	singleton.CommonSubmited()
@@ -198,4 +217,19 @@ func ConfurmMenu_NoButton_Common(_cb:CardButton):
 #region DECK BUTTON FUNCTIONS
 #-------------------------------------------------------------------------------
 #endregion
+#-------------------------------------------------------------------------------
+func CardBuy_Effect(_cr:CardResource):
+	gameScene.moneyPoints -= _cr.price
+	gameScene.cardInventory[_cr] = gameScene.cardInventory.get(_cr, 0) + 1
+	gameScene.SetMoney()
+	match(GetCardText_ID(_cr)):
+		"card_id_1":
+			gameScene.lifePoints += 1
+			gameScene.SetInfoText_Life()
+		"card_id_2":
+			gameScene.powerPoints += 1
+			gameScene.SetInfoText_Power()
+		"card_id_3":
+			gameScene.player.playerResource.maxMoney += 100
+			gameScene.SetMaxMoney()
 #-------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ func Start() -> void:
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS
 func SetAllButtons() -> void:
-	for _i in 2:
+	for _i in singleton.playerResource.size():
 		singleton.SetButton(button[_i], singleton.CommonSelected, func():PlayerButton_Subited(_i), AnyButton_Canceled)
 	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------

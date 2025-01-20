@@ -2,6 +2,8 @@ extends Node
 class_name Singleton
 #-------------------------------------------------------------------------------
 enum STAGE_STATE{DISABLED, ENABLED, COMPLETED}
+enum DIFFICULTY{EASY, NORMAL, HARD, LUNATIC}
+enum STAGE{STAGE_1, STAGE_2, STAGE_3, STAGE_4, STAGE_5, STAGE_6, STAGE_7, ROGUELIKE_MODE, BOSSRUSH_MODE}
 #region VARIABLES
 #-------------------------------------------------------------------------------
 @export var optionMenu: Option_Menu
@@ -22,6 +24,11 @@ const cancelInput: String = "ui_cancel"
 const saveData_name : String = "Save"
 const saveData_path : String = "user://Save/"
 var currentSaveData_Json: Dictionary;
+#-------------------------------------------------------------------------------
+@export var playerResource: Array[PlayerResource]
+var mySTAGE: STAGE
+var myDIFFICULTY: DIFFICULTY
+#-------------------------------------------------------------------------------
 var currentFocus: Control
 #-------------------------------------------------------------------------------
 const titleScene_Path: StringName = "res://Nodes/Scenes/title_scene.tscn"
@@ -31,6 +38,7 @@ const gameScene_Path: StringName = "res://Nodes/Scenes/game_scene.tscn"
 @export var fps: Label
 #-------------------------------------------------------------------------------
 var maxSave: int = 9
+var maxPlayer: int = 0
 var isSlowMotion: bool = false
 @export var useCustomButton: bool = true
 #endregion
@@ -83,11 +91,11 @@ func CreateNew_SaveData_Json() -> Dictionary:
 	_saveData["difficultyIndex"] = 0
 	_saveData["stageIndex"] = 0
 	var _playerData: Dictionary
-	for _i in 2:
+	for _i in playerResource.size():
 		var _difficultyData: Dictionary
-		for _j in 4:
+		for _j in DIFFICULTY.size():
 			var _stageData: Dictionary
-			for _k in 9:
+			for _k in STAGE.size():
 				#Aqui viene toda la data de cada nivel.
 				var _clearData: Dictionary
 				_clearData["value"] = STAGE_STATE.DISABLED
@@ -102,6 +110,11 @@ func CreateNew_SaveData_Json() -> Dictionary:
 func Get_SaveDataPath_Json(_i:int) -> String:
 	var _path: String = saveData_path+saveData_name+str(_i)+".json"
 	return _path
+#-------------------------------------------------------------------------------
+func Get_CurrentPlayer() -> PlayerResource:
+	var _new_playerResource: PlayerResource = PlayerResource.new()
+	_new_playerResource.CopyFrom(playerResource[currentSaveData_Json["playerIndex"]])
+	return _new_playerResource
 #endregion
 #-------------------------------------------------------------------------------
 #region UI FUNCTIONS

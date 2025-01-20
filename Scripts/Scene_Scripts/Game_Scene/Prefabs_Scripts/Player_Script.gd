@@ -8,10 +8,20 @@ enum PLAYER_STATE{ALIVE, DEATH, INVINCIBLE}
 @export var graze: PlayerCollision
 @export var magnet: PlayerCollision
 #-------------------------------------------------------------------------------
-const normalSpeed: float = 7.0
-const focusSpeed: float = 3.5
+var playerResource: PlayerResource
+#endregion
 #-------------------------------------------------------------------------------
-var maxLives: int = 80
-var maxPower: int = 40
+#region CONSTRUCTORS
+func SetPlayer(_playerResournce: PlayerResource):
+	playerResource = _playerResournce
+	#-------------------------------------------------------------------------------
+	hitBox.scale.x  = _playerResournce.hitBox_Scale
+	hitBox.scale.y  = _playerResournce.hitBox_Scale
+	#-------------------------------------------------------------------------------
+	graze.scale.x  = _playerResournce.grazeBox_Scale
+	graze.scale.y  = _playerResournce.grazeBox_Scale
+	#-------------------------------------------------------------------------------
+	magnet.scale.x  = _playerResournce.magnetBox_Scale
+	magnet.scale.y  = _playerResournce.magnetBox_Scale
 #endregion
 #-------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ func Start() -> void:
 #-------------------------------------------------------------------------------
 #region BUTTON FUNCTIONS
 func SetAllButtons() -> void:
-	for _i in 9:
+	for _i in singleton.STAGE.size():
 		singleton.SetButton(button[_i], singleton.CommonSelected, func():StageButton_Subited(_i), AnyButton_Canceled)
 	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ func UpdateStageButtons():
 	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
 	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
 	var _stage: Dictionary = singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
-	for _i in 9:
+	for _i in singleton.STAGE.size():
 		match(int(_stage[str(_i)]["value"])):
 			singleton.STAGE_STATE.DISABLED:
 				button[_i].text = "[Locked]"

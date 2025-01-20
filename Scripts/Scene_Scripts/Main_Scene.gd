@@ -8,6 +8,7 @@ var singleton: Singleton
 @export var playerMenu: Player_Menu
 @export var stageMenu: Stage_Menu
 @export var startMenu: Start_Menu
+#-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOBEHAVIOUR
