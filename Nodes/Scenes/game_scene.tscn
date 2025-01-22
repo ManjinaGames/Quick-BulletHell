@@ -681,7 +681,6 @@ theme_override_font_sizes/font_size = 30
 text = "Quit"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "confirmCard_Title", "yesButton", "noButton")]
-visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -724,7 +723,6 @@ horizontal_alignment = 1
 vertical_alignment = 2
 
 [node name="Buy_Menu" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
-visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu"]
@@ -795,6 +793,7 @@ Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 fit_content = true
 
 [node name="Confirm_Menu" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10

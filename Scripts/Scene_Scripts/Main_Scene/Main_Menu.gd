@@ -7,6 +7,7 @@ var singleton: Singleton
 @export var title: Label
 @export var button: Array[Button]
 @export var gameInfo: Label
+@export var picture: TextureRect
 #-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
@@ -36,7 +37,11 @@ func StartButton_Subited() -> void:
 func PlayerButton_Submited() -> void:
 	hide()
 	mainScene.playerMenu.show()
-	singleton.MoveToButton(mainScene.playerMenu.button[singleton.currentSaveData_Json["playerIndex"]])
+	#-------------------------------------------------------------------------------
+	var _index: int = singleton.currentSaveData_Json["playerIndex"]
+	singleton.MoveToButton(mainScene.playerMenu.button[_index])
+	mainScene.playerMenu.scrollContainer.scroll_horizontal = int(mainScene.playerMenu.buttonSize.x + mainScene.playerMenu.container.get_theme_constant("separation")) * _index	#NOTA IMPORTANTE: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
+	#-------------------------------------------------------------------------------
 	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func DifficultyButton_Submited() -> void:
@@ -91,16 +96,27 @@ func SetIdiome():
 #-------------------------------------------------------------------------------
 func SetGameInfo():
 	var _saveData: Dictionary = singleton.currentSaveData_Json
-	var _playerIndex: StringName = str(_saveData["playerIndex"])
-	var _difficultyIndex: StringName = str(_saveData["difficultyIndex"])
-	var _stageIndex: StringName = str(_saveData["stageIndex"])
 	#-------------------------------------------------------------------------------
-	gameInfo.text = tr("playerMenu_button"+_playerIndex)+"\n"
-	gameInfo.text +=  tr("difficultyMenu_button"+_difficultyIndex)+"\n"
-	gameInfo.text += tr("stageMenu_button"+_stageIndex)+"\n"
+	var _playerIndex: int = _saveData["playerIndex"]
+	var _difficultyIndex: int = _saveData["difficultyIndex"]
+	var _stageIndex: int = _saveData["stageIndex"]
+	#-------------------------------------------------------------------------------
+	SetGameInfo2(_playerIndex, _difficultyIndex, _stageIndex)
+#-------------------------------------------------------------------------------
+func SetGameInfo2(_playerIndex: int, _difficultyIndex: int, _stageIndex: int):
+	var _saveData: Dictionary = singleton.currentSaveData_Json
+	#-------------------------------------------------------------------------------
+	var _playerIndex_string: StringName = str(_playerIndex)
+	var _difficultyIndex_string: StringName = str(_difficultyIndex)
+	var _stageIndex_string: StringName = str(_stageIndex)
+	#-------------------------------------------------------------------------------
+	gameInfo.text = tr("playerMenu_button"+_playerIndex_string)+"\n"
+	gameInfo.text +=  tr("difficultyMenu_button"+_difficultyIndex_string)+"\n"
+	#gameInfo.text += tr("stageMenu_button"+_stageIndex_string)+"\n"
+	picture.texture = singleton.playerResource[_playerIndex].picture
 	#-------------------------------------------------------------------------------
 	gameInfo.text += "-"
-	var _stage: Dictionary = _saveData["saveData"][_playerIndex][_difficultyIndex]
+	var _stage: Dictionary = _saveData["saveData"][_playerIndex_string][_difficultyIndex_string]
 	for _i in _stage.size():
 		gameInfo.text += str(_stage[str(_i)]["value"])+"-"
 #endregion

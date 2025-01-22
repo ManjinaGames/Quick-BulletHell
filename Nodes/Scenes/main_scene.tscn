@@ -1,12 +1,21 @@
-[gd_scene load_steps=8 format=3 uid="uid://d0dbuca6xjv3b"]
+[gd_scene load_steps=11 format=3 uid="uid://d0dbuca6xjv3b"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene.gd" id="1_5f268"]
 [ext_resource type="Texture2D" uid="uid://bssghjqkpvhhi" path="res://Assets/Images/2.jpg" id="2_p5ilu"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Main_Menu.gd" id="3_s5nvw"]
+[ext_resource type="Texture2D" uid="uid://bx76eilx2cn5q" path="res://Assets/Images/Marisa.png" id="4_1tijy"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Player_Menu.gd" id="4_e83j3"]
+[ext_resource type="PackedScene" uid="uid://bcew6q4vq4d3j" path="res://Nodes/Prefabs/player_button.tscn" id="5_c5p36"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Difficulty_Menu.gd" id="5_i24b0"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Stage_Menu.gd" id="6_x5vwy"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Start_Menu.gd" id="7_jwsoe"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_mjece"]
+color = Color(1, 1, 1, 1)
+grow_begin = 10.0
+grow_end = 10.0
+thickness = 5
+vertical = true
 
 [node name="Main_Scene" type="Control" node_paths=PackedStringArray("mainMenu", "difficultyMenu", "playerMenu", "stageMenu", "startMenu")]
 layout_mode = 3
@@ -16,11 +25,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5f268")
-mainMenu = NodePath("MarginContainer/Main_Menu")
-difficultyMenu = NodePath("MarginContainer/Difficulty_Menu")
-playerMenu = NodePath("MarginContainer/Player_Menu")
-stageMenu = NodePath("MarginContainer/Stage_Menu")
-startMenu = NodePath("MarginContainer/Start_Menu")
+mainMenu = NodePath("Main_Menu")
+difficultyMenu = NodePath("Difficulty_Menu")
+playerMenu = NodePath("Player_Menu")
+stageMenu = NodePath("Stage_Menu")
+startMenu = NodePath("Start_Menu")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -32,333 +41,524 @@ grow_vertical = 2
 texture = ExtResource("2_p5ilu")
 expand_mode = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Main_Menu" type="Control" parent="." node_paths=PackedStringArray("mainScene", "button", "gameInfo", "picture")]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
-
-[node name="Label" type="Label" parent="MarginContainer"]
-layout_mode = 2
-size_flags_horizontal = 8
-theme_override_font_sizes/font_size = 50
-text = "Player 1
-Easy
-"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Main_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "gameInfo")]
-layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
 script = ExtResource("3_s5nvw")
-mainScene = NodePath("../..")
-button = [NodePath("PanelContainer/MarginContainer/VBoxContainer/Button"), NodePath("PanelContainer/MarginContainer/VBoxContainer/Button2"), NodePath("PanelContainer/MarginContainer/VBoxContainer/Button3"), NodePath("PanelContainer/MarginContainer/VBoxContainer/Button4"), NodePath("PanelContainer/MarginContainer/VBoxContainer/Button5")]
-gameInfo = NodePath("../Label")
+mainScene = NodePath("..")
+button = [NodePath("MarginContainer/VBoxContainer/Button"), NodePath("MarginContainer/VBoxContainer/Button2"), NodePath("MarginContainer/VBoxContainer/Button3"), NodePath("MarginContainer/VBoxContainer/Button4"), NodePath("MarginContainer/VBoxContainer/Button5")]
+gameInfo = NodePath("../TextureRect2/MarginContainer/Label")
+picture = NodePath("../TextureRect2")
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Main_Menu"]
+[node name="MarginContainer" type="MarginContainer" parent="Main_Menu"]
 layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -210.5
-offset_right = 276.0
-offset_bottom = 210.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Main_Menu/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Main_Menu/MarginContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+size_flags_horizontal = 0
+size_flags_vertical = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer"]
+[node name="Label" type="Label" parent="Main_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 60
+text = "Main Menu"
+horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="Main_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Start"
 
-[node name="Button2" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="Main_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Player"
 
-[node name="Button3" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button3" type="Button" parent="Main_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Difficulty"
 
-[node name="Button4" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button4" type="Button" parent="Main_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Options"
 
-[node name="Button5" type="Button" parent="MarginContainer/Main_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button5" type="Button" parent="Main_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Go to Title"
 
-[node name="Player_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
-visible = false
-layout_mode = 2
-script = ExtResource("4_e83j3")
-mainScene = NodePath("../..")
-button = [NodePath("VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/Button"), NodePath("VBoxContainer/PanelContainer/MarginContainer/HBoxContainer/Button2")]
-back = NodePath("VBoxContainer/Button")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Player_Menu"]
+[node name="Player_Menu" type="Control" parent="." node_paths=PackedStringArray("mainScene", "scrollContainer", "container", "back")]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -512.0
-offset_top = -275.5
-offset_right = 512.0
-offset_bottom = 275.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("4_e83j3")
+mainScene = NodePath("..")
+scrollContainer = NodePath("MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScrollContainer")
+container = NodePath("MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
+playerButton_prefab = ExtResource("5_c5p36")
+back = NodePath("MarginContainer/VBoxContainer/Button")
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Player_Menu/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 633.0
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Player_Menu/MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="Player_Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 60
+text = "Player Select:"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Player_Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="VSeparator" type="VSeparator" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_mjece")
+
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer"]
+show_behind_parent = true
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer"]
+clip_contents = false
+custom_minimum_size = Vector2(460, 460)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+follow_focus = true
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="PlayerButton" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+custom_minimum_size = Vector2(460, 460)
+layout_mode = 2
+
+[node name="PlayerButton2" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+custom_minimum_size = Vector2(460, 460)
+layout_mode = 2
+
+[node name="PlayerButton3" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+custom_minimum_size = Vector2(460, 460)
+layout_mode = 2
+
+[node name="VSeparator2" type="VSeparator" parent="Player_Menu/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_mjece")
+
+[node name="PanelContainer" type="PanelContainer" parent="Player_Menu/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Player_Menu/VBoxContainer/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Player_Menu/VBoxContainer/PanelContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Player_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MarginContainer/Player_Menu/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Button" type="Button" parent="Player_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(500, 450)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Player 1"
 
-[node name="Button2" type="Button" parent="MarginContainer/Player_Menu/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
+[node name="Button2" type="Button" parent="Player_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(500, 450)
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Player 2"
 
-[node name="Button" type="Button" parent="MarginContainer/Player_Menu/VBoxContainer"]
+[node name="Button" type="Button" parent="Player_Menu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 8
+size_flags_vertical = 4
 theme_override_font_sizes/font_size = 50
 text = "Back
 "
 
-[node name="Difficulty_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
-visible = false
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu/MarginContainer"]
 layout_mode = 2
-script = ExtResource("5_i24b0")
-mainScene = NodePath("../..")
-button = [NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button2"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button3"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button4")]
-back = NodePath("VBoxContainer/Button")
+size_flags_horizontal = 8
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_bottom = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Difficulty_Menu"]
+[node name="Difficulty_Menu" type="Control" parent="." node_paths=PackedStringArray("mainScene", "button", "back")]
+visible = false
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -210.0
-offset_top = -256.5
-offset_right = 210.0
-offset_bottom = 256.5
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("5_i24b0")
+mainScene = NodePath("..")
+button = [NodePath("MarginContainer/VBoxContainer2/Button"), NodePath("MarginContainer/VBoxContainer2/Button2"), NodePath("MarginContainer/VBoxContainer2/Button3"), NodePath("MarginContainer/VBoxContainer2/Button4")]
+back = NodePath("MarginContainer/VBoxContainer2/Button5")
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Difficulty_Menu/VBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Difficulty_Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Difficulty_Menu/MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer"]
+[node name="Label" type="Label" parent="Difficulty_Menu/MarginContainer/VBoxContainer2"]
 layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+theme_override_font_sizes/font_size = 60
+text = "Difficulty Select"
+horizontal_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 100)
+[node name="Button" type="Button" parent="Difficulty_Menu/MarginContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Easy"
 
-[node name="Button2" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 100)
+[node name="Button2" type="Button" parent="Difficulty_Menu/MarginContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Normal"
 
-[node name="Button3" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 100)
+[node name="Button3" type="Button" parent="Difficulty_Menu/MarginContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Hard"
 
-[node name="Button4" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(400, 100)
+[node name="Button4" type="Button" parent="Difficulty_Menu/MarginContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Lunatic"
 
-[node name="Button" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer"]
-custom_minimum_size = Vector2(300, 70)
+[node name="HSeparator" type="HSeparator" parent="Difficulty_Menu/MarginContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button5" type="Button" parent="Difficulty_Menu/MarginContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Back"
 
-[node name="Stage_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
+[node name="HBoxContainer" type="HBoxContainer" parent="Difficulty_Menu/MarginContainer"]
 visible = false
 layout_mode = 2
-script = ExtResource("6_x5vwy")
-mainScene = NodePath("../..")
-button = [NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button2"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button3"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button4"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button5"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button6"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button7"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button8"), NodePath("VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button9")]
-back = NodePath("VBoxContainer/Button")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Stage_Menu"]
-layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -303.0
-offset_right = 320.0
-offset_bottom = 303.0
-grow_vertical = 2
+[node name="VBoxContainer2" type="VBoxContainer" parent="Difficulty_Menu/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Stage_Menu/VBoxContainer"]
+[node name="Label" type="Label" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Difficultu Select"
+horizontal_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2"]
+clip_contents = true
+custom_minimum_size = Vector2(0, 450)
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer"]
+clip_contents = false
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 6
+follow_focus = true
+scroll_vertical = 100
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_right = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="Button" type="Button" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Saturday of Salamanca
+Difficult-Mode
+For Those who want to have fun."
+
+[node name="Button2" type="Button" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Saturday of Salamanca
+Difficult-Mode
+For Those who want to have fun."
+
+[node name="Button3" type="Button" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Saturday of Salamanca
+Difficult-Mode
+For Those who want to have fun."
+
+[node name="Button4" type="Button" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+text = "Saturday of Salamanca
+Difficult-Mode
+For Those who want to have fun."
+
+[node name="Button" type="Button" parent="Difficulty_Menu/MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 30
+text = "Back"
+
+[node name="Control" type="Control" parent="Difficulty_Menu/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Stage_Menu" type="Control" parent="." node_paths=PackedStringArray("mainScene", "button", "back")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_x5vwy")
+mainScene = NodePath("..")
+button = [NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button2"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button3"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button4"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button5"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button6"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button7"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button8"), NodePath("MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/Button9")]
+back = NodePath("MarginContainer/VBoxContainer/Button")
+
+[node name="MarginContainer" type="MarginContainer" parent="Stage_Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Stage_Menu/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="PanelContainer" type="PanelContainer" parent="Stage_Menu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 1"
 
-[node name="Button2" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 2"
 
-[node name="Button3" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button3" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 3"
 
-[node name="Button4" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button4" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 4"
 
-[node name="Button5" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button5" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 5"
 
-[node name="Button6" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button6" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage Final"
 
-[node name="Button7" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button7" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage Extra"
 
-[node name="Button8" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button8" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Rogue-Like Mode"
 
-[node name="Button9" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button9" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Boss-Rush Mode"
 
-[node name="Button" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer"]
+[node name="Button" type="Button" parent="Stage_Menu/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Back"
 
-[node name="Start_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "start", "back")]
+[node name="Start_Menu" type="Control" parent="." node_paths=PackedStringArray("mainScene", "start", "back")]
 visible = false
-layout_mode = 2
-script = ExtResource("7_jwsoe")
-mainScene = NodePath("../..")
-start = NodePath("PanelContainer/MarginContainer/VBoxContainer/Button")
-back = NodePath("PanelContainer/MarginContainer/VBoxContainer/Button3")
-
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/Start_Menu"]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -178.0
-offset_right = 249.0
-grow_vertical = 0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("7_jwsoe")
+mainScene = NodePath("..")
+start = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Button")
+back = NodePath("MarginContainer/PanelContainer/MarginContainer/VBoxContainer/Button3")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Start_Menu/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Start_Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+
+[node name="PanelContainer" type="PanelContainer" parent="Start_Menu/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="Start_Menu/MarginContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Start_Menu/PanelContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Start_Menu/MarginContainer/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MarginContainer/Start_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="Start_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Start"
 
-[node name="Button2" type="Button" parent="MarginContainer/Start_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="Start_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Info"
 
-[node name="Button3" type="Button" parent="MarginContainer/Start_Menu/PanelContainer/MarginContainer/VBoxContainer"]
+[node name="Button3" type="Button" parent="Start_Menu/MarginContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Back"
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -599.4
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+texture = ExtResource("4_1tijy")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="TextureRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_bottom = 50
+
+[node name="Label" type="Label" parent="TextureRect2/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+text = "Player 1
+Easy
+-1-0-0-0-0-0-0-0-0-
+"
+horizontal_alignment = 1
+vertical_alignment = 2

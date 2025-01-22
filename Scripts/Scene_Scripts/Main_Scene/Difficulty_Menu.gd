@@ -13,7 +13,7 @@ func Start() -> void:
 	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
 	for _i in singleton.DIFFICULTY.size():
-		singleton.SetButton(button[_i], singleton.CommonSelected, func():DifficultyButton_Subited(_i), AnyButton_Canceled)
+		singleton.SetButton(button[_i], func():DifficultyButton_Selected(_i), func():DifficultyButton_Subited(_i), AnyButton_Canceled)
 	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 	hide()
 #endregion
@@ -25,6 +25,12 @@ func DifficultyButton_Subited(_i:int) -> void:
 	singleton.Save_SaveData_Json(singleton.optionMenu.optionSaveData_Json["saveIndex"])
 	BackButton_Common()
 	singleton.CommonSubmited()
+#-------------------------------------------------------------------------------
+func DifficultyButton_Selected(_i:int) -> void:
+	var _player: int = singleton.currentSaveData_Json["playerIndex"]
+	var _stage: int = singleton.currentSaveData_Json["stageIndex"]
+	mainScene.mainMenu.SetGameInfo2(_player, _i, _stage)
+	singleton.CommonSelected()
 #-------------------------------------------------------------------------------
 func AnyButton_Canceled() -> void:
 	singleton.MoveToButton(back)
@@ -40,6 +46,7 @@ func BackButton_Canceled() -> void:
 #-------------------------------------------------------------------------------
 func BackButton_Common() -> void:
 	hide()
+	mainScene.mainMenu.SetGameInfo()
 	singleton.MoveToButton(mainScene.mainMenu.button[2])
 	mainScene.mainMenu.show()
 #endregion
