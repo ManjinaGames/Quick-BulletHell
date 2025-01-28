@@ -16,6 +16,8 @@ class_name PlayerButton
 @export var focusSpeed_value_label: Label
 #-------------------------------------------------------------------------------
 @export var description_label: Label
+#-------------------------------------------------------------------------------
+@export var picture: TextureRect
 #endregion
 #-------------------------------------------------------------------------------
 #region FUNCTIONS
@@ -30,5 +32,7 @@ func SetPlayerButtonStats(_playerResource: PlayerResource):
 	#-------------------------------------------------------------------------------
 	normalSpeed_value_label.text = str(_playerResource.normalSpeed)
 	focusSpeed_value_label.text = str(_playerResource.focusSpeed)
+	#-------------------------------------------------------------------------------
+	picture.texture = _playerResource.picture
 #endregion
 #-------------------------------------------------------------------------------

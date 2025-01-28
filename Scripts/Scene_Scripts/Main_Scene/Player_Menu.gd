@@ -8,7 +8,7 @@ var singleton: Singleton
 @export var container: HBoxContainer
 @export var button: Array[PlayerButton]
 @export var playerButton_prefab: PackedScene
-const buttonSize: Vector2 = Vector2(460, 460)
+const buttonSize: Vector2 = Vector2(450, 400)
 @export var back: Button
 #endregion
 #-------------------------------------------------------------------------------
