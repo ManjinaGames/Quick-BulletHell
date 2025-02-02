@@ -19,12 +19,13 @@ var timer: int
 var difficulty: float
 @export var content: Control
 @export var player: Player
-@export var cardInventory: Dictionary
+var cardInventory: Dictionary
 @export var playerExplotion: PackedScene
 #-------------------------------------------------------------------------------
 @export var enemy_Prefab: PackedScene
 @export var bullet_Prefab: PackedScene
-@export var bulletDictionary: Dictionary
+var bulletDictionary: Dictionary
+@export var bulletDictionary_Path: String = "res://Resources/Bullets/"
 var maxColor: int = 15
 @export var item_Prefab: PackedScene
 #-------------------------------------------------------------------------------
@@ -405,9 +406,9 @@ func BeginGame() -> void:
 	SetScore()
 	SetMoney()
 	SetMaxMoney()
-	lifePoints = int(float(player.playerResource.maxLives)*0.25)
+	lifePoints = int(float(player.playerResource.maxLives)*1)
 	SetInfoText_Life()
-	powerPoints = int(float(player.playerResource.maxPower)*0.25)
+	powerPoints = int(float(player.playerResource.maxPower)*1)
 	SetInfoText_Power()
 	#-------------------------------------------------------------------------------
 	completedPanel.hide()
@@ -419,8 +420,19 @@ func BeginGame() -> void:
 	player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
 	cardInventory = {}
 	#-------------------------------------------------------------------------------
+	LoadBulletDatabase()
 	Enter_GameState_InGameplay()
 	Choreography()
+#-------------------------------------------------------------------------------
+func LoadBulletDatabase():
+	bulletDictionary.clear()
+	#-------------------------------------------------------------------------------
+	var dir_array = DirAccess.get_files_at(bulletDictionary_Path)
+	if(dir_array):
+		for _i in dir_array.size():
+			var _base_name: String = dir_array[_i].get_slice(".",0)
+			var _bulletResource: BulletResource = load(bulletDictionary_Path+"/"+_base_name+".tres") as BulletResource
+			bulletDictionary[_base_name] = _bulletResource
 #-------------------------------------------------------------------------------
 func Choreography() -> void:
 	match(singleton.currentSaveData_Json["stageIndex"]):

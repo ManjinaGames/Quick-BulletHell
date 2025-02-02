@@ -10,7 +10,8 @@ var singleton: Singleton
 @export var cardContainer: HBoxContainer
 @export var cardPrefab: PackedScene
 @export var cardButton: Array[Button]
-@export var cardDictionary: Dictionary
+var cardDictionary: Dictionary
+@export var cardDictionary_Path: String = "res://Resources/Cards/"
 @export var deckTexture: Texture2D
 @export var description: RichTextLabel
 #-------------------------------------------------------------------------------
@@ -31,12 +32,24 @@ var isMarketOpen: bool = false
 func Start():
 	singleton = get_node("/root/singleton")
 	#-------------------------------------------------------------------------------
+	LoadCardDatabase()
+	#-------------------------------------------------------------------------------
 	buyMenu.hide()
 	confirmMenu.hide()
 	hide()
 #endregion
 #-------------------------------------------------------------------------------
 #region CREATE MARKET FUNCTIONS
+func LoadCardDatabase():
+	cardDictionary.clear()
+	#-------------------------------------------------------------------------------
+	var dir_array = DirAccess.get_files_at(cardDictionary_Path)
+	if(dir_array):
+		for _i in dir_array.size():
+			var _base_name: String = dir_array[_i].get_slice(".",0)
+			var _card: CardResource = load(cardDictionary_Path+"/"+_base_name+".tres") as CardResource
+			cardDictionary[_base_name] = _card
+#-------------------------------------------------------------------------------
 func OpenMarket():
 	CreateCardMarket()
 	scrollContainer.custom_minimum_size = buttonSize
@@ -218,6 +231,7 @@ func ConfurmMenu_NoButton_Common(_cb:CardButton):
 #-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
+#region MISC FUNCTIONS
 func CardBuy_Effect(_cr:CardResource):
 	gameScene.moneyPoints -= _cr.price
 	gameScene.cardInventory[_cr] = gameScene.cardInventory.get(_cr, 0) + 1
@@ -232,4 +246,5 @@ func CardBuy_Effect(_cr:CardResource):
 		"card_id_3":
 			gameScene.player.playerResource.maxMoney += 100
 			gameScene.SetMaxMoney()
+#endregion
 #-------------------------------------------------------------------------------

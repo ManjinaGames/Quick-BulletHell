@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=32 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
@@ -8,50 +8,21 @@
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Collider_Script.gd" id="4_1isya"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
-[ext_resource type="Script" path="res://Scripts/Resource_Scripts/BulletResource.gd" id="5_5ick3"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
-[ext_resource type="Texture2D" uid="uid://d24jdxnpb0gbm" path="res://Assets/Sprites/Bullets/Rice_Bullet.png" id="6_f7nn8"]
 [ext_resource type="Texture2D" uid="uid://dsiggugs8jlh7" path="res://Assets/Skybox/SunsetSky.png" id="6_ydsod"]
-[ext_resource type="Texture2D" uid="uid://db00buwxk3mf2" path="res://Assets/Sprites/Bullets/Arrowhead_Bullet.png" id="7_6l0j7"]
-[ext_resource type="Texture2D" uid="uid://vhryeklkmvmt" path="res://Assets/Sprites/Bullets/Ball1_Bullet.png" id="8_24by6"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Player_Script.gd" id="9_4cqcx"]
 [ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="12_7k8wf"]
-[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="13_x786h"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/game_over_menu.gd" id="15_ou6t6"]
 [ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
 [ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="19_jc3d8"]
 [ext_resource type="PackedScene" uid="uid://kthlaqw0sk1v" path="res://Nodes/Prefabs/card_button_prefab.tscn" id="20_4usgd"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Dialogue_Menu.gd" id="20_kjtdd"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
-[ext_resource type="Texture2D" uid="uid://qe0pv72mqbir" path="res://Assets/Images/Cards/128px-EXTEND_max.png" id="21_4ffrs"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
 [ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="21_fdfmj"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
-[ext_resource type="Texture2D" uid="uid://c58r32hi6sk7s" path="res://Assets/Images/Cards/128px-BOMB_max.png" id="23_3pa5v"]
-[ext_resource type="Texture2D" uid="uid://dnbg0qmux8j2f" path="res://Assets/Images/Cards/128px-PENDULUM_max.png" id="24_yidum"]
-
-[sub_resource type="Resource" id="Resource_fbv1d"]
-script = ExtResource("5_5ick3")
-texture = ExtResource("7_6l0j7")
-frame = Vector2(16, 1)
-size = Vector2(2, 4)
-offset = Vector2(0, -3.5)
-
-[sub_resource type="Resource" id="Resource_cjkxh"]
-script = ExtResource("5_5ick3")
-texture = ExtResource("8_24by6")
-frame = Vector2(16, 1)
-size = Vector2(4, 4)
-offset = Vector2(0, 0)
-
-[sub_resource type="Resource" id="Resource_tlea4"]
-script = ExtResource("5_5ick3")
-texture = ExtResource("6_f7nn8")
-frame = Vector2(16, 1)
-size = Vector2(2, 4)
-offset = Vector2(0, 0)
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_cw1e3"]
 panorama = ExtResource("6_ydsod")
@@ -82,24 +53,6 @@ radius = 12.5
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
 radius = 3.0
 
-[sub_resource type="Resource" id="Resource_nwqne"]
-script = ExtResource("13_x786h")
-price = 150
-maxHold = 30
-artwork = ExtResource("21_4ffrs")
-
-[sub_resource type="Resource" id="Resource_24log"]
-script = ExtResource("13_x786h")
-price = 100
-maxHold = 30
-artwork = ExtResource("23_3pa5v")
-
-[sub_resource type="Resource" id="Resource_hjv2k"]
-script = ExtResource("13_x786h")
-price = 50
-maxHold = 30
-artwork = ExtResource("24_yidum")
-
 [node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "difficultyLabel", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
 currentLayer = NodePath("CanvasLayer")
@@ -113,11 +66,6 @@ player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player_Prefab")
 playerExplotion = ExtResource("2_pa18e")
 enemy_Prefab = ExtResource("2_acyb6")
 bullet_Prefab = ExtResource("3_5om1x")
-bulletDictionary = {
-"ArrowHead_Bullet": SubResource("Resource_fbv1d"),
-"Ball1_Bullet": SubResource("Resource_cjkxh"),
-"Rice_Bullet": SubResource("Resource_tlea4")
-}
 item_Prefab = ExtResource("4_7dwg7")
 difficultyLabel = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/Label")
 maxScoreLabel_title = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/PanelContainer/MarginContainer/VBoxContainer/RichTextLabel")
@@ -681,6 +629,7 @@ theme_override_font_sizes/font_size = 30
 text = "Quit"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "confirmCard_Title", "yesButton", "noButton")]
+visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -689,11 +638,6 @@ buyMenu = NodePath("VBoxContainer/Buy_Menu")
 scrollContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer")
 cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
 cardPrefab = ExtResource("20_4usgd")
-cardDictionary = {
-"card_id_1": SubResource("Resource_nwqne"),
-"card_id_2": SubResource("Resource_24log"),
-"card_id_3": SubResource("Resource_hjv2k")
-}
 deckTexture = ExtResource("21_fdfmj")
 description = NodePath("VBoxContainer/Buy_Menu/MarginContainer2/RichTextLabel")
 confirmCard_Panel = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel")

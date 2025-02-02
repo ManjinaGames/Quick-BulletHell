@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://djof2x4j4xse7"]
+
+[ext_resource type="Texture2D" uid="uid://ci4jfw2wl4k36" path="res://Assets/Images/Cards/128px-ALICE_OP_max.png" id="1_4sfrp"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_v3vo1"]
+
+[resource]
+script = ExtResource("1_v3vo1")
+price = 700
+maxHold = 14
+artwork = ExtResource("1_4sfrp")

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://dt7vpv3cdqqcc"]
+
+[ext_resource type="Texture2D" uid="uid://qe0pv72mqbir" path="res://Assets/Images/Cards/128px-EXTEND_max.png" id="1_cgbpc"]
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="2_8gl7w"]
+
+[resource]
+script = ExtResource("2_8gl7w")
+price = 100
+maxHold = 30
+artwork = ExtResource("1_cgbpc")

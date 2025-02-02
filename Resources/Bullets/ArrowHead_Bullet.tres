@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BulletResource" load_steps=3 format=3 uid="uid://t2conetv0utm"]
+
+[ext_resource type="Script" path="res://Scripts/Resource_Scripts/BulletResource.gd" id="1_o1iu1"]
+[ext_resource type="Texture2D" uid="uid://db00buwxk3mf2" path="res://Assets/Sprites/Bullets/Arrowhead_Bullet.png" id="2_btxxo"]
+
+[resource]
+script = ExtResource("1_o1iu1")
+texture = ExtResource("2_btxxo")
+frame = Vector2(16, 1)
+size = Vector2(2, 4)
+offset = Vector2(0, -3.5)
