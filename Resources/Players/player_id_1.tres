@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="PlayerResource" load_steps=3 format=3 uid="uid://p8lqv58vpcxv"]
 
-[ext_resource type="Texture2D" uid="uid://lcfsm5j6f03s" path="res://Assets/Images/Reimu.png" id="1_iwodg"]
+[ext_resource type="Texture2D" uid="uid://j6sy2d6bl6al" path="res://Assets/Images/PlayerSelect1.png" id="1_xuota"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/PlayerResource.gd" id="2_vephl"]
 
 [resource]
 script = ExtResource("2_vephl")
-picture = ExtResource("1_iwodg")
+picture = ExtResource("1_xuota")
 normalSpeed = 6.0
 focusSpeed = 3.0
-hitBox_Scale = 0.8
-grazeBox_Scale = 0.8
-magnetBox_Scale = 0.8
+hitBox_Scale = 0.75
+grazeBox_Scale = 0.75
+magnetBox_Scale = 0.75
 maxLives = 3
 maxPower = 2
 maxMoney = 300

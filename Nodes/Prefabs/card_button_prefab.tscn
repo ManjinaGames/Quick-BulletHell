@@ -1,14 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://kthlaqw0sk1v"]
+[gd_scene load_steps=4 format=3 uid="uid://kthlaqw0sk1v"]
 
-[ext_resource type="Texture2D" uid="uid://ci4jfw2wl4k36" path="res://Assets/Images/Cards/128px-ALICE_OP_max.png" id="1_1ly6d"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/cardButton_Script.gd" id="1_3uemk"]
+[ext_resource type="Texture2D" uid="uid://yvix06fsckwj" path="res://Assets/Images/Cards/CardFront.PNG" id="2_gfkub"]
+[ext_resource type="Texture2D" uid="uid://b8tpyno12at6c" path="res://Assets/Images/Cards/Card1.PNG" id="3_li0l5"]
 
 [node name="cardButton" type="Button" node_paths=PackedStringArray("artwork", "hold", "price")]
 custom_minimum_size = Vector2(198, 250)
 offset_right = 198.0
 offset_bottom = 250.0
 script = ExtResource("1_3uemk")
-artwork = NodePath("MarginContainer/TextureRect")
+artwork = NodePath("MarginContainer/TextureRect/TextureRect")
 hold = NodePath("Label")
 price = NodePath("Label2")
 
@@ -26,7 +27,17 @@ theme_override_constants/margin_bottom = 2
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer"]
 layout_mode = 2
-texture = ExtResource("1_1ly6d")
+texture = ExtResource("2_gfkub")
+expand_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_li0l5")
 expand_mode = 1
 
 [node name="Label" type="Label" parent="."]

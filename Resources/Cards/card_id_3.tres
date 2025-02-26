@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://dur8uuy2o21t5"]
 
+[ext_resource type="Texture2D" uid="uid://23clkhsg4f71" path="res://Assets/Images/Cards/Card3.PNG" id="1_6uv4c"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_kro2q"]
-[ext_resource type="Texture2D" uid="uid://dnbg0qmux8j2f" path="res://Assets/Images/Cards/128px-PENDULUM_max.png" id="1_meiy7"]
 
 [resource]
 script = ExtResource("1_kro2q")
 price = 50
 maxHold = 50
-artwork = ExtResource("1_meiy7")
+artwork = ExtResource("1_6uv4c")

@@ -1,16 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3ym6uahxyv5x"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Enemy_Script.gd" id="1_30lj2"]
-[ext_resource type="Texture2D" uid="uid://c17f1pvj5b3gf" path="res://Assets/Sprites/Enemy 1.png" id="2_a8iax"]
+[ext_resource type="Texture2D" uid="uid://cycuo84xkdqc6" path="res://Assets/Sprites/Enemy.png" id="1_x48a8"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="3_b7mhl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r7ht2"]
 size = Vector2(32, 32)
 
 [node name="Enemy_Prefab" type="Sprite2D" node_paths=PackedStringArray("label", "area2D", "collider")]
-scale = Vector2(2, 2)
-texture = ExtResource("2_a8iax")
-hframes = 12
+texture = ExtResource("1_x48a8")
 script = ExtResource("1_30lj2")
 label = NodePath("Marker2D/Label")
 area2D = NodePath("StaticBody2D")
@@ -39,7 +37,7 @@ offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 6
+theme_override_font_sizes/font_size = 10
 text = "50 / 50 HP"
 horizontal_alignment = 1
 vertical_alignment = 1

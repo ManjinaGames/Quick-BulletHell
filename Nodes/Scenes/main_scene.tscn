@@ -1,20 +1,23 @@
 [gd_scene load_steps=12 format=3 uid="uid://d0dbuca6xjv3b"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene.gd" id="1_5f268"]
-[ext_resource type="Texture2D" uid="uid://bssghjqkpvhhi" path="res://Assets/Images/2.jpg" id="2_p5ilu"]
+[ext_resource type="Texture2D" uid="uid://cdt3w8a31lukk" path="res://Assets/Images/Background_MainMenu.PNG" id="2_ehwil"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Main_Menu.gd" id="3_s5nvw"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Player_Menu.gd" id="4_e83j3"]
-[ext_resource type="Texture2D" uid="uid://lcfsm5j6f03s" path="res://Assets/Images/Reimu.png" id="4_rfjox"]
 [ext_resource type="PackedScene" uid="uid://bcew6q4vq4d3j" path="res://Nodes/Prefabs/player_button.tscn" id="5_c5p36"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Difficulty_Menu.gd" id="5_i24b0"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Stage_Menu.gd" id="6_x5vwy"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Start_Menu.gd" id="7_jwsoe"]
-[ext_resource type="Texture2D" uid="uid://72241fs1cgsf" path="res://Assets/Images/1.jpg" id="9_rv1n6"]
+[ext_resource type="Texture2D" uid="uid://j6sy2d6bl6al" path="res://Assets/Images/PlayerSelect1.png" id="10_38oag"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_177sr"]
 color = Color(1, 1, 1, 1)
-thickness = 5
+grow_begin = 10.0
+grow_end = 10.0
+thickness = 10
 vertical = true
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wn0ab"]
 
 [node name="Main_Scene" type="Control" node_paths=PackedStringArray("mainMenu", "difficultyMenu", "playerMenu", "stageMenu", "startMenu")]
 layout_mode = 3
@@ -37,7 +40,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_p5ilu")
+texture = ExtResource("2_ehwil")
 expand_mode = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -135,8 +138,8 @@ text = "Go to Title"
 layout_mode = 2
 script = ExtResource("4_e83j3")
 mainScene = NodePath("../../../..")
-scrollContainer = NodePath("HBoxContainer/MarginContainer/ScrollContainer")
-container = NodePath("HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
+scrollContainer = NodePath("MarginContainer/HBoxContainer/MarginContainer/ScrollContainer")
+container = NodePath("MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
 playerButton_prefab = ExtResource("5_c5p36")
 back = NodePath("Button")
 
@@ -144,7 +147,7 @@ back = NodePath("Button")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 69.0
+offset_bottom = 83.0
 grow_horizontal = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
@@ -152,8 +155,7 @@ theme_override_font_sizes/font_size = 60
 text = "Player Select:"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu"]
-show_behind_parent = true
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu"]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -163,24 +165,28 @@ offset_top = -210.0
 offset_bottom = 210.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_vertical = 6
+theme_override_constants/margin_left = -40
+theme_override_constants/margin_right = -40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer"]
+show_behind_parent = true
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 0
 alignment = 1
 
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer"]
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_177sr")
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer"]
 show_behind_parent = true
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 2
-theme_override_constants/margin_right = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer"]
 clip_contents = false
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
@@ -190,27 +196,27 @@ follow_focus = true
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer/MarginContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer"]
 layout_mode = 2
 theme_override_constants/margin_bottom = 10
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
 
-[node name="PlayerButton" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+[node name="PlayerButton" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 
-[node name="PlayerButton2" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+[node name="PlayerButton2" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 
-[node name="PlayerButton3" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+[node name="PlayerButton3" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
 custom_minimum_size = Vector2(400, 400)
 layout_mode = 2
 
-[node name="VSeparator2" type="VSeparator" parent="HBoxContainer/Control/MarginContainer/Player_Menu/HBoxContainer"]
+[node name="VSeparator2" type="VSeparator" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxLine_177sr")
 
@@ -534,6 +540,7 @@ size_flags_horizontal = 3
 mouse_filter = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control2"]
+visible = false
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -546,7 +553,7 @@ theme_override_constants/margin_bottom = 15
 
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/Control2/MarginContainer"]
 layout_mode = 2
-texture = ExtResource("9_rv1n6")
+texture = SubResource("CompressedTexture2D_wn0ab")
 expand_mode = 1
 
 [node name="TextureRect2" type="TextureRect" parent="HBoxContainer/Control2"]
@@ -558,7 +565,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 8
 mouse_filter = 2
-texture = ExtResource("4_rfjox")
+texture = ExtResource("10_38oag")
 expand_mode = 3
 stretch_mode = 4
 

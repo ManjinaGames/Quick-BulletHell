@@ -1,10 +1,10 @@
 [gd_resource type="Resource" script_class="CardResource" load_steps=3 format=3 uid="uid://bmxxocjyyqhjw"]
 
+[ext_resource type="Texture2D" uid="uid://bdn37rxu1dkrq" path="res://Assets/Images/Cards/Card2.PNG" id="1_2fh6b"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/CardResource.gd" id="1_j2t11"]
-[ext_resource type="Texture2D" uid="uid://c58r32hi6sk7s" path="res://Assets/Images/Cards/128px-BOMB_max.png" id="1_ubbg0"]
 
 [resource]
 script = ExtResource("1_j2t11")
 price = 150
 maxHold = 25
-artwork = ExtResource("1_ubbg0")
+artwork = ExtResource("1_2fh6b")

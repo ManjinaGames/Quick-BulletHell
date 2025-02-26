@@ -14,9 +14,9 @@ enum STAGE{STAGE_1, STAGE_2, STAGE_3, STAGE_4, STAGE_5, STAGE_6, STAGE_7, ROGUEL
 @export var sfx_Canceled : AudioStreamPlayer
 @export var bgmPlayer : AudioStreamPlayer
 var playPosition: float = 0.0
-@export var bgmStage1 : AudioStreamMP3
-@export var bgmBoss1 : AudioStreamMP3
-@export var bgmTitle : AudioStreamMP3
+@export var bgmStage1 : AudioStreamOggVorbis
+@export var bgmBoss1 : AudioStreamOggVorbis
+@export var bgmTitle : AudioStreamOggVorbis
 #-------------------------------------------------------------------------------
 const submitInput: String = "ui_accept"
 const cancelInput: String = "ui_cancel"
@@ -111,9 +111,9 @@ func Get_SaveDataPath_Json(_i:int) -> String:
 	var _path: String = saveData_path+saveData_name+str(_i)+".json"
 	return _path
 #-------------------------------------------------------------------------------
-func Get_CurrentPlayer() -> PlayerResource:
-	var _new_playerResource: PlayerResource = PlayerResource.new()
-	_new_playerResource.CopyFrom(playerResource[currentSaveData_Json["playerIndex"]])
+func Copy_CurrentPlayer() -> PlayerResource:
+	var _i: int = currentSaveData_Json["playerIndex"]
+	var _new_playerResource: PlayerResource = playerResource[_i].duplicate(true)
 	return _new_playerResource
 #endregion
 #-------------------------------------------------------------------------------
@@ -281,7 +281,7 @@ func MoveToLastButton(_b:Array[Button]) -> void:
 func MoveToFirstButton(_b:Array[Button]) -> void:
 	MoveToButton(_b[0])
 #-------------------------------------------------------------------------------
-func PlayBGM(_bgm:AudioStreamMP3) -> void:
+func PlayBGM(_bgm:AudioStreamOggVorbis) -> void:
 	bgmPlayer.stream = _bgm
 	bgmPlayer.play()
 #-------------------------------------------------------------------------------

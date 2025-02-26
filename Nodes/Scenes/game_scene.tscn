@@ -1,7 +1,6 @@
-[gd_scene load_steps=32 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=33 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
-[ext_resource type="Texture2D" uid="uid://ctvpxk1slnbbc" path="res://Assets/Images/4.jpg" id="2_6rmrd"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
 [ext_resource type="PackedScene" uid="uid://dsbbbpoj74b1r" path="res://Nodes/Prefabs/Player_Explotion.tscn" id="2_pa18e"]
 [ext_resource type="PackedScene" uid="uid://cspvg8uimw0jt" path="res://Nodes/Prefabs/bullet_prefab.tscn" id="3_5om1x"]
@@ -9,31 +8,34 @@
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
-[ext_resource type="Texture2D" uid="uid://dsiggugs8jlh7" path="res://Assets/Skybox/SunsetSky.png" id="6_ydsod"]
+[ext_resource type="Texture2D" uid="uid://dfe2fa3236j3p" path="res://Assets/Images/Background_GameMenu.PNG" id="7_j0qmj"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Player_Script.gd" id="9_4cqcx"]
-[ext_resource type="Texture2D" uid="uid://dmisd13rr7mok" path="res://Assets/Sprites/Reimu Hakurei.png" id="12_7k8wf"]
+[ext_resource type="Texture2D" uid="uid://drx4sqikt30op" path="res://Assets/Sprites/Player.png" id="10_v4ix3"]
+[ext_resource type="Texture2D" uid="uid://dqbugw3tefi1c" path="res://Assets/Sprites/hitbox.png" id="13_6lohc"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/game_over_menu.gd" id="15_ou6t6"]
+[ext_resource type="Texture2D" uid="uid://yvix06fsckwj" path="res://Assets/Images/Cards/CardFront.PNG" id="17_sjbfm"]
+[ext_resource type="Texture2D" uid="uid://0ncvd5s3kli" path="res://Assets/Images/Cards/CardBack.PNG" id="18_6xp6x"]
 [ext_resource type="Texture2D" uid="uid://cpfjedsjgmnbc" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0006.png" id="19_334te"]
 [ext_resource type="Texture2D" uid="uid://q4fdwkimip0n" path="res://icon.svg" id="19_jc3d8"]
 [ext_resource type="PackedScene" uid="uid://kthlaqw0sk1v" path="res://Nodes/Prefabs/card_button_prefab.tscn" id="20_4usgd"]
 [ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Dialogue_Menu.gd" id="20_kjtdd"]
 [ext_resource type="Texture2D" uid="uid://cvhk017pbtl4y" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0007.png" id="20_o8vix"]
 [ext_resource type="Texture2D" uid="uid://bsr5ehf26ipqr" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0004.png" id="21_4y53g"]
-[ext_resource type="Texture2D" uid="uid://dyhx2oeqegtel" path="res://Assets/Images/Cards/vogecrgp.png" id="21_fdfmj"]
 [ext_resource type="Texture2D" uid="uid://dxe6v667wwed6" path="res://Assets/1-bit-input-prompts-pixel-16/tile_0005.png" id="22_b0e5b"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_cw1e3"]
-panorama = ExtResource("6_ydsod")
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6dshv"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 
-[sub_resource type="Sky" id="Sky_fcioh"]
-sky_material = SubResource("PanoramaSkyMaterial_cw1e3")
+[sub_resource type="Sky" id="Sky_glvg6"]
+sky_material = SubResource("ProceduralSkyMaterial_6dshv")
 
-[sub_resource type="Environment" id="Environment_q1y1w"]
+[sub_resource type="Environment" id="Environment_5r3bf"]
 background_mode = 2
-sky = SubResource("Sky_fcioh")
-sky_rotation = Vector3(0, 0, 1.5708)
+sky = SubResource("Sky_glvg6")
+tonemap_mode = 2
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_jmjr4"]
 color = Color(1, 1, 1, 1)
@@ -45,13 +47,13 @@ thickness = 3
 viewport_path = NodePath("World3D/SubViewport")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cfppq"]
-radius = 51.0
+radius = 96.0052
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qurjd"]
-radius = 12.5
+radius = 32.0156
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
-radius = 3.0
+radius = 7.0
 
 [node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "difficultyLabel", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
@@ -92,12 +94,12 @@ position = Vector2(576, 324)
 
 [node name="World3D" type="Node3D" parent="."]
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D"]
-transform = Transform3D(-0.850308, -0.330336, 0.4097, 0.164236, 0.573044, 0.802899, -0.500003, 0.749999, -0.433011, 0.437671, 1.57956, -0.325333)
-shadow_enabled = true
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="World3D"]
-environment = SubResource("Environment_q1y1w")
+environment = SubResource("Environment_5r3bf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D"]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 5, 0)
+shadow_enabled = true
 
 [node name="SubViewport" type="SubViewport" parent="World3D"]
 size = Vector2i(2048, 2048)
@@ -149,7 +151,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_6rmrd")
+texture = ExtResource("7_j0qmj")
 expand_mode = 1
 
 [node name="LeftUI_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
@@ -426,12 +428,7 @@ layout_mode = 2
 [node name="Player_Prefab" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content" node_paths=PackedStringArray("hitBox", "graze", "magnet")]
 z_index = 10
 position = Vector2(302, 559)
-scale = Vector2(2, 2)
-texture = ExtResource("12_7k8wf")
-offset = Vector2(-1.5, 1)
-hframes = 8
-vframes = 3
-frame = 1
+texture = ExtResource("10_v4ix3")
 script = ExtResource("9_4cqcx")
 hitBox = NodePath("Hitbox_PlayerCollision3")
 graze = NodePath("Graze_PlayerCollision2")
@@ -450,8 +447,8 @@ shape = NodePath("Magnet_CollisionShape2D")
 shape = SubResource("CircleShape2D_cfppq")
 
 [node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
-self_modulate = Color(0, 0, 1, 0.215686)
-scale = Vector2(0.4, 0.4)
+self_modulate = Color(0, 0, 1, 0.411765)
+scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_0qyn6")
 
 [node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
@@ -467,8 +464,8 @@ shape = NodePath("Graze_CollisionShape2D")
 shape = SubResource("CircleShape2D_qurjd")
 
 [node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
-self_modulate = Color(1, 0, 0, 0.215686)
-scale = Vector2(0.1, 0.1)
+self_modulate = Color(1, 0, 1, 0.415686)
+scale = Vector2(0.25, 0.25)
 texture = ExtResource("5_0qyn6")
 
 [node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
@@ -480,9 +477,7 @@ sprite = NodePath("Hitbox_Sprite2D")
 shape = NodePath("Hitbox_CollisionShape2D")
 
 [node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
-self_modulate = Color(0, 1, 0, 0.803922)
-scale = Vector2(0.025, 0.025)
-texture = ExtResource("5_0qyn6")
+texture = ExtResource("13_6lohc")
 
 [node name="Hitbox_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
 shape = SubResource("CircleShape2D_c4em7")
@@ -629,7 +624,6 @@ theme_override_font_sizes/font_size = 30
 text = "Quit"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "confirmCard_Title", "yesButton", "noButton")]
-visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -638,10 +632,10 @@ buyMenu = NodePath("VBoxContainer/Buy_Menu")
 scrollContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer")
 cardContainer = NodePath("VBoxContainer/Buy_Menu/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
 cardPrefab = ExtResource("20_4usgd")
-deckTexture = ExtResource("21_fdfmj")
+deckTexture = ExtResource("18_6xp6x")
 description = NodePath("VBoxContainer/Buy_Menu/MarginContainer2/RichTextLabel")
 confirmCard_Panel = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel")
-confirmCard_Artwork = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer/TextureRect")
+confirmCard_Artwork = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer/TextureRect/TextureRect")
 confirmCard_Hold = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/Label")
 confirmCard_Price = NodePath("VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/Label2")
 confirmMenu = NodePath("VBoxContainer/Confirm_Menu")
@@ -667,6 +661,7 @@ horizontal_alignment = 1
 vertical_alignment = 2
 
 [node name="Buy_Menu" type="VBoxContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
+visible = false
 layout_mode = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Buy_Menu"]
@@ -737,7 +732,6 @@ Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 fit_content = true
 
 [node name="Confirm_Menu" type="MarginContainer" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer"]
-visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
@@ -772,7 +766,17 @@ theme_override_constants/margin_bottom = 2
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer"]
 layout_mode = 2
-texture = ExtResource("21_fdfmj")
+texture = ExtResource("17_sjbfm")
+expand_mode = 1
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel/MarginContainer/TextureRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("18_6xp6x")
 expand_mode = 1
 
 [node name="Label" type="Label" parent="CanvasLayer/Window_MarginContainer/Market_Menu/VBoxContainer/Confirm_Menu/VBoxContainer/MarginContainer/Panel"]

@@ -1,16 +1,16 @@
 [gd_resource type="Resource" script_class="PlayerResource" load_steps=3 format=3 uid="uid://chvopxu8qt3y2"]
 
-[ext_resource type="Texture2D" uid="uid://bx76eilx2cn5q" path="res://Assets/Images/Marisa.png" id="1_7s2fr"]
+[ext_resource type="Texture2D" uid="uid://cew7ubxibyi81" path="res://Assets/Images/PlayerSelect2.png" id="1_hc4h6"]
 [ext_resource type="Script" path="res://Scripts/Resource_Scripts/PlayerResource.gd" id="2_wwops"]
 
 [resource]
 script = ExtResource("2_wwops")
-picture = ExtResource("1_7s2fr")
+picture = ExtResource("1_hc4h6")
 normalSpeed = 8.0
 focusSpeed = 4.0
 hitBox_Scale = 1.25
 grazeBox_Scale = 1.25
-magnetBox_Scale = 1.25
+magnetBox_Scale = 1.5
 maxLives = 2
 maxPower = 5
 maxMoney = 450

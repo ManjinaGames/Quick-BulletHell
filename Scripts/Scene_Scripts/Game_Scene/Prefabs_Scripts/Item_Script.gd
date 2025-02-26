@@ -6,7 +6,7 @@ enum ITEM_STATE{SPIN, FALL, IMANTED}
 var myOBJECT2D_STATE: OBJECT2D_STATE
 var myITEM_STATE: ITEM_STATE
 #-------------------------------------------------------------------------------
-var size: Vector2 = Vector2(2.0, 2.0)
+var size: Vector2 = Vector2(4.0, 4.0)
 #endregion
 #-------------------------------------------------------------------------------
 #region FUNCTIONS

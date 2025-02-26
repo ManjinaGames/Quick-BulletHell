@@ -397,7 +397,8 @@ func BeginGame() -> void:
 	difficulty = float(singleton.currentSaveData_Json["difficultyIndex"])
 	difficultyLabel.text = tr("difficultyMenu_button"+str(difficulty))
 	SetGameLimits()
-	player.SetPlayer(singleton.Get_CurrentPlayer())
+	player.SetPlayer(singleton.Copy_CurrentPlayer())
+	print(player.playerResource)
 	#-------------------------------------------------------------------------------
 	CreateDisabledItem(200)
 	CreateDisabledBullets(playerBulletsDisabled, 50)
@@ -459,16 +460,16 @@ func Choreography() -> void:
 #region STAGE 1
 func Stage1() -> void:
 	#-------------------------------------------------------------------------------
-	await EnemyWave_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
-	await EnemyWave_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
-	await EnemyWave_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
+	#await EnemyWave_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
+	#await EnemyWave_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
+	#await EnemyWave_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
 	#-------------------------------------------------------------------------------
-	await Stage1_Boss1()
+	#await Stage1_Boss1()
 	#-------------------------------------------------------------------------------
-	await Nothing_and_Market()
+	#await Nothing_and_Market()
 	#-------------------------------------------------------------------------------
-	await EnemyWave_and_Market("Wave of Enemies N°4", Stage1_Wave1_UM1, 30)
-	await EnemyWave_and_Market("Wave of Enemies N°5", Stage1_Wave2_UM1, 30)
+	#await EnemyWave_and_Market("Wave of Enemies N°4", Stage1_Wave1_UM1, 30)
+	#await EnemyWave_and_Market("Wave of Enemies N°5", Stage1_Wave2_UM1, 30)
 	#-------------------------------------------------------------------------------
 	await Stage1_Boss2()
 	#-------------------------------------------------------------------------------
