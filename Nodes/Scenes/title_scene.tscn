@@ -104,8 +104,8 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -95.0
-offset_right = 377.0
+offset_top = -77.0
+offset_right = 499.0
 grow_vertical = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Title_Menu/PanelContainer2"]
@@ -120,8 +120,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 12
 text = "Assets:
 * Music by Abstraction (https://tallbeard.itch.io/music-loop-bundle).
-* Interface sfx pack 1 by ObsydianX (https://obsydianx.itch.io/interface-sfx-pack-1).
-* 1-Bit Input Prompts Pixel 16× (1.0) by Kenney."
+* Interface sfx pack 1 by ObsydianX (https://obsydianx.itch.io/interface-sfx-pack-1)."
 
 [node name="Save_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("titleScene", "clipContainer", "scrollContainer", "vBoxContainer", "back")]
 visible = false

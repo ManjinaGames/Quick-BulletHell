@@ -609,9 +609,9 @@ func Stage1_Boss2_Spellcard_1_1(_boss:Enemy):
 	var _mirror: float = 1
 	while(Obj2D_IsInGame(_boss)):
 		for _i in 2:
-			await Stage1_Boss2_Spellcard_1_1_Fire1(_boss, 24+difficulty, _mirror)
+			await Stage1_Boss2_Spellcard_1_1_Fire1(_boss, 20+difficulty*3, _mirror)
 			_mirror *=-1
-			await Frame_InGame(15)
+			await Frame_InGame(30)
 		_mirror *=-1
 		await Stage1_Boss2_Spellcard_1_1_Movement(_boss)
 #-------------------------------------------------------------------------------
@@ -668,8 +668,8 @@ func Stage1_Boss2_Spellcard_1_2(_boss:Enemy):
 		await Stage1_Boss2_Spellcard_1_1_Movement(_boss)
 #-------------------------------------------------------------------------------
 func Stage1_Boss2_Spellcard_1_2_Fire1(_boss:Enemy):
-	var _max1: float = 16
-	var _max2: float = 25
+	var _max1: float = 16+difficulty
+	var _max2: float = 25+difficulty
 	var _rad: float = width*0
 	#-------------------------------------------------------------------------------
 	for _j in _max2:
