@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bcew6q4vq4d3j"]
 
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Main_Scene/Prefab_Scripts/player_button.gd" id="1_pl5in"]
+[ext_resource type="Script" uid="uid://0oh8yshkm3wx" path="res://Scripts/Scene_Scripts/Main_Scene/Prefab_Scripts/player_button.gd" id="1_pl5in"]
 [ext_resource type="Texture2D" uid="uid://j6sy2d6bl6al" path="res://Assets/Images/PlayerSelect1.png" id="2_ejyb6"]
 
 [node name="PlayerButton" type="Button" node_paths=PackedStringArray("name_label", "nickname_label", "maxLives_value_label", "maxPower_value_label", "maxMoney_value_label", "hitboxRad_value_label", "grazeboxRad_value_label", "magnetboxRad_value_label", "normalSpeed_value_label", "focusSpeed_value_label", "description_label", "picture")]

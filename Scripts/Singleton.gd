@@ -87,9 +87,9 @@ func Load_SaveData_Json(_i:int) -> Dictionary:
 #-------------------------------------------------------------------------------
 func CreateNew_SaveData_Json() -> Dictionary:
 	var _saveData: Dictionary = {}
-	_saveData["playerIndex"] = 0
-	_saveData["difficultyIndex"] = 0
-	_saveData["stageIndex"] = 0
+	_saveData["playerIndex"] = int(0)
+	_saveData["difficultyIndex"] = int(0)
+	_saveData["stageIndex"] = int(0)
 	var _playerData: Dictionary
 	for _i in playerResource.size():
 		var _difficultyData: Dictionary

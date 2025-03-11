@@ -97,9 +97,9 @@ func SetIdiome():
 func SetGameInfo():
 	var _saveData: Dictionary = singleton.currentSaveData_Json
 	#-------------------------------------------------------------------------------
-	var _playerIndex: int = _saveData["playerIndex"]
-	var _difficultyIndex: int = _saveData["difficultyIndex"]
-	var _stageIndex: int = _saveData["stageIndex"]
+	var _playerIndex: int = _saveData.get("playerIndex", 0)
+	var _difficultyIndex: int = _saveData.get("difficultyIndex", 0)
+	var _stageIndex: int = _saveData.get("stageIndex", 0)
 	#-------------------------------------------------------------------------------
 	SetGameInfo2(_playerIndex, _difficultyIndex, _stageIndex)
 #-------------------------------------------------------------------------------
@@ -118,6 +118,6 @@ func SetGameInfo2(_playerIndex: int, _difficultyIndex: int, _stageIndex: int):
 	gameInfo.text += "-"
 	var _stage: Dictionary = _saveData["saveData"][_playerIndex_string][_difficultyIndex_string]
 	for _i in _stage.size():
-		gameInfo.text += str(_stage[str(_i)]["value"])+"-"
+		gameInfo.text += str(int(_stage[str(_i)].get("value", 0)))+"-"
 #endregion
 #-------------------------------------------------------------------------------

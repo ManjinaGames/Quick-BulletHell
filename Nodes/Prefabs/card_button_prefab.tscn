@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://kthlaqw0sk1v"]
 
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/cardButton_Script.gd" id="1_3uemk"]
+[ext_resource type="Script" uid="uid://byhmy1qonwtm1" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/cardButton_Script.gd" id="1_3uemk"]
 [ext_resource type="Texture2D" uid="uid://yvix06fsckwj" path="res://Assets/Images/Cards/CardFront.PNG" id="2_gfkub"]
 [ext_resource type="Texture2D" uid="uid://b8tpyno12at6c" path="res://Assets/Images/Cards/Card1.PNG" id="3_li0l5"]
 

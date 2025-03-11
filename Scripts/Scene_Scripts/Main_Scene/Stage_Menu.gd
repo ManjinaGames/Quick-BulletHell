@@ -23,8 +23,8 @@ func SetAllButtons() -> void:
 	singleton.SetButton(back, singleton.CommonSelected, BackButton_Subited, BackButton_Canceled)
 #-------------------------------------------------------------------------------
 func UpdateStageButtons():
-	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	var _playerIndex: StringName = str(int(singleton.currentSaveData_Json.get("playerIndex", 0)))
+	var _difficultyIndex: StringName = str(int(singleton.currentSaveData_Json.get("difficultyIndex", 0)))
 	var _stage: Dictionary = singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
 	for _i in singleton.STAGE.size():
 		match(int(_stage[str(_i)]["value"])):
@@ -37,8 +37,8 @@ func UpdateStageButtons():
 				button[_i].text += " (Clear)"
 #-------------------------------------------------------------------------------
 func StageButton_Subited(_i:int) -> void:
-	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	var _playerIndex: StringName = str(int(singleton.currentSaveData_Json.get("playerIndex", 0)))
+	var _difficultyIndex: StringName = str(int(singleton.currentSaveData_Json.get("difficultyIndex", 0)))
 	var _stage: Dictionary = singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex]
 	match(int(_stage[str(_i)]["value"])):
 		singleton.STAGE_STATE.DISABLED:

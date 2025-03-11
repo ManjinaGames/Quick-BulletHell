@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3ym6uahxyv5x"]
 
-[ext_resource type="Script" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Enemy_Script.gd" id="1_30lj2"]
+[ext_resource type="Script" uid="uid://cb6frkhllxl6i" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Enemy_Script.gd" id="1_30lj2"]
 [ext_resource type="Texture2D" uid="uid://cycuo84xkdqc6" path="res://Assets/Sprites/Enemy.png" id="1_x48a8"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="3_b7mhl"]
 

@@ -112,18 +112,18 @@ func SetSaveText(_i:int) -> String:
 	var _s:String
 	if(ResourceLoader.exists(_path)):
 		var _saveData: Dictionary = singleton.Load_SaveData_Json(_i)
-		var _playerIndex: String = str(_saveData["playerIndex"])
-		var _difficultyIndex: String = str(_saveData["difficultyIndex"])
+		var _playerIndex: String = str(int(_saveData.get("playerIndex", 0)))
+		var _difficultyIndex: String = str(int(_saveData.get("difficultyIndex", 0)))
 		#-------------------------------------------------------------------------------
 		_s = tr("saveMenu_save")+" N°"+str(_i)+"\n"
-		_s += tr("playerMenu_button"+str(_saveData["playerIndex"])) + " - "
-		_s +=  tr("difficultyMenu_button"+str(_saveData["difficultyIndex"])) + " - "
-		_s += tr("stageMenu_button"+str(_saveData["stageIndex"]))+"\n"
+		_s += tr("playerMenu_button"+str(int(_saveData.get("playerIndex", 0)))) + " - "
+		_s +=  tr("difficultyMenu_button"+str(int(_saveData.get("difficultyIndex", 0)))) + " - "
+		_s += tr("stageMenu_button"+str(int(_saveData.get("stageIndex", 0)))) + "\n"
 		#-------------------------------------------------------------------------------
 		_s += "-"
 		var _stage: Dictionary = _saveData["saveData"][_playerIndex][_difficultyIndex]
 		for _j in _stage.size():
-			_s += str(_stage[str(_j)]["value"])+"-"
+			_s += str(int(_stage[str(_j)].get("value", 0)))+"-"
 	else:
 		_s = SetEmptySaveText(_i)
 	return _s 

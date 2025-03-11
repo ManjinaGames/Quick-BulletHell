@@ -19,12 +19,12 @@ var timer: int
 var difficulty: float
 @export var content: Control
 @export var player: Player
-var cardInventory: Dictionary
+var cardInventory: Dictionary[CardResource, int]
 @export var playerExplotion: PackedScene
 #-------------------------------------------------------------------------------
 @export var enemy_Prefab: PackedScene
 @export var bullet_Prefab: PackedScene
-var bulletDictionary: Dictionary
+var bulletDictionary: Dictionary[String, BulletResource]
 @export var bulletDictionary_Path: String = "res://Resources/Bullets/"
 var maxColor: int = 15
 @export var item_Prefab: PackedScene
@@ -394,8 +394,9 @@ func DestroyItem(_item:Item, _shape_rid: RID) -> void:
 #-------------------------------------------------------------------------------
 #region START FUNCTIONS
 func BeginGame() -> void:
-	difficulty = float(singleton.currentSaveData_Json["difficultyIndex"])
-	difficultyLabel.text = tr("difficultyMenu_button"+str(difficulty))
+	var _difficulty: int = singleton.currentSaveData_Json.get("difficultyIndex", 0)
+	difficulty = float(_difficulty)
+	difficultyLabel.text = tr("difficultyMenu_button"+str(_difficulty))
 	SetGameLimits()
 	player.SetPlayer(singleton.Copy_CurrentPlayer())
 	print(player.playerResource)
@@ -1227,14 +1228,14 @@ func StageCommon(_s:String, _enabled:int, _completed:int):
 	GoToMainScene()
 #-------------------------------------------------------------------------------
 func EnableStage(_i:int):
-	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	var _playerIndex: StringName = str(int(singleton.currentSaveData_Json["playerIndex"]))
+	var _difficultyIndex: StringName = str(int(singleton.currentSaveData_Json["difficultyIndex"]))
 	if(singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] == singleton.STAGE_STATE.DISABLED):
 		singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = singleton.STAGE_STATE.ENABLED
 #-------------------------------------------------------------------------------
 func CompletedStage(_i:int):
-	var _playerIndex: StringName = str(singleton.currentSaveData_Json["playerIndex"])
-	var _difficultyIndex: StringName = str(singleton.currentSaveData_Json["difficultyIndex"])
+	var _playerIndex: StringName = str(int(singleton.currentSaveData_Json["playerIndex"]))
+	var _difficultyIndex: StringName = str(int(singleton.currentSaveData_Json["difficultyIndex"]))
 	singleton.currentSaveData_Json["saveData"][_playerIndex][_difficultyIndex][str(_i)]["value"] = singleton.STAGE_STATE.COMPLETED
 #-------------------------------------------------------------------------------
 func GoToMainScene():
