@@ -4,20 +4,20 @@
 [ext_resource type="Texture2D" uid="uid://j6sy2d6bl6al" path="res://Assets/Images/PlayerSelect1.png" id="2_ejyb6"]
 
 [node name="PlayerButton" type="Button" node_paths=PackedStringArray("name_label", "nickname_label", "maxLives_value_label", "maxPower_value_label", "maxMoney_value_label", "hitboxRad_value_label", "grazeboxRad_value_label", "magnetboxRad_value_label", "normalSpeed_value_label", "focusSpeed_value_label", "description_label", "picture")]
-custom_minimum_size = Vector2(450, 400)
+custom_minimum_size = Vector2(900, 450)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -225.0
-offset_top = -200.0
-offset_right = 225.0
-offset_bottom = 200.0
+offset_left = -450.0
+offset_top = -225.0
+offset_right = 450.0
+offset_bottom = 225.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_pl5in")
 name_label = NodePath("MarginContainer/HBoxContainer/Control/MarginContainer/VBoxContainer/Label")
 nickname_label = NodePath("MarginContainer/HBoxContainer/Control/MarginContainer/VBoxContainer/Label3")
@@ -64,10 +64,7 @@ grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 mouse_filter = 2
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 0
+theme_override_constants/margin_right = -100
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/Control/MarginContainer"]
 layout_mode = 2
@@ -314,7 +311,6 @@ text = "Description:
 autowrap_mode = 2
 
 [node name="Control2" type="Control" parent="MarginContainer/HBoxContainer"]
-visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
@@ -328,7 +324,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/margin_left = -100
-theme_override_constants/margin_right = -100
+theme_override_constants/margin_right = -135
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/Control2/MarginContainer"]
 layout_mode = 2

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://d0dbuca6xjv3b"]
+[gd_scene load_steps=10 format=3 uid="uid://d0dbuca6xjv3b"]
 
 [ext_resource type="Script" uid="uid://dh6p17sjfdxco" path="res://Scripts/Scene_Scripts/Main_Scene.gd" id="1_5f268"]
 [ext_resource type="Texture2D" uid="uid://cdt3w8a31lukk" path="res://Assets/Images/Background_MainMenu.PNG" id="2_ehwil"]
@@ -10,15 +10,6 @@
 [ext_resource type="Script" uid="uid://0ka8twb7v4p3" path="res://Scripts/Scene_Scripts/Main_Scene/Start_Menu.gd" id="7_jwsoe"]
 [ext_resource type="Texture2D" uid="uid://j6sy2d6bl6al" path="res://Assets/Images/PlayerSelect1.png" id="10_38oag"]
 
-[sub_resource type="StyleBoxLine" id="StyleBoxLine_177sr"]
-color = Color(1, 1, 1, 1)
-grow_begin = 10.0
-grow_end = 10.0
-thickness = 10
-vertical = true
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wn0ab"]
-
 [node name="Main_Scene" type="Control" node_paths=PackedStringArray("mainMenu", "difficultyMenu", "playerMenu", "stageMenu", "startMenu")]
 layout_mode = 3
 anchors_preset = 15
@@ -27,11 +18,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_5f268")
-mainMenu = NodePath("HBoxContainer/Control/MarginContainer/Main_Menu")
-difficultyMenu = NodePath("HBoxContainer/Control/MarginContainer/Difficulty_Menu")
-playerMenu = NodePath("HBoxContainer/Control/MarginContainer/Player_Menu")
-stageMenu = NodePath("HBoxContainer/Control/MarginContainer/Stage_Menu")
-startMenu = NodePath("HBoxContainer/Control/MarginContainer/Start_Menu")
+mainMenu = NodePath("MarginContainer/Main_Menu")
+difficultyMenu = NodePath("MarginContainer/Difficulty_Menu")
+playerMenu = NodePath("Player_Menu")
+stageMenu = NodePath("MarginContainer/Stage_Menu")
+startMenu = NodePath("MarginContainer/Start_Menu")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 layout_mode = 1
@@ -43,7 +34,27 @@ grow_vertical = 2
 texture = ExtResource("2_ehwil")
 expand_mode = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="Main_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "gameInfo", "picture")]
+layout_mode = 2
+script = ExtResource("3_s5nvw")
+mainScene = NodePath("../..")
+button = [NodePath("HBoxContainer/VBoxContainer/Button"), NodePath("HBoxContainer/VBoxContainer/Button2"), NodePath("HBoxContainer/VBoxContainer/Button3"), NodePath("HBoxContainer/VBoxContainer/Button4"), NodePath("HBoxContainer/VBoxContainer/Button5")]
+gameInfo = NodePath("HBoxContainer/TextureRect2/Label2")
+picture = NodePath("HBoxContainer/TextureRect2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Main_Menu"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,198 +63,76 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 
-[node name="Control" type="Control" parent="HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Main_Menu/HBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
+size_flags_vertical = 4
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 45
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_bottom = 45
-
-[node name="Main_Menu" type="Control" parent="HBoxContainer/Control/MarginContainer" node_paths=PackedStringArray("mainScene", "button", "gameInfo", "picture")]
-visible = false
+[node name="Label" type="Label" parent="MarginContainer/Main_Menu/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-script = ExtResource("3_s5nvw")
-mainScene = NodePath("../../../..")
-button = [NodePath("VBoxContainer/Button"), NodePath("VBoxContainer/Button2"), NodePath("VBoxContainer/Button3"), NodePath("VBoxContainer/Button4"), NodePath("Button5")]
-gameInfo = NodePath("../../../Control2/Label2")
-picture = NodePath("../../../Control2/TextureRect2")
-
-[node name="Label" type="Label" parent="HBoxContainer/Control/MarginContainer/Main_Menu"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 83.0
-grow_horizontal = 2
 size_flags_vertical = 0
 theme_override_font_sizes/font_size = 60
 text = "Main Menu"
 horizontal_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer/Main_Menu"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -160.0
-offset_bottom = 160.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Main_Menu/VBoxContainer"]
+[node name="Button" type="Button" parent="MarginContainer/Main_Menu/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Start"
 
-[node name="Button2" type="Button" parent="HBoxContainer/Control/MarginContainer/Main_Menu/VBoxContainer"]
+[node name="Button2" type="Button" parent="MarginContainer/Main_Menu/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Player"
 
-[node name="Button3" type="Button" parent="HBoxContainer/Control/MarginContainer/Main_Menu/VBoxContainer"]
+[node name="Button3" type="Button" parent="MarginContainer/Main_Menu/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Difficulty"
 
-[node name="Button4" type="Button" parent="HBoxContainer/Control/MarginContainer/Main_Menu/VBoxContainer"]
+[node name="Button4" type="Button" parent="MarginContainer/Main_Menu/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Options"
 
-[node name="Button5" type="Button" parent="HBoxContainer/Control/MarginContainer/Main_Menu"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -77.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
+[node name="Button5" type="Button" parent="MarginContainer/Main_Menu/HBoxContainer/VBoxContainer"]
+layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Go to Title"
 
-[node name="Player_Menu" type="Control" parent="HBoxContainer/Control/MarginContainer" node_paths=PackedStringArray("mainScene", "scrollContainer", "container", "back")]
+[node name="TextureRect2" type="TextureRect" parent="MarginContainer/Main_Menu/HBoxContainer"]
 layout_mode = 2
-script = ExtResource("4_e83j3")
-mainScene = NodePath("../../../..")
-scrollContainer = NodePath("MarginContainer/HBoxContainer/MarginContainer/ScrollContainer")
-container = NodePath("MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer")
-playerButton_prefab = ExtResource("5_c5p36")
-back = NodePath("Button")
+mouse_filter = 2
+texture = ExtResource("10_38oag")
+expand_mode = 3
+stretch_mode = 4
 
-[node name="Label" type="Label" parent="HBoxContainer/Control/MarginContainer/Player_Menu"]
+[node name="Label2" type="Label" parent="MarginContainer/Main_Menu/HBoxContainer/TextureRect2"]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 83.0
-grow_horizontal = 2
-size_flags_horizontal = 6
-size_flags_vertical = 0
-theme_override_font_sizes/font_size = 60
-text = "Player Select:"
-horizontal_alignment = 1
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu"]
-layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -210.0
-offset_bottom = 210.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = -40
-theme_override_constants/margin_right = -40
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer"]
-show_behind_parent = true
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-alignment = 1
-
-[node name="VSeparator" type="VSeparator" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_177sr")
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer"]
-show_behind_parent = true
-clip_contents = true
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_top = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer"]
-clip_contents = false
-custom_minimum_size = Vector2(400, 400)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-follow_focus = true
-horizontal_scroll_mode = 2
-vertical_scroll_mode = 0
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer"]
-layout_mode = 2
-theme_override_constants/margin_bottom = 10
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 30
-
-[node name="PlayerButton" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
-custom_minimum_size = Vector2(400, 400)
-layout_mode = 2
-
-[node name="PlayerButton2" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
-custom_minimum_size = Vector2(400, 400)
-layout_mode = 2
-
-[node name="PlayerButton3" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer/MarginContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
-custom_minimum_size = Vector2(400, 400)
-layout_mode = 2
-
-[node name="VSeparator2" type="VSeparator" parent="HBoxContainer/Control/MarginContainer/Player_Menu/MarginContainer/HBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxLine_177sr")
-
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Player_Menu"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -63.0
 grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
+grow_vertical = 2
 size_flags_vertical = 8
-theme_override_font_sizes/font_size = 40
-text = "Back
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 30
+text = "Player 1
+Easy
+-1-0-0-0-0-0-0-0-0-
 "
+horizontal_alignment = 1
+vertical_alignment = 2
 
-[node name="Difficulty_Menu" type="Control" parent="HBoxContainer/Control/MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
+[node name="Difficulty_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
 visible = false
 layout_mode = 2
 script = ExtResource("5_i24b0")
-mainScene = NodePath("../../../..")
+mainScene = NodePath("../..")
 button = [NodePath("VBoxContainer2/Button"), NodePath("VBoxContainer2/Button2"), NodePath("VBoxContainer2/Button3"), NodePath("VBoxContainer2/Button4")]
 back = NodePath("Button5")
 
-[node name="Label" type="Label" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu"]
+[node name="Label" type="Label" parent="MarginContainer/Difficulty_Menu"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -255,28 +144,28 @@ theme_override_font_sizes/font_size = 60
 text = "Difficulty Select"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/Difficulty_Menu"]
 visible = false
 layout_mode = 2
 offset_right = 282.0
 offset_bottom = 550.0
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/Difficulty_Menu/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2"]
+[node name="Label" type="Label" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Difficultu Select"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2"]
 clip_contents = true
 custom_minimum_size = Vector2(0, 450)
 layout_mode = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer"]
 clip_contents = false
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
@@ -286,56 +175,56 @@ scroll_vertical = 100
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_right = 10
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 text = "Saturday of Salamanca
 Difficult-Mode
 For Those who want to have fun."
 
-[node name="Button2" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="Button2" type="Button" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 text = "Saturday of Salamanca
 Difficult-Mode
 For Those who want to have fun."
 
-[node name="Button3" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="Button3" type="Button" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 text = "Saturday of Salamanca
 Difficult-Mode
 For Those who want to have fun."
 
-[node name="Button4" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="Button4" type="Button" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2/MarginContainer/ScrollContainer/MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 text = "Saturday of Salamanca
 Difficult-Mode
 For Those who want to have fun."
 
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2"]
+[node name="Button" type="Button" parent="MarginContainer/Difficulty_Menu/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 30
 text = "Back"
 
-[node name="Control" type="Control" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/HBoxContainer"]
+[node name="Control" type="Control" parent="MarginContainer/Difficulty_Menu/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/Difficulty_Menu"]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -348,27 +237,27 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/VBoxContainer2"]
+[node name="Button" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Easy"
 
-[node name="Button2" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/VBoxContainer2"]
+[node name="Button2" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Normal"
 
-[node name="Button3" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/VBoxContainer2"]
+[node name="Button3" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Hard"
 
-[node name="Button4" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu/VBoxContainer2"]
+[node name="Button4" type="Button" parent="MarginContainer/Difficulty_Menu/VBoxContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 50
 text = "Lunatic"
 
-[node name="Button5" type="Button" parent="HBoxContainer/Control/MarginContainer/Difficulty_Menu"]
+[node name="Button5" type="Button" parent="MarginContainer/Difficulty_Menu"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -382,15 +271,15 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 50
 text = "Back"
 
-[node name="Stage_Menu" type="Control" parent="HBoxContainer/Control/MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
+[node name="Stage_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "button", "back")]
 visible = false
 layout_mode = 2
 script = ExtResource("6_x5vwy")
-mainScene = NodePath("../../../..")
+mainScene = NodePath("../..")
 button = [NodePath("VBoxContainer2/Button"), NodePath("VBoxContainer2/Button2"), NodePath("VBoxContainer2/Button3"), NodePath("VBoxContainer2/Button4"), NodePath("VBoxContainer2/Button5"), NodePath("VBoxContainer2/Button6"), NodePath("VBoxContainer2/Button7"), NodePath("VBoxContainer2/Button8"), NodePath("VBoxContainer2/Button9")]
 back = NodePath("Button")
 
-[node name="Label" type="Label" parent="HBoxContainer/Control/MarginContainer/Stage_Menu"]
+[node name="Label" type="Label" parent="MarginContainer/Stage_Menu"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -402,7 +291,7 @@ theme_override_font_sizes/font_size = 60
 text = "Stage Select"
 horizontal_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer/Stage_Menu"]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/Stage_Menu"]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -415,64 +304,64 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 1"
 
-[node name="Button2" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button2" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 2"
 
-[node name="Button3" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button3" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 3"
 
-[node name="Button4" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button4" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 4"
 
-[node name="Button5" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button5" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage 5"
 
-[node name="Button6" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button6" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage Final"
 
-[node name="Button7" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button7" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 visible = false
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Stage Extra"
 
-[node name="Button8" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button8" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 visible = false
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Rogue-Like Mode"
 
-[node name="Button9" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu/VBoxContainer2"]
+[node name="Button9" type="Button" parent="MarginContainer/Stage_Menu/VBoxContainer2"]
 visible = false
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Boss-Rush Mode"
 
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Stage_Menu"]
+[node name="Button" type="Button" parent="MarginContainer/Stage_Menu"]
 custom_minimum_size = Vector2(300, 55)
 layout_mode = 1
 anchors_preset = 12
@@ -487,15 +376,15 @@ size_flags_vertical = 8
 theme_override_font_sizes/font_size = 30
 text = "Back"
 
-[node name="Start_Menu" type="Control" parent="HBoxContainer/Control/MarginContainer" node_paths=PackedStringArray("mainScene", "start", "back")]
+[node name="Start_Menu" type="Control" parent="MarginContainer" node_paths=PackedStringArray("mainScene", "start", "back")]
 visible = false
 layout_mode = 2
 script = ExtResource("7_jwsoe")
-mainScene = NodePath("../../../..")
+mainScene = NodePath("../..")
 start = NodePath("VBoxContainer/Button")
 back = NodePath("VBoxContainer/Button3")
 
-[node name="Label" type="Label" parent="HBoxContainer/Control/MarginContainer/Start_Menu"]
+[node name="Label" type="Label" parent="MarginContainer/Start_Menu"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -506,7 +395,7 @@ theme_override_font_sizes/font_size = 60
 text = "Start Menu"
 horizontal_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/Control/MarginContainer/Start_Menu"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/Start_Menu"]
 layout_mode = 1
 anchors_preset = 14
 anchor_top = 0.5
@@ -519,129 +408,112 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Button" type="Button" parent="HBoxContainer/Control/MarginContainer/Start_Menu/VBoxContainer"]
+[node name="Button" type="Button" parent="MarginContainer/Start_Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Start"
 
-[node name="Button2" type="Button" parent="HBoxContainer/Control/MarginContainer/Start_Menu/VBoxContainer"]
+[node name="Button2" type="Button" parent="MarginContainer/Start_Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Info"
 
-[node name="Button3" type="Button" parent="HBoxContainer/Control/MarginContainer/Start_Menu/VBoxContainer"]
+[node name="Button3" type="Button" parent="MarginContainer/Start_Menu/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 30
 text = "Back"
 
-[node name="Control2" type="Control" parent="HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control2"]
-visible = false
+[node name="Player_Menu" type="Control" parent="." node_paths=PackedStringArray("mainScene", "scrollContainer", "container", "back")]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_bottom = 576.0
+anchor_bottom = 1.0
 grow_horizontal = 2
-theme_override_constants/margin_left = 15
+grow_vertical = 2
+script = ExtResource("4_e83j3")
+mainScene = NodePath("..")
+scrollContainer = NodePath("MarginContainer/MarginContainer/VBoxContainer/ScrollContainer")
+container = NodePath("MarginContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer")
+playerButton_prefab = ExtResource("5_c5p36")
+back = NodePath("MarginContainer/MarginContainer/VBoxContainer/HBoxContainer/Button")
+
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="TextureRect" type="TextureRect" parent="HBoxContainer/Control2/MarginContainer"]
-layout_mode = 2
-texture = SubResource("CompressedTexture2D_wn0ab")
-expand_mode = 1
-
-[node name="TextureRect2" type="TextureRect" parent="HBoxContainer/Control2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 8
-mouse_filter = 2
-texture = ExtResource("10_38oag")
-expand_mode = 3
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="HBoxContainer/Control2"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -0.5
-offset_top = -11.5
-offset_right = 0.5
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-text = "I cannot belive where i am right now!"
-
-[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/Control2/Label"]
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu/MarginContainer"]
 show_behind_parent = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = -10
-theme_override_constants/margin_top = -10
-theme_override_constants/margin_right = -10
-theme_override_constants/margin_bottom = -10
-
-[node name="Panel" type="Panel" parent="HBoxContainer/Control2/Label/MarginContainer"]
+clip_contents = true
 layout_mode = 2
-
-[node name="Label2" type="Label" parent="HBoxContainer/Control2"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -123.0
-offset_top = -164.0
-offset_right = 128.0
-offset_bottom = -32.0
-grow_horizontal = 2
-grow_vertical = 0
-size_flags_vertical = 8
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 30
-text = "Player 1
-Easy
--1-0-0-0-0-0-0-0-0-
-"
-horizontal_alignment = 1
-vertical_alignment = 2
-
-[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/Control2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 size_flags_horizontal = 3
-mouse_filter = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_bottom = 2
 
-[node name="Control" type="Control" parent="HBoxContainer/Control2/MarginContainer2"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Player_Menu/MarginContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MarginContainer2" type="MarginContainer" parent="HBoxContainer/Control2/MarginContainer2"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_constants/margin_right = -50
-theme_override_constants/margin_bottom = 100
+
+[node name="Label" type="Label" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+z_index = 1
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 60
+text = "Player Select:"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer"]
+clip_contents = false
+custom_minimum_size = Vector2(900, 450)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+follow_focus = true
+horizontal_scroll_mode = 2
+vertical_scroll_mode = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="PlayerButton" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+layout_mode = 2
+
+[node name="PlayerButton2" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+layout_mode = 2
+
+[node name="PlayerButton3" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("5_c5p36")]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 40
+text = "Back
+"
+
+[node name="Control" type="Control" parent="Player_Menu/MarginContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
