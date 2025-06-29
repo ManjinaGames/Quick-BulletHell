@@ -323,8 +323,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = -100
-theme_override_constants/margin_right = -135
+theme_override_constants/margin_left = -50
+theme_override_constants/margin_right = -140
 
 [node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer/Control2/MarginContainer"]
 layout_mode = 2

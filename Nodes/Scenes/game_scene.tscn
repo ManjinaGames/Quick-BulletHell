@@ -9,11 +9,11 @@
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
 [ext_resource type="Texture2D" uid="uid://cg66h3pgyvkxa" path="res://Assets/Images/Desert_skybox_material_baseColor.jpeg" id="6_sfc41"]
-[ext_resource type="Texture2D" uid="uid://dfe2fa3236j3p" path="res://Assets/Images/Background_GameMenu.PNG" id="7_j0qmj"]
+[ext_resource type="Texture2D" uid="uid://p7vwg4oncvs4" path="res://Assets/Images/Background_GameMenu.jpg" id="8_hxoxt"]
 [ext_resource type="Script" uid="uid://c4b6si6rx0wc8" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" uid="uid://0g6t8l52l1kw" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Market_Menu.gd" id="9_3u2qh"]
 [ext_resource type="Script" uid="uid://bgogvq8gsxvk1" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Player_Script.gd" id="9_4cqcx"]
-[ext_resource type="Texture2D" uid="uid://drx4sqikt30op" path="res://Assets/Sprites/Player.png" id="10_v4ix3"]
+[ext_resource type="Texture2D" uid="uid://drx4sqikt30op" path="res://Assets/Sprites/Player1.png" id="10_v4ix3"]
 [ext_resource type="Texture2D" uid="uid://dqbugw3tefi1c" path="res://Assets/Sprites/Hitbox.png" id="13_6lohc"]
 [ext_resource type="Script" uid="uid://cauphv42fsmg2" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/game_over_menu.gd" id="15_ou6t6"]
 [ext_resource type="Texture2D" uid="uid://yvix06fsckwj" path="res://Assets/Images/Cards/CardFront.PNG" id="17_sjbfm"]
@@ -56,7 +56,7 @@ radius = 96.0052
 radius = 32.0156
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
-radius = 7.0
+radius = 9.0
 
 [node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "difficultyLabel", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
@@ -159,7 +159,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("7_j0qmj")
+texture = ExtResource("8_hxoxt")
 expand_mode = 1
 
 [node name="LeftUI_MarginContainer" type="MarginContainer" parent="CanvasLayer"]
@@ -433,14 +433,20 @@ expand_mode = 1
 clip_contents = true
 layout_mode = 2
 
-[node name="Player_Prefab" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content" node_paths=PackedStringArray("hitBox", "graze", "magnet")]
+[node name="Player_Prefab" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content" node_paths=PackedStringArray("sprite", "hitBox", "graze", "magnet")]
 z_index = 10
 position = Vector2(302, 559)
-texture = ExtResource("10_v4ix3")
 script = ExtResource("9_4cqcx")
+sprite = NodePath("Sprite2D")
 hitBox = NodePath("Hitbox_PlayerCollision3")
 graze = NodePath("Graze_PlayerCollision2")
 magnet = NodePath("Magnet_PlayerCollision")
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
+position = Vector2(-1.99999, -3.49998)
+texture = ExtResource("10_v4ix3")
+hframes = 8
+vframes = 3
 
 [node name="Magnet_PlayerCollision" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
 z_index = -1
@@ -485,6 +491,7 @@ sprite = NodePath("Hitbox_Sprite2D")
 shape = NodePath("Hitbox_CollisionShape2D")
 
 [node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
+scale = Vector2(3, 3)
 texture = ExtResource("13_6lohc")
 
 [node name="Hitbox_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]

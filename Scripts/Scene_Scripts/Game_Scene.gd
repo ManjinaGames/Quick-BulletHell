@@ -176,7 +176,7 @@ func PlayerShoot() -> void:
 	while(CanPlayerShoot()):
 		if(Input.is_action_pressed("input_Shoot") and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
 			PlayerShoot1(player.position.x, player.position.y-16, 16, -90)
-			await Frame(4)
+			await Frame(5)
 		else:
 			await frame
 #-------------------------------------------------------------------------------
@@ -463,7 +463,7 @@ func Stage1() -> void:
 	#-------------------------------------------------------------------------------
 	#await EnemyWave_and_Market("Wave of Enemies N°1", InfiniteEnemySpawn, 7)
 	#await EnemyWave_and_Market("Wave of Enemies N°2", Stage1_Wave1_UM1, 30)
-	await EnemyWave_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 30)
+	await EnemyWave_and_Market("Wave of Enemies N°3", Stage1_Wave2_UM1, 5)
 	#-------------------------------------------------------------------------------
 	await Stage1_Boss1()
 	#-------------------------------------------------------------------------------
@@ -1541,21 +1541,25 @@ func MovePlayer_Towards(_player:Player, _maxTimer:float) -> void:
 #-------------------------------------------------------------------------------
 func PlayerInvincible(_player:Player, _maxTimer: float) -> void:
 	var _timer: float = 0
-	var _alpha1: float = _player.self_modulate.a
+	var _alpha1: float = _player.sprite.self_modulate.a
 	var _alpha2: float = _player.hitBox.sprite.self_modulate.a
 	var _alpha3: float = _player.graze.sprite.self_modulate.a
 	#-------------------------------------------------------------------------------
 	while(_timer < _maxTimer):
 		await Frame(2)
-		_player.self_modulate.a = 0
+		_player.sprite.self_modulate.a = 0
 		_player.hitBox.sprite.self_modulate.a = 0
 		_player.graze.sprite.self_modulate.a = 0
 		_timer += deltaTimeScale
 		await Frame(2)
-		_player.self_modulate.a = _alpha1
+		_player.sprite.self_modulate.a = _alpha1
 		_player.hitBox.sprite.self_modulate.a = _alpha2
 		_player.graze.sprite.self_modulate.a = _alpha3
 		_timer += deltaTimeScale
+	#-------------------------------------------------------------------------------
+	_player.sprite.self_modulate.a = _alpha1
+	_player.hitBox.sprite.self_modulate.a = _alpha2
+	_player.graze.sprite.self_modulate.a = _alpha3
 #-------------------------------------------------------------------------------
 func PlayerGameOver(_player:Player) -> void:
 	myGAME_STATE = GAME_STATE.IN_GAMEOVER
@@ -1646,7 +1650,7 @@ func DestroyEnemy(_enemy:Enemy, _num:int) -> void:
 #-------------------------------------------------------------------------------
 func DestroyEnemy_WithRevenge(_enemy:Enemy, _num:int, _callable:Callable) -> void:
 	if(_enemy.myOBJECT2D_STATE == Enemy.OBJECT2D_STATE.DEATH):
-		SpawnItems(_enemy.position.x, _enemy.position.y, 40.0, _num)
+		SpawnItems(_enemy.position.x, _enemy.position.y, float(32+_num), _num)
 		_callable.call()
 	Death_Enemy(_enemy)
 #-------------------------------------------------------------------------------
@@ -1655,7 +1659,7 @@ func Death_Enemy(_enemy:Enemy) -> void:
 #-------------------------------------------------------------------------------
 func Enemy_SpawnItems(_enemy:Enemy, _x:float, _y:float, _num:int):
 	if(_enemy.myOBJECT2D_STATE == Enemy.OBJECT2D_STATE.DEATH):
-		SpawnItems(_x, _y, float(_num)*2, _num)
+		SpawnItems(_x, _y, float(32+_num), _num)
 #endregion
 #-------------------------------------------------------------------------------
 #region OBJECT2D FUNCTIONS

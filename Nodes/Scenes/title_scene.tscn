@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://qbwtirmt7cw5" path="res://Scripts/Scene_Scripts/Title_Scene.gd" id="1_i05x6"]
 [ext_resource type="Script" uid="uid://xw1cchvuqtw" path="res://Scripts/Scene_Scripts/Title_Scene/Title_Menu.gd" id="2_ctd5h"]
-[ext_resource type="Texture2D" uid="uid://bmuykwx48g74v" path="res://Assets/Images/Background_TitleMenu.PNG" id="2_me8rx"]
+[ext_resource type="Texture2D" uid="uid://dfxnixm6kp712" path="res://Assets/Images/Background_TitleMenu.jpg" id="2_ywsiu"]
 [ext_resource type="Script" uid="uid://ctrg4leyp0tph" path="res://Scripts/Scene_Scripts/Title_Scene/Save_Menu.gd" id="3_g1pxl"]
 [ext_resource type="Script" uid="uid://dsj3ins7pl6nv" path="res://Scripts/Scene_Scripts/Title_Scene/Save_Menu2.gd" id="4_k54io"]
 
@@ -25,7 +25,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_me8rx")
+texture = ExtResource("2_ywsiu")
 expand_mode = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="."]

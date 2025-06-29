@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://d0dbuca6xjv3b"]
 
 [ext_resource type="Script" uid="uid://dh6p17sjfdxco" path="res://Scripts/Scene_Scripts/Main_Scene.gd" id="1_5f268"]
-[ext_resource type="Texture2D" uid="uid://cdt3w8a31lukk" path="res://Assets/Images/Background_MainMenu.PNG" id="2_ehwil"]
+[ext_resource type="Texture2D" uid="uid://cjsmsu2shr7yu" path="res://Assets/Images/Background_MainMenu.jpg" id="2_6x71i"]
 [ext_resource type="Script" uid="uid://bos7kpj21x1e4" path="res://Scripts/Scene_Scripts/Main_Scene/Main_Menu.gd" id="3_s5nvw"]
 [ext_resource type="Script" uid="uid://mj63dv50jsa4" path="res://Scripts/Scene_Scripts/Main_Scene/Player_Menu.gd" id="4_e83j3"]
 [ext_resource type="PackedScene" uid="uid://bcew6q4vq4d3j" path="res://Nodes/Prefabs/player_button.tscn" id="5_c5p36"]
@@ -31,7 +31,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_ehwil")
+texture = ExtResource("2_6x71i")
 expand_mode = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
