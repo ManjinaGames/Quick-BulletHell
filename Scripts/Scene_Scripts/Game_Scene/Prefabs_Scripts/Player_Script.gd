@@ -1,8 +1,15 @@
-extends Object2D
+extends Node2D
 class_name Player
 #-------------------------------------------------------------------------------
 enum PLAYER_STATE{ALIVE, DEATH, INVINCIBLE}
 #region VARIABLES
+var velocity: Vector2
+var dir: float
+var vel: float
+#-------------------------------------------------------------------------------
+var physics_Update: Callable = func(): pass
+var tween_Array: Array[Tween] = []
+#-------------------------------------------------------------------------------
 @export var myPLAYER_STATE: PLAYER_STATE
 #-------------------------------------------------------------------------------
 @export var sprite: Sprite2D

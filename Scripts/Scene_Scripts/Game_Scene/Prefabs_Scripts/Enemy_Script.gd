@@ -1,4 +1,4 @@
-extends Object2D
+extends Node2D
 class_name Enemy
 #region VARIABLES
 @export var label: Label

@@ -54,7 +54,7 @@ func _process(_delta:float):
 	#Set_MouseMode()
 	#ResetGame()
 	Set_SlowMotion()
-	fps.text = PlayerInfo()
+	#fps.text = PlayerInfo()
 #endregion
 #-------------------------------------------------------------------------------
 #region PLAYER DATA SAVE SYSTEM
