@@ -14,6 +14,7 @@ area2D = NodePath("StaticBody2D")
 collider = NodePath("StaticBody2D/CollisionShape2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
 texture = ExtResource("1_x48a8")
 hframes = 12
 
@@ -25,7 +26,7 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_r7ht2")
 
 [node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(0, -41)
+position = Vector2(0, -30)
 
 [node name="Label" type="Label" parent="Marker2D"]
 z_index = 29
@@ -40,7 +41,7 @@ offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 10
 text = "50 / 50 HP"
 horizontal_alignment = 1
 vertical_alignment = 1

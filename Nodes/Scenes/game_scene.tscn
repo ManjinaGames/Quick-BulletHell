@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=30 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" uid="uid://b471unj5j3evn" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
-[ext_resource type="Texture2D" uid="uid://cg66h3pgyvkxa" path="res://Assets/Images/Desert_skybox_material_baseColor.jpeg" id="6_sfc41"]
+[ext_resource type="Texture2D" uid="uid://dfxnixm6kp712" path="res://Assets/Images/Background_TitleMenu.jpg" id="6_hxoxt"]
 [ext_resource type="Texture2D" uid="uid://p7vwg4oncvs4" path="res://Assets/Images/Background_GameMenu.jpg" id="8_hxoxt"]
 [ext_resource type="Script" uid="uid://c4b6si6rx0wc8" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Pause_Menu.gd" id="8_q0g70"]
 [ext_resource type="Script" uid="uid://0g6t8l52l1kw" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Market_Menu.gd" id="9_3u2qh"]
@@ -23,7 +23,7 @@
 [ext_resource type="Script" uid="uid://d0kihyc8vswun" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Dialogue_Menu.gd" id="20_kjtdd"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_lnt6d"]
-panorama = ExtResource("6_sfc41")
+panorama = ExtResource("6_hxoxt")
 
 [sub_resource type="Sky" id="Sky_glvg6"]
 sky_material = SubResource("PanoramaSkyMaterial_lnt6d")
@@ -31,14 +31,10 @@ sky_material = SubResource("PanoramaSkyMaterial_lnt6d")
 [sub_resource type="Environment" id="Environment_5r3bf"]
 background_mode = 2
 sky = SubResource("Sky_glvg6")
-sky_rotation = Vector3(0.0872665, 0, 3.14159)
+sky_custom_fov = 120.0
+sky_rotation = Vector3(-0.436332, 3.14159, 0)
 tonemap_mode = 2
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.0
-
-[sub_resource type="FogMaterial" id="FogMaterial_4ffg5"]
-albedo = Color(0.839216, 0.364706, 0.160784, 1)
-emission = Color(0.562538, 0.224506, 0.0905982, 1)
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_jmjr4"]
 color = Color(1, 1, 1, 1)
@@ -103,11 +99,6 @@ environment = SubResource("Environment_5r3bf")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D"]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 5, 0)
 shadow_enabled = true
-
-[node name="FogVolume" type="FogVolume" parent="World3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -7.5)
-size = Vector3(15, 1.5, 10)
-material = SubResource("FogMaterial_4ffg5")
 
 [node name="SubViewport" type="SubViewport" parent="World3D"]
 size = Vector2i(2048, 2048)
@@ -444,6 +435,7 @@ magnet = NodePath("Magnet_PlayerCollision")
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
 position = Vector2(-1.99999, -3.49998)
+scale = Vector2(2, 2)
 texture = ExtResource("10_v4ix3")
 hframes = 8
 vframes = 3
@@ -491,7 +483,7 @@ sprite = NodePath("Hitbox_Sprite2D")
 shape = NodePath("Hitbox_CollisionShape2D")
 
 [node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
-scale = Vector2(3, 3)
+scale = Vector2(2, 2)
 texture = ExtResource("13_6lohc")
 
 [node name="Hitbox_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]

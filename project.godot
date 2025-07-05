@@ -109,3 +109,8 @@ locale/translations=PackedStringArray("res://Translations/Translation - Hoja 1.e
 2d_physics/layer_2="Enemy"
 2d_physics/layer_3="Graze"
 2d_physics/layer_4="Magnet"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
