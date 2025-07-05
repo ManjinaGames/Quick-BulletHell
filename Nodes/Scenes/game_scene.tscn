@@ -1,10 +1,9 @@
-[gd_scene load_steps=30 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=26 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" uid="uid://b471unj5j3evn" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
 [ext_resource type="PackedScene" uid="uid://dsbbbpoj74b1r" path="res://Nodes/Prefabs/Player_Explotion.tscn" id="2_pa18e"]
 [ext_resource type="PackedScene" uid="uid://cspvg8uimw0jt" path="res://Nodes/Prefabs/bullet_prefab.tscn" id="3_5om1x"]
-[ext_resource type="Script" uid="uid://ddpv1idhnfui7" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Collider_Script.gd" id="4_1isya"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
@@ -45,15 +44,6 @@ thickness = 3
 [sub_resource type="ViewportTexture" id="ViewportTexture_6jl8c"]
 viewport_path = NodePath("World3D/SubViewport")
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_cfppq"]
-radius = 96.0052
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_qurjd"]
-radius = 32.0156
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_c4em7"]
-radius = 9.0
-
 [node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "difficultyLabel", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
 currentLayer = NodePath("CanvasLayer")
@@ -87,9 +77,6 @@ playerLayer = 1
 grazeLayer = 4
 magnetLayer = 8
 enemyLayer = 2
-
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(576, 324)
 
 [node name="World3D" type="Node3D" parent="."]
 
@@ -424,14 +411,17 @@ expand_mode = 1
 clip_contents = true
 layout_mode = 2
 
-[node name="Player_Prefab" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content" node_paths=PackedStringArray("sprite", "hitBox", "graze", "magnet")]
+[node name="Player_Prefab" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content" node_paths=PackedStringArray("sprite", "magnetBox_Sprite", "magnetBox_Marker2D", "grazeBox_Sprite", "grazeBox_Marker2D", "hitBox_Sprite", "hitBox_Marker2D")]
 z_index = 10
 position = Vector2(302, 559)
 script = ExtResource("9_4cqcx")
 sprite = NodePath("Sprite2D")
-hitBox = NodePath("Hitbox_PlayerCollision3")
-graze = NodePath("Graze_PlayerCollision2")
-magnet = NodePath("Magnet_PlayerCollision")
+magnetBox_Sprite = NodePath("Magnet_Sprite2D")
+magnetBox_Marker2D = NodePath("Magnet_Marker2D")
+grazeBox_Sprite = NodePath("Graze_Sprite2D")
+grazeBox_Marker2D = NodePath("Graze_Marker2D")
+hitBox_Sprite = NodePath("Hitbox_Sprite2D")
+hitBox_Marker2D = NodePath("Hitbox_Marker2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
 position = Vector2(-1.99999, -3.49998)
@@ -440,54 +430,31 @@ texture = ExtResource("10_v4ix3")
 hframes = 8
 vframes = 3
 
-[node name="Magnet_PlayerCollision" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
-z_index = -1
-collision_layer = 8
-collision_mask = 0
-script = ExtResource("4_1isya")
-player = NodePath("..")
-sprite = NodePath("Magnet_Sprite2D")
-shape = NodePath("Magnet_CollisionShape2D")
-
-[node name="Magnet_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
-shape = SubResource("CircleShape2D_cfppq")
-
-[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Magnet_PlayerCollision"]
+[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
 self_modulate = Color(0, 0, 1, 0.411765)
 scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_0qyn6")
 
-[node name="Graze_PlayerCollision2" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
-z_index = 1
-collision_layer = 4
-collision_mask = 0
-script = ExtResource("4_1isya")
-player = NodePath("..")
-sprite = NodePath("Graze_Sprite2D")
-shape = NodePath("Graze_CollisionShape2D")
+[node name="Magnet_Marker2D" type="Marker2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
+position = Vector2(96, 0)
+gizmo_extents = 50.0
 
-[node name="Graze_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
-shape = SubResource("CircleShape2D_qurjd")
-
-[node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Graze_PlayerCollision2"]
+[node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
 self_modulate = Color(1, 0, 1, 0.415686)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("5_0qyn6")
 
-[node name="Hitbox_PlayerCollision3" type="StaticBody2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab" node_paths=PackedStringArray("player", "sprite", "shape")]
-z_index = 2
-collision_mask = 0
-script = ExtResource("4_1isya")
-player = NodePath("..")
-sprite = NodePath("Hitbox_Sprite2D")
-shape = NodePath("Hitbox_CollisionShape2D")
+[node name="Graze_Marker2D" type="Marker2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
+position = Vector2(32, 0)
+gizmo_extents = 50.0
 
-[node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
+[node name="Hitbox_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
 scale = Vector2(2, 2)
 texture = ExtResource("13_6lohc")
 
-[node name="Hitbox_CollisionShape2D" type="CollisionShape2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab/Hitbox_PlayerCollision3"]
-shape = SubResource("CircleShape2D_c4em7")
+[node name="Hitbox_Marker2D" type="Marker2D" parent="CanvasLayer/Window_MarginContainer/Content/Player_Prefab"]
+position = Vector2(6, 0)
+gizmo_extents = 50.0
 
 [node name="Timer_Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]
 visible = false
