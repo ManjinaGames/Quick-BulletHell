@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=21 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" uid="uid://b471unj5j3evn" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://cspvg8uimw0jt" path="res://Nodes/Prefabs/bullet_prefab.tscn" id="3_5om1x"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
-[ext_resource type="PackedScene" uid="uid://bushxnb3qli8s" path="res://Assets/Models/house.tscn" id="5_xpyxf"]
 [ext_resource type="Texture2D" uid="uid://dfxnixm6kp712" path="res://Assets/Images/Background_TitleMenu.jpg" id="6_hxoxt"]
 [ext_resource type="Texture2D" uid="uid://p7vwg4oncvs4" path="res://Assets/Images/Background_GameMenu.jpg" id="8_hxoxt"]
 [ext_resource type="Script" uid="uid://c4b6si6rx0wc8" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Pause_Menu.gd" id="8_q0g70"]
@@ -21,28 +20,11 @@
 [ext_resource type="PackedScene" uid="uid://kthlaqw0sk1v" path="res://Nodes/Prefabs/card_button_prefab.tscn" id="20_4usgd"]
 [ext_resource type="Script" uid="uid://d0kihyc8vswun" path="res://Scripts/Scene_Scripts/Game_Scene/Menu_Nodes/Dialogue_Menu.gd" id="20_kjtdd"]
 
-[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_lnt6d"]
-panorama = ExtResource("6_hxoxt")
-
-[sub_resource type="Sky" id="Sky_glvg6"]
-sky_material = SubResource("PanoramaSkyMaterial_lnt6d")
-
-[sub_resource type="Environment" id="Environment_5r3bf"]
-background_mode = 2
-sky = SubResource("Sky_glvg6")
-sky_custom_fov = 120.0
-sky_rotation = Vector3(-0.436332, 3.14159, 0)
-tonemap_mode = 2
-volumetric_fog_density = 0.0
-
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_jmjr4"]
 color = Color(1, 1, 1, 1)
 grow_begin = -25.0
 grow_end = -25.0
 thickness = 3
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_6jl8c"]
-viewport_path = NodePath("World3D/SubViewport")
 
 [node name="Game_Scene" type="Node" node_paths=PackedStringArray("currentLayer", "pauseMenu", "gameoverMenu", "marketMenu", "dialogueMenu", "timerLabel", "content", "player", "difficultyLabel", "maxScoreLabel_title", "maxScoreLabel_Num", "scoreLabel_title", "scoreLabel_Num", "powerLabel_title", "powerLabel_Num", "livesLabel_title", "livesLabel_Num", "moneyLabel_title", "moneyLabel_Num", "maxMoneyLabel_Num", "leftLabel", "completedPanel", "completedLabel")]
 script = ExtResource("1_143dr")
@@ -77,57 +59,6 @@ playerLayer = 1
 grazeLayer = 4
 magnetLayer = 8
 enemyLayer = 2
-
-[node name="World3D" type="Node3D" parent="."]
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="World3D"]
-environment = SubResource("Environment_5r3bf")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World3D"]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 5, 0)
-shadow_enabled = true
-
-[node name="SubViewport" type="SubViewport" parent="World3D"]
-size = Vector2i(2048, 2048)
-
-[node name="Camera3D" type="Camera3D" parent="World3D/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 0.998135, 0.0610486, 0, -0.0610486, 0.998135, 0, 1.6, 0.6)
-
-[node name="Stage4" type="Node3D" parent="World3D"]
-
-[node name="House" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, 0)
-
-[node name="House2" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -2)
-
-[node name="House3" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -4)
-
-[node name="House4" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -6)
-
-[node name="House5" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, -2, 0, -8)
-
-[node name="House6" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, 0)
-
-[node name="House7" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -2)
-
-[node name="House8" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -4)
-
-[node name="House9" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -6)
-
-[node name="House10" parent="World3D/Stage4" instance=ExtResource("5_xpyxf")]
-transform = Transform3D(1.52, 0, 0, 0, 1.52, 0, 0, 0, 1.52, 2, 0, -8)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="World3D/Stage4"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -4.75)
-size = Vector3(15, 0.5, 15.5)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -404,7 +335,7 @@ theme_override_constants/margin_bottom = 10
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer/Window_MarginContainer"]
 layout_mode = 2
-texture = SubResource("ViewportTexture_6jl8c")
+texture = ExtResource("6_hxoxt")
 expand_mode = 1
 
 [node name="Content" type="Control" parent="CanvasLayer/Window_MarginContainer"]

@@ -54,7 +54,7 @@ func _process(_delta:float):
 	#Set_MouseMode()
 	#ResetGame()
 	Set_SlowMotion()
-	#fps.text = PlayerInfo()
+	fps.text = PlayerInfo()
 #endregion
 #-------------------------------------------------------------------------------
 #region PLAYER DATA SAVE SYSTEM
@@ -76,14 +76,17 @@ func Delete_SaveData_Json(_i:int) -> void:
 #-------------------------------------------------------------------------------
 func Load_SaveData_Json(_i:int) -> Dictionary:
 	var _path: String = Get_SaveDataPath_Json(_i)
+	#-------------------------------------------------------------------------------
 	if(ResourceLoader.exists(_path)):
 		var _jsonFile: FileAccess = FileAccess.open(_path, FileAccess.READ)
 		var _jsonString: String = _jsonFile.get_as_text()
 		_jsonFile.close()
 		var _saveData: Dictionary = JSON.parse_string(_jsonString)
 		return _saveData
+	#-------------------------------------------------------------------------------
 	else:
 		return CreateNew_SaveData_Json()
+	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func CreateNew_SaveData_Json() -> Dictionary:
 	var _saveData: Dictionary = {}

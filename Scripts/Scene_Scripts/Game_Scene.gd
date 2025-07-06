@@ -272,10 +272,10 @@ func BeginGame() -> void:
 	#-------------------------------------------------------------------------------
 	Create_EnemyBullets_Disabled(3000)
 	Create_PlayerBullets_Disabled(50)
-	Create_Items_Disabled(200)
+	Create_Items_Disabled(2000)
 	#-------------------------------------------------------------------------------
-	#await get_tree().create_timer(3, false).timeout
-	#Create_Items(width*0.5, height*0.5, 20, 2000)
+	await get_tree().create_timer(3, false).timeout
+	Create_Items(width*0.5, height*0.5, 200, 2000)
 	await get_tree().create_timer(3.0, false).timeout
 	Create_SpellCard()
 	#-------------------------------------------------------------------------------
@@ -367,13 +367,15 @@ func Create_EnemyBullets_Disabled(_iMax:int):
 #-------------------------------------------------------------------------------
 func Create_EnemyBullet(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
 	var _bullet: Bullet
+	#-------------------------------------------------------------------------------
 	if(enemyBullets_Disabled_Array.size() > 0):
 		_bullet = enemyBullets_Disabled_Array[0]
 		_bullet.show()
-		_bullet.physics_Update = func(): Bullet_PhysicsUpdate(_bullet)
 		enemyBullets_Disabled_Array.erase(_bullet)
+	#-------------------------------------------------------------------------------
 	else:
 		_bullet = bullet_Prefab.instantiate() as Bullet
+		_bullet.physics_Update = func(): Bullet_PhysicsUpdate(_bullet)
 		content.add_child(_bullet)
 	#-------------------------------------------------------------------------------
 	enemyBullets_Enabled_Array.append(_bullet)
@@ -408,22 +410,22 @@ func Create_Items(_x:float, _y:float, _rad: float, _num:int):
 #-------------------------------------------------------------------------------
 func Create_Item(_x:float, _y:float):
 	var _item: Item
-	_x = clamp(_x, playerLimitsX.x, playerLimitsX.y)
-	_y = clamp(_y, playerLimitsY.x, playerLimitsY.y)
 	#-------------------------------------------------------------------------------
 	if(items_Disabled_Array.size()>0):
 		_item = items_Disabled_Array[0]
 		items_Disabled_Array.erase(_item)
-		_item.physics_Update = func(): Items_PhysicsUpdate(_item)
 		_item.show()
 	#-------------------------------------------------------------------------------
 	else:
 		_item = item_Prefab.instantiate() as Item
+		_item.physics_Update = func(): Items_PhysicsUpdate(_item)
 		content.add_child(_item)
 	#-------------------------------------------------------------------------------
 	items_Enabled_Array.append(_item)
 	#-------------------------------------------------------------------------------
 	_item.velocity = Vector2(0, -5)
+	_x = clamp(_x, playerLimitsX.x, playerLimitsX.y)
+	_y = clamp(_y, playerLimitsY.x, playerLimitsY.y)
 	_item.position = Vector2(_x, _y)
 #-------------------------------------------------------------------------------
 func Items_PhysicsUpdate(_item:Item):
@@ -487,7 +489,7 @@ func Bullet_PhysicsUpdate(_bullet: Bullet):
 				var _dir2: float = deg_to_rad(_bullet.dir)
 				_bullet.velocity.x = _bullet.vel * cos(_dir2)
 				_bullet.velocity.y = _bullet.vel * sin(_dir2)
-				_bullet.position += _bullet.velocity
+				_bullet.position += _bullet.velocity * deltaTimeScale
 				_bullet.rotation_degrees = _bullet.dir+90
 			#-------------------------------------------------------------------------------
 			else:
