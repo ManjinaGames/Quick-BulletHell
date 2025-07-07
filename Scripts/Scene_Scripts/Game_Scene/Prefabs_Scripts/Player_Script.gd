@@ -15,13 +15,8 @@ var tween_Array: Array[Tween] = []
 @export var sprite: Sprite2D
 #-------------------------------------------------------------------------------
 @export var magnetBox_Sprite: Sprite2D
-@export var magnetBox_Marker2D: Marker2D
-#-------------------------------------------------------------------------------
 @export var grazeBox_Sprite: Sprite2D
-@export var grazeBox_Marker2D: Marker2D
-#-------------------------------------------------------------------------------
 @export var hitBox_Sprite: Sprite2D
-@export var hitBox_Marker2D: Marker2D
 #-------------------------------------------------------------------------------
 var playerResource: PlayerResource
 #endregion

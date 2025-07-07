@@ -9,7 +9,7 @@ script = ExtResource("1_30lj2")
 label = NodePath("Label")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(2, 2)
+scale = Vector2(2.5, 2.5)
 texture = ExtResource("1_x48a8")
 hframes = 12
 

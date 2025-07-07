@@ -122,8 +122,9 @@ func Copy_CurrentPlayer() -> PlayerResource:
 #-------------------------------------------------------------------------------
 #region UI FUNCTIONS
 func PlayerInfo() -> String:
-	var _s: String = str(Engine.get_frames_per_second()) + " fps.\n"
-	_s += "Slow Motion: " + str(isSlowMotion)
+	var _s: String = ""
+	_s += "Slow Motion: " + str(isSlowMotion) + "\n"
+	_s += str(Engine.get_frames_per_second()) + " fps."
 	return _s
 #endregion
 #-------------------------------------------------------------------------------

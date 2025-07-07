@@ -20,14 +20,13 @@ var difficulty: float
 @export var content: Control
 @export var player: Player
 var cardInventory: Dictionary[CardResource, int]
-@export var playerExplotion: PackedScene
 #-------------------------------------------------------------------------------
 @export var enemy_Prefab: PackedScene
 @export var bullet_Prefab: PackedScene
+@export var item_Prefab: PackedScene
+#-------------------------------------------------------------------------------
 var bulletDictionary: Dictionary[String, BulletResource]
 @export var bulletDictionary_Path: String = "res://Resources/Bullets/"
-var maxColor: int = 15
-@export var item_Prefab: PackedScene
 #-------------------------------------------------------------------------------
 @export var difficultyLabel: Label
 @export var maxScoreLabel_title: RichTextLabel
@@ -57,11 +56,6 @@ var items_Disabled_Array: Array[Item]
 #-------------------------------------------------------------------------------
 var tween_Array: Array[Tween]
 #-------------------------------------------------------------------------------
-@export_flags_2d_physics var playerLayer: int
-@export_flags_2d_physics var grazeLayer: int
-@export_flags_2d_physics var magnetLayer: int
-@export_flags_2d_physics var enemyLayer: int
-#-------------------------------------------------------------------------------
 var height: float
 var width: float
 #-------------------------------------------------------------------------------
@@ -79,6 +73,8 @@ var moneyPoints: int
 var scorePoints: int
 #-------------------------------------------------------------------------------
 var deltaTimeScale: float = 1
+#-------------------------------------------------------------------------------
+var enemy_tween_array: Array[Tween]
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
@@ -102,14 +98,14 @@ func _physics_process(_delta:float) -> void:
 	tween_Array = get_tree().get_processed_tweens()
 	Debug_Information()
 	#-------------------------------------------------------------------------------
-	for _bullet in enemyBullets_Enabled_Array:
-		_bullet.physics_Update.call()
+	for _i in range(enemyBullets_Enabled_Array.size()-1,-1,-1):
+		enemyBullets_Enabled_Array[_i].physics_Update.call()
 	#-------------------------------------------------------------------------------
-	for _bullet in playerBullets_Enabled_Array:
-		_bullet.physics_Update.call()
+	for _i in range(playerBullets_Enabled_Array.size()-1,-1,-1):
+		playerBullets_Enabled_Array[_i].physics_Update.call()
 	#-------------------------------------------------------------------------------
-	for _item in items_Enabled_Array:
-		_item.physics_Update.call()
+	for _i in range(items_Enabled_Array.size()-1,-1,-1):
+		items_Enabled_Array[_i].physics_Update.call()
 	#-------------------------------------------------------------------------------
 	match(myGAME_STATE):
 		GAME_STATE.IN_GAMEPLAY:
@@ -193,8 +189,8 @@ func SetGameLimits() -> void:
 	playerLimitsX = Vector2(_offSet, width-_offSet)
 	playerLimitsY = Vector2(_offSet, height-_offSet)
 	#-------------------------------------------------------------------------------
-	enemyLimitsX = Vector2(width*-0.1, width*1.1)
-	enemyLimitsY = Vector2(height*-0.5, height*1.1)
+	enemyLimitsX = Vector2(0, width)
+	enemyLimitsY = Vector2(0, height)
 	#-------------------------------------------------------------------------------
 	bossStartingPosition = Vector2(width*0.5, height*0.25)
 #-------------------------------------------------------------------------------
@@ -274,9 +270,10 @@ func BeginGame() -> void:
 	Create_PlayerBullets_Disabled(50)
 	Create_Items_Disabled(2000)
 	#-------------------------------------------------------------------------------
-	await get_tree().create_timer(3, false).timeout
-	Create_Items(width*0.5, height*0.5, 200, 2000)
-	await get_tree().create_timer(3.0, false).timeout
+	TimeLimit(15)
+	await Seconds(3)
+	Create_Items(width*0.5, height*0.5, 200, 1000)
+	await Seconds(3.0)
 	Create_SpellCard()
 	#-------------------------------------------------------------------------------
 	LoadBulletDatabase()
@@ -315,35 +312,34 @@ func GoToMainScene():
 #-------------------------------------------------------------------------------
 func Create_SpellCard():
 	var _tween_array: Array[Tween] = CreateTween_Array(1)
+	enemy_tween_array = _tween_array
 	#-------------------------------------------------------------------------------
+	_tween_array[0].set_loops()
+	Create_SpellCard_Tween(_tween_array[0], 1)
+	Create_SpellCard_Tween(_tween_array[0], -1)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Create_SpellCard_Tween(_tween:Tween, _mirror: float):
 	var _dir: float
-	var _dir2: float
-	var _max1: float = 50.0
-	var _max2: float = 50.0
-	var _vel1: float
-	var _vel2: float
-	var _dvel: float
-	var _mirror: float = -1
+	var _dir2: float = 0.0
+	var _max1: float = 40.0
+	var _max2: float = 40.0
+	var _vel1: float = 4.0
+	var _vel2: float = 1.0
+	var _dvel: float = (_vel2-_vel1)/_max2
 	#-------------------------------------------------------------------------------
-	for _k in 10:
-		_dir2 = 0.0
-		_vel1 = 4.0
-		_vel2 = 1.0
-		_dvel = (_vel2-_vel1)/_max2
+	for _j in _max2:
+		_dir = 0.0
+		for _i in _max1:
+			_tween.tween_callback(func():Create_SpellCard_bullet(_dir+_dir2*_mirror, _max1, _vel1, _mirror))
+			_dir += 360/_max1
 		#-------------------------------------------------------------------------------
-		for _j in _max2:
-			_dir = 0.0
-			for _i in _max1:
-				_tween_array[0].tween_callback(func():Create_SpellCard_bullet(_dir+_dir2*_mirror, _max1, _vel1, _mirror))
-				_dir += 360/_max1
-			#-------------------------------------------------------------------------------
-			_tween_array[0].tween_interval(0.1)
-			_vel1 += _dvel
-			_dir2 += 2
-		#-------------------------------------------------------------------------------
-		_tween_array[0].set_parallel(false)
-		_tween_array[0].tween_interval(4.0)
-		_mirror *=-1
+		_tween.tween_interval(0.1)
+		_vel1 += _dvel
+		_dir2 += 2
+	#-------------------------------------------------------------------------------
+	_tween.set_parallel(false)
+	_tween.tween_interval(4.0)
 #-------------------------------------------------------------------------------
 func Create_SpellCard_bullet(_dir:float, _max1:float, _vel:float, _mirror: float):
 	var _bullet: Bullet = Create_EnemyBullet(width*0.5, height*0.5, 4.0, _dir)
@@ -423,19 +419,23 @@ func Create_Item(_x:float, _y:float):
 	#-------------------------------------------------------------------------------
 	items_Enabled_Array.append(_item)
 	#-------------------------------------------------------------------------------
+	_item.myITEM_STATE = Item.ITEM_STATE.SPIN
 	_item.velocity = Vector2(0, -5)
 	_x = clamp(_x, playerLimitsX.x, playerLimitsX.y)
 	_y = clamp(_y, playerLimitsY.x, playerLimitsY.y)
 	_item.position = Vector2(_x, _y)
 #-------------------------------------------------------------------------------
 func Items_PhysicsUpdate(_item:Item):
-	var _maxVelY: float = 3.0
+	var _velY_Max: float = 3.0
+	var _velY_Accel: float = 0.05
 	var _magnetVel: float = 8.0
 	match(_item.myITEM_STATE):
 		Item.ITEM_STATE.SPIN:
 			if(_item.velocity.y <= 0):
-				ItemMovement_Fall(_item, _maxVelY)
+				_item.velocity.y += _velY_Accel * deltaTimeScale
+				_item.position.y += _item.velocity.y * deltaTimeScale
 				_item.rotation += 0.5 * deltaTimeScale
+				return
 			#-------------------------------------------------------------------------------
 			else:
 				_item.rotation = 0
@@ -445,9 +445,15 @@ func Items_PhysicsUpdate(_item:Item):
 		#-------------------------------------------------------------------------------
 		Item.ITEM_STATE.FALL:
 			if(_item.position.y <= height):
-				ItemMovement_Fall(_item, _maxVelY)
+				if(_item.velocity.y > _velY_Max):
+					_item.velocity.y = _velY_Max
 				#-------------------------------------------------------------------------------
-				if(_item.position.distance_to(player.position)< 96.0 and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
+				elif(_item.velocity.y < _velY_Max):
+					_item.velocity.y += _velY_Accel * deltaTimeScale
+				#-------------------------------------------------------------------------------
+				_item.position.y += _item.velocity.y * deltaTimeScale
+				#-------------------------------------------------------------------------------
+				if(_item.position.distance_to(player.position)< 98.0 and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
 					_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
 					return
 				#-------------------------------------------------------------------------------
@@ -482,25 +488,30 @@ func Items_PhysicsUpdate(_item:Item):
 func Bullet_PhysicsUpdate(_bullet: Bullet):
 	if(_bullet.position.x > enemyLimitsX.x and _bullet.position.x < enemyLimitsX.y):
 		if(_bullet.position.y > enemyLimitsY.x and _bullet.position.y < enemyLimitsY.y):
-			if(_bullet.position.distance_to(player.position)> 50.0 and !_bullet.isGrazed):
+			if(_bullet.position.distance_to(player.position)< 34.0 and !_bullet.isGrazed):
+				Create_Item(_bullet.position.x, _bullet.position.y)
 				_bullet.isGrazed = true
 			#-------------------------------------------------------------------------------
-			if(_bullet.position.distance_to(player.position)> 12.0):
+			if(_bullet.position.distance_to(player.position)> 10.0):
 				var _dir2: float = deg_to_rad(_bullet.dir)
 				_bullet.velocity.x = _bullet.vel * cos(_dir2)
 				_bullet.velocity.y = _bullet.vel * sin(_dir2)
 				_bullet.position += _bullet.velocity * deltaTimeScale
 				_bullet.rotation_degrees = _bullet.dir+90
+				return
 			#-------------------------------------------------------------------------------
 			else:
 				Player_Shooted()
 				DestroyBullet(_bullet)
+				return
 			#-------------------------------------------------------------------------------
 		else:
 			DestroyBullet(_bullet)
+			return
 		#-------------------------------------------------------------------------------
 	else:
 		DestroyBullet(_bullet)
+		return
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func DestroyBullet(_bullet: Bullet):
@@ -516,15 +527,6 @@ func Player_Shooted():
 	else:
 		SetInfoText_Life()
 #-------------------------------------------------------------------------------
-func ItemMovement_Fall(_item:Item, _maxVelY:float):
-	if(_item.velocity.y > _maxVelY):
-		_item.velocity.y = _maxVelY
-	#-------------------------------------------------------------------------------
-	elif(_item.velocity.y < _maxVelY):
-		_item.velocity.y += 0.05 * deltaTimeScale
-	#-------------------------------------------------------------------------------
-	_item.position.y += _item.velocity.y * deltaTimeScale
-#-------------------------------------------------------------------------------
 func DestroyItem(_item:Item) -> void:
 	items_Enabled_Array.erase(_item)
 	items_Disabled_Array.append(_item)
@@ -538,6 +540,30 @@ func CanPlayerShoot() -> bool:
 		return false
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
+func TimeLimit(_iMax: int):
+	timer = _iMax
+	timerLabel.show()
+	#-------------------------------------------------------------------------------
+	timerLabel.text = str(timer).pad_zeros(2)+" / " +str(_iMax).pad_zeros(2)
+	await Seconds(1.0)
+	#-------------------------------------------------------------------------------
+	for _i in _iMax:
+		timer-=1
+		timerLabel.text = str(timer).pad_zeros(2)+" / " +str(_iMax).pad_zeros(2)
+		await Seconds(1.0)
+	#-------------------------------------------------------------------------------
+	timerLabel.text = ""
+	timerLabel.hide()
+	#-------------------------------------------------------------------------------
+	for _i in range(enemyBullets_Enabled_Array.size()-1, -1, -1):
+		DestroyBullet(enemyBullets_Enabled_Array[_i])
+	#-------------------------------------------------------------------------------
+	KillTween_Array(enemy_tween_array)
+#-------------------------------------------------------------------------------
+func Seconds(_f:float):
+	await get_tree().create_timer(_f, false).timeout
+#-------------------------------------------------------------------------------
+#region ARRAY[TWEEN] FUNCTIONS
 func CreateTween_Array(_size: int) ->Array[Tween]:
 	var _tween_Array: Array[Tween]
 	for _i in _size:
@@ -558,6 +584,7 @@ func KillTween_Array(_tween_Array: Array[Tween]):
 	for _i in range(_tween_Array.size()-1, -1, -1):
 		_tween_Array[_i].kill()
 		_tween_Array[_i].finished.emit()
+#endregion
 #-------------------------------------------------------------------------------
 #region IDIOME FUNCTIONS
 func SetIdiome():
