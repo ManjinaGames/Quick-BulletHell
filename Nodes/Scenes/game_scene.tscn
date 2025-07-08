@@ -356,17 +356,17 @@ magnetBox_Sprite = NodePath("Magnet_Sprite2D")
 grazeBox_Sprite = NodePath("Graze_Sprite2D")
 hitBox_Sprite = NodePath("Hitbox_Sprite2D")
 
+[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
+self_modulate = Color(0, 0, 1, 0.411765)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("5_0qyn6")
+
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
 position = Vector2(-2, -3.5)
 scale = Vector2(2.5, 2.5)
 texture = ExtResource("10_v4ix3")
 hframes = 8
 vframes = 3
-
-[node name="Magnet_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
-self_modulate = Color(0, 0, 1, 0.411765)
-scale = Vector2(0.75, 0.75)
-texture = ExtResource("5_0qyn6")
 
 [node name="Graze_Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
 self_modulate = Color(1, 0, 1, 0.415686)
@@ -523,7 +523,6 @@ theme_override_font_sizes/font_size = 30
 text = "Quit"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "confirmCard_Title", "yesButton", "noButton")]
-visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")
@@ -803,4 +802,5 @@ Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla 
 [node name="WhiteOutlines_Panel" type="Panel" parent="CanvasLayer/Window_MarginContainer"]
 z_index = 30
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xrh8u")

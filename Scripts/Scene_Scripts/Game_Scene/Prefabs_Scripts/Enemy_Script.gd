@@ -6,5 +6,8 @@ class_name Enemy
 var hp: int
 var maxHp: int
 var canBeHit: bool = true
+#-------------------------------------------------------------------------------
+var physics_Update: Callable = func(): pass
+var tween_Array: Array[Tween] = []
 #endregion
 #-------------------------------------------------------------------------------

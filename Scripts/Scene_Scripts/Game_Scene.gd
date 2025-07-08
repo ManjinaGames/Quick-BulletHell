@@ -19,6 +19,7 @@ var timer: int
 var difficulty: float
 @export var content: Control
 @export var player: Player
+var isFocus: bool = false
 var cardInventory: Dictionary[CardResource, int]
 #-------------------------------------------------------------------------------
 @export var enemy_Prefab: PackedScene
@@ -75,6 +76,8 @@ var scorePoints: int
 var deltaTimeScale: float = 1
 #-------------------------------------------------------------------------------
 var enemy_tween_array: Array[Tween]
+var timer_tween: Tween
+var main_tween: Tween
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
@@ -141,10 +144,25 @@ func PlayerMovement() -> void:
 		return
 	#-------------------------------------------------------------------------------
 	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	#-------------------------------------------------------------------------------
+	if(isFocus):
+		if(!Input.is_action_pressed("input_Focus")):
+			player.grazeBox_Sprite.hide()
+			player.hitBox_Sprite.hide()
+			isFocus = false
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+	else:
+		if(Input.is_action_pressed("input_Focus")):
+				player.grazeBox_Sprite.show()
+				player.hitBox_Sprite.show()
+				isFocus = true
+	#-------------------------------------------------------------------------------
 	if(input_dir != Vector2.ZERO):
 		input_dir.normalized()
 		var myPosition: Vector2 = player.position
-		if(Input.is_action_pressed("input_Focus")):
+		#-------------------------------------------------------------------------------
+		if(isFocus):
 			myPosition += input_dir * player.playerResource.focusSpeed * deltaTimeScale
 		#-------------------------------------------------------------------------------
 		else:
@@ -248,6 +266,8 @@ func BeginGame() -> void:
 	#-------------------------------------------------------------------------------
 	await SetGameLimits()
 	player.SetPlayer(singleton.Copy_CurrentPlayer())
+	player.grazeBox_Sprite.hide()
+	player.hitBox_Sprite.hide()
 	#-------------------------------------------------------------------------------
 	SetScore()
 	SetMoney()
@@ -270,13 +290,9 @@ func BeginGame() -> void:
 	Create_PlayerBullets_Disabled(50)
 	Create_Items_Disabled(2000)
 	#-------------------------------------------------------------------------------
-	TimeLimit(15)
-	await Seconds(3)
-	Create_Items(width*0.5, height*0.5, 200, 1000)
-	await Seconds(3.0)
-	Create_SpellCard()
-	#-------------------------------------------------------------------------------
 	LoadBulletDatabase()
+	Enter_GameState_InGameplay()
+	Choreography()
 #-------------------------------------------------------------------------------
 func LoadBulletDatabase():
 	bulletDictionary.clear()
@@ -292,6 +308,31 @@ func LoadBulletDatabase():
 #endregion
 #-------------------------------------------------------------------------------
 #region STAGE FUNCTIONS COMMON
+#-------------------------------------------------------------------------------
+func StageCommon(_s:String, _enabled:int, _completed:int):
+	await ShowBanner(_s)
+	EnableStage(_enabled)
+	CompletedStage(_completed)
+	singleton.Save_SaveData_Json(singleton.optionMenu.optionSaveData_Json["saveIndex"])
+	singleton.CommonSubmited()
+	GoToMainScene()
+#-------------------------------------------------------------------------------
+func ShowBanner(_s:String, _timer:float = 1.0):
+	await Seconds(_timer)
+	await ShowBanner2(_s)
+#-------------------------------------------------------------------------------
+func ShowBanner2(_s:String):
+	Banner_Open(_s)
+	await Seconds(3)
+	Banner_Close()
+#-------------------------------------------------------------------------------
+func Banner_Open(_s:String):
+	completedPanel.show()
+	completedLabel.text = _s
+#-------------------------------------------------------------------------------
+func Banner_Close():
+	completedPanel.hide()
+	completedLabel.text = ""
 #-------------------------------------------------------------------------------
 func EnableStage(_i:int):
 	var _playerIndex: StringName = str(int(singleton.currentSaveData_Json["playerIndex"]))
@@ -309,6 +350,89 @@ func GoToMainScene():
 	get_tree().set_deferred("paused", false)
 	get_tree().change_scene_to_file(singleton.mainScene_Path)
 #endregion
+func Choreography():
+	match(singleton.currentSaveData_Json["stageIndex"]):
+		singleton.STAGE.STAGE_1:
+			await Stage1()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_2:
+			await Stage2()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_3:
+			await Stage3()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_4:
+			await Stage4()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_5:
+			await Stage5()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_6:
+			await Stage6()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_7:
+			await Stage7()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.ROGUELIKE_MODE:
+			await Stage_RougeLike()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.BOSSRUSH_MODE:
+			await Stage_BossRish()
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Stage1():
+	#await Seconds(3)
+	#Create_Items(width*0.5, height*0.5, 200, 1000)
+	#-------------------------------------------------------------------------------
+	var _tween: Tween = create_tween()
+	main_tween = _tween
+	#-------------------------------------------------------------------------------
+	_tween.tween_interval(3.0)
+	_tween.tween_callback(func(): Create_SpellCard())
+	#-------------------------------------------------------------------------------
+	Boss_InstantDeath_inSeconds(15.0)
+	await TimeOut_Tween(30)
+	await Nothing_and_Market()
+	await StageCommon("Stage 1 Completed",1,0)
+#-------------------------------------------------------------------------------
+func Stage2():
+	await StageCommon("Stage 2 Completed",2,1)
+#-------------------------------------------------------------------------------
+func Stage3():
+	await StageCommon("Stage 3 Completed",3,2)
+#-------------------------------------------------------------------------------
+func Stage4():
+	await StageCommon("Stage 4 Completed",4,3)
+#-------------------------------------------------------------------------------
+func Stage5():
+	await StageCommon("Stage 5 Completed",5,4)
+#-------------------------------------------------------------------------------
+func Stage6():
+	await StageCommon("Stage 6 Completed",6,5)
+#-------------------------------------------------------------------------------
+func Stage7():
+	await StageCommon("Stage 7 Completed",7,6)
+#-------------------------------------------------------------------------------
+func Stage_RougeLike():
+	await StageCommon("Stage Rogue-Like Completed",8,7)
+#-------------------------------------------------------------------------------
+func Stage_BossRish():
+	await StageCommon("Stage Boss-Rish Completed",8,8)
+#-------------------------------------------------------------------------------
+func Nothing_and_Market():
+	await OpenMarket()
+	Enter_GameState_InGameplay()
+#-------------------------------------------------------------------------------
+func OpenMarket():
+	myGAME_STATE = GAME_STATE.IN_CUTIN
+	await ShowBanner2("Flea Market has being Open")
+	myGAME_STATE = GAME_STATE.IN_MARKET
+	await marketMenu.OpenMarket()
+#-------------------------------------------------------------------------------
+func Enter_GameState_InGameplay():
+	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
+	#PlayerShoot()
 #-------------------------------------------------------------------------------
 func Create_SpellCard():
 	var _tween_array: Array[Tween] = CreateTween_Array(1)
@@ -322,8 +446,8 @@ func Create_SpellCard():
 func Create_SpellCard_Tween(_tween:Tween, _mirror: float):
 	var _dir: float
 	var _dir2: float = 0.0
-	var _max1: float = 40.0
-	var _max2: float = 40.0
+	var _max1: float = 10.0*(difficulty+1)
+	var _max2: float = 10.0*(difficulty+1)
 	var _vel1: float = 4.0
 	var _vel2: float = 1.0
 	var _dvel: float = (_vel2-_vel1)/_max2
@@ -342,8 +466,10 @@ func Create_SpellCard_Tween(_tween:Tween, _mirror: float):
 	_tween.tween_interval(4.0)
 #-------------------------------------------------------------------------------
 func Create_SpellCard_bullet(_dir:float, _max1:float, _vel:float, _mirror: float):
-	var _bullet: Bullet = Create_EnemyBullet(width*0.5, height*0.5, 4.0, _dir)
+	var _bullet: Bullet = Create_EnemyBullet(width*0.5, height*0.15, 4.0, _dir)
+	_bullet.isDestroyed_OutScreen = false
 	_dir += 360/_max1
+	#-------------------------------------------------------------------------------
 	_bullet.tween_Array = CreateTween_Array(1)
 	#-------------------------------------------------------------------------------
 	_bullet.tween_Array[0].tween_property(_bullet, "vel",0.5, 1.0)
@@ -351,6 +477,7 @@ func Create_SpellCard_bullet(_dir:float, _max1:float, _vel:float, _mirror: float
 	_bullet.tween_Array[0].tween_property(_bullet, "dir",_bullet.dir+165*_mirror, 0.25)
 	_bullet.tween_Array[0].tween_property(_bullet, "vel",_vel, 1.0)
 	_bullet.tween_Array[0].parallel().tween_property(_bullet, "dir",_bullet.dir+270*_mirror, 3.0)
+	_bullet.tween_Array[0].tween_callback(func(): _bullet.isDestroyed_OutScreen = true)
 #-------------------------------------------------------------------------------
 func Create_EnemyBullets_Disabled(_iMax:int):
 	for _i in _iMax:
@@ -486,33 +613,55 @@ func Items_PhysicsUpdate(_item:Item):
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Bullet_PhysicsUpdate(_bullet: Bullet):
-	if(_bullet.position.x > enemyLimitsX.x and _bullet.position.x < enemyLimitsX.y):
-		if(_bullet.position.y > enemyLimitsY.x and _bullet.position.y < enemyLimitsY.y):
-			if(_bullet.position.distance_to(player.position)< 34.0 and !_bullet.isGrazed):
-				Create_Item(_bullet.position.x, _bullet.position.y)
-				_bullet.isGrazed = true
-			#-------------------------------------------------------------------------------
-			if(_bullet.position.distance_to(player.position)> 10.0):
-				var _dir2: float = deg_to_rad(_bullet.dir)
-				_bullet.velocity.x = _bullet.vel * cos(_dir2)
-				_bullet.velocity.y = _bullet.vel * sin(_dir2)
-				_bullet.position += _bullet.velocity * deltaTimeScale
-				_bullet.rotation_degrees = _bullet.dir+90
-				return
+	if(!_bullet.isDestroyed_OutScreen):
+		Bullet_PhysicsUpdate2(_bullet)
+	#-------------------------------------------------------------------------------
+	else:
+		if(_bullet.position.x > enemyLimitsX.x and _bullet.position.x < enemyLimitsX.y):
+			if(_bullet.position.y > enemyLimitsY.x and _bullet.position.y < enemyLimitsY.y):
+				Bullet_PhysicsUpdate2(_bullet)
 			#-------------------------------------------------------------------------------
 			else:
-				Player_Shooted()
 				DestroyBullet(_bullet)
 				return
 			#-------------------------------------------------------------------------------
+		#-------------------------------------------------------------------------------
 		else:
 			DestroyBullet(_bullet)
 			return
 		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Bullet_PhysicsUpdate2(_bullet: Bullet):
+	if(_bullet.position.distance_to(player.position)< 34.0 and !_bullet.isGrazed):
+		Create_Item(_bullet.position.x, _bullet.position.y)
+		_bullet.isGrazed = true
+	#-------------------------------------------------------------------------------
+	if(_bullet.position.distance_to(player.position)> 10.0):
+		var _dir2: float = deg_to_rad(_bullet.dir)
+		_bullet.velocity.x = _bullet.vel * cos(_dir2)
+		_bullet.velocity.y = _bullet.vel * sin(_dir2)
+		_bullet.position += _bullet.velocity * deltaTimeScale
+		_bullet.rotation_degrees = _bullet.dir+90
+		return
+	#-------------------------------------------------------------------------------
 	else:
+		Player_Shooted()
 		DestroyBullet(_bullet)
 		return
 	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Enemy_PhysicsUpdate(_enemy:Enemy):
+	if(_enemy.hp > 0):
+		KillTween_Array(_enemy.tween_Array)
+		_enemy.queue_free()
+		return
+	#-------------------------------------------------------------------------------
+	var _dir2: float = deg_to_rad(_enemy.dir)
+	_enemy.velocity.x = _enemy.vel * cos(_dir2)
+	_enemy.velocity.y = _enemy.vel * sin(_dir2)
+	_enemy.position += _enemy.velocity * deltaTimeScale
+	#_enemy.rotation_degrees = _enemy.dir+90
 #-------------------------------------------------------------------------------
 func DestroyBullet(_bullet: Bullet):
 	KillTween_Array(_bullet.tween_Array)
@@ -540,29 +689,52 @@ func CanPlayerShoot() -> bool:
 		return false
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-func TimeLimit(_iMax: int):
-	timer = _iMax
-	timerLabel.show()
+func Boss_InstantDeath_inSeconds(_f: float):
+	await Seconds(_f+1.0)
+	StopEverithing()
+	timer_tween.kill()
+	timer_tween.finished.emit()
+#-------------------------------------------------------------------------------
+func Seconds(_f:float):
+	await get_tree().create_timer(_f, false).timeout
+#-------------------------------------------------------------------------------
+func TimeOut_Tween(_iMax: int):
+	var _tween: Tween = create_tween()
+	timer_tween = _tween
 	#-------------------------------------------------------------------------------
-	timerLabel.text = str(timer).pad_zeros(2)+" / " +str(_iMax).pad_zeros(2)
-	await Seconds(1.0)
+	_tween.tween_callback(func():
+		timer = _iMax
+		timerLabel.show()
+		timerLabel.text = str(timer).pad_zeros(2)+" / " +str(_iMax).pad_zeros(2)
+	)
+	#-------------------------------------------------------------------------------
+	_tween.tween_interval(1.0)
 	#-------------------------------------------------------------------------------
 	for _i in _iMax:
-		timer-=1
-		timerLabel.text = str(timer).pad_zeros(2)+" / " +str(_iMax).pad_zeros(2)
-		await Seconds(1.0)
+		_tween.tween_callback(func():
+			timer-=1
+			timerLabel.text = str(timer).pad_zeros(2)+" / " +str(_iMax).pad_zeros(2)
+		)
+		_tween.tween_interval(1.0)
+		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		StopEverithing()
+	)
+	#-------------------------------------------------------------------------------
+	await timer_tween.finished
+#-------------------------------------------------------------------------------
+func StopEverithing():
 	timerLabel.text = ""
 	timerLabel.hide()
+	#-------------------------------------------------------------------------------
+	main_tween.kill()
+	main_tween.finished.emit()
 	#-------------------------------------------------------------------------------
 	for _i in range(enemyBullets_Enabled_Array.size()-1, -1, -1):
 		DestroyBullet(enemyBullets_Enabled_Array[_i])
 	#-------------------------------------------------------------------------------
 	KillTween_Array(enemy_tween_array)
-#-------------------------------------------------------------------------------
-func Seconds(_f:float):
-	await get_tree().create_timer(_f, false).timeout
-#-------------------------------------------------------------------------------
 #region ARRAY[TWEEN] FUNCTIONS
 func CreateTween_Array(_size: int) ->Array[Tween]:
 	var _tween_Array: Array[Tween]

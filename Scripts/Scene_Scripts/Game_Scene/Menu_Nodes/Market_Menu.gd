@@ -25,7 +25,8 @@ var cardDictionary: Dictionary
 @export var yesButton: Button
 @export var noButton: Button
 const buttonSize: Vector2 = Vector2(200, 250)
-var isMarketOpen: bool = false
+#-------------------------------------------------------------------------------
+signal closeMarket_signal
 #endregion
 #-------------------------------------------------------------------------------
 #region STATE MACHINE
@@ -55,19 +56,20 @@ func OpenMarket():
 	scrollContainer.custom_minimum_size = buttonSize
 	#-------------------------------------------------------------------------------
 	var _i: int
+	#-------------------------------------------------------------------------------
 	if(cardButton.size()>0):
 		_i = 1
+	#-------------------------------------------------------------------------------
 	else:
 		_i = 0
+	#-------------------------------------------------------------------------------
 	singleton.MoveToButton(cardButton[_i])
 	scrollContainer.scroll_horizontal = int(buttonSize.x + cardContainer.get_theme_constant("separation")) * _i	#NOTA IMPORTANTE: Por alguna razon el boton no se alinea con el container la primera vez, hay que ayudarlo
 	#-------------------------------------------------------------------------------
 	buyMenu.show()
 	confirmMenu.hide()
 	show()
-	isMarketOpen = true
-	while(isMarketOpen):
-		await gameScene.frame
+	await closeMarket_signal
 #-------------------------------------------------------------------------------
 func CreateCardMarket() ->void:
 	DeleteCardButtons()
@@ -200,13 +202,13 @@ func ConfirmMenu_Card_YesButton_Submited(_cr:CardResource):
 	print(GetCardText_Name(GetCardText_ID(_cr))+" was added to your bag.")
 	CardBuy_Effect(_cr)
 	hide()
-	isMarketOpen = false
+	closeMarket_signal.emit()
 	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func ConfirmMenu_Deck_YesButton_Submited():
 	DeleteCardButtons()
 	hide()
-	isMarketOpen = false
+	closeMarket_signal.emit()
 	singleton.CommonSubmited()
 #-------------------------------------------------------------------------------
 func ConfirmMenu_YesButton_Canceled():
