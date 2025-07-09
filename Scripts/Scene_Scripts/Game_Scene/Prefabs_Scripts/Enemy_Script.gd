@@ -3,6 +3,10 @@ class_name Enemy
 #region VARIABLES
 @export var label: Label
 #-------------------------------------------------------------------------------
+var velocity: Vector2 = Vector2.ZERO
+var dir: float = 0
+var vel: float = 0
+#-------------------------------------------------------------------------------
 var hp: int
 var maxHp: int
 var canBeHit: bool = true

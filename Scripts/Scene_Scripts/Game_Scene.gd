@@ -49,6 +49,9 @@ var bulletDictionary: Dictionary[String, BulletResource]
 var enemyBullets_Enabled_Array: Array[Bullet]
 var enemyBullets_Disabled_Array: Array[Bullet]
 #-------------------------------------------------------------------------------
+var enemy_Enabled_Array: Array[Enemy]
+var enemy_Disabled_Array: Array[Enemy]
+#-------------------------------------------------------------------------------
 var playerBullets_Enabled_Array: Array[Bullet]
 var playerBullets_Disabled_Array: Array[Bullet]
 #-------------------------------------------------------------------------------
@@ -75,9 +78,9 @@ var scorePoints: int
 #-------------------------------------------------------------------------------
 var deltaTimeScale: float = 1
 #-------------------------------------------------------------------------------
-var enemy_tween_array: Array[Tween]
 var timer_tween: Tween
-var main_tween: Tween
+var main_tween_Array: Array[Tween]
+var player_tween_Array: Array[Tween]
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
@@ -104,12 +107,20 @@ func _physics_process(_delta:float) -> void:
 	for _i in range(enemyBullets_Enabled_Array.size()-1,-1,-1):
 		enemyBullets_Enabled_Array[_i].physics_Update.call()
 	#-------------------------------------------------------------------------------
+	for _i in range(enemy_Enabled_Array.size()-1,-1,-1):
+		enemy_Enabled_Array[_i].physics_Update.call()
+	#-------------------------------------------------------------------------------
 	for _i in range(playerBullets_Enabled_Array.size()-1,-1,-1):
 		playerBullets_Enabled_Array[_i].physics_Update.call()
 	#-------------------------------------------------------------------------------
 	for _i in range(items_Enabled_Array.size()-1,-1,-1):
 		items_Enabled_Array[_i].physics_Update.call()
 	#-------------------------------------------------------------------------------
+	Player_StateMachine()
+#endregion
+#-------------------------------------------------------------------------------
+#region PLAYER FUNCTIONS
+func Player_StateMachine():
 	match(myGAME_STATE):
 		GAME_STATE.IN_GAMEPLAY:
 			PlayerMovement()
@@ -136,9 +147,7 @@ func _physics_process(_delta:float) -> void:
 			pass
 		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
-#endregion
 #-------------------------------------------------------------------------------
-#region PLAYER FUNCTIONS
 func PlayerMovement() -> void:
 	if(player.myPLAYER_STATE == Player.PLAYER_STATE.DEATH):
 		return
@@ -146,6 +155,8 @@ func PlayerMovement() -> void:
 	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	#-------------------------------------------------------------------------------
 	if(isFocus):
+		player.hitBox_Sprite.rotate(0.05*deltaTimeScale)
+		#-------------------------------------------------------------------------------
 		if(!Input.is_action_pressed("input_Focus")):
 			player.grazeBox_Sprite.hide()
 			player.hitBox_Sprite.hide()
@@ -154,9 +165,10 @@ func PlayerMovement() -> void:
 	#-------------------------------------------------------------------------------
 	else:
 		if(Input.is_action_pressed("input_Focus")):
-				player.grazeBox_Sprite.show()
-				player.hitBox_Sprite.show()
-				isFocus = true
+			player.grazeBox_Sprite.show()
+			player.hitBox_Sprite.show()
+			isFocus = true
+		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
 	if(input_dir != Vector2.ZERO):
 		input_dir.normalized()
@@ -220,6 +232,9 @@ func Debug_Information() -> void:
 	_s += "-------------------------------------------------------\n"
 	_s += "Enemy Bullets Enabled: " + str(enemyBullets_Enabled_Array.size())+"\n"
 	_s += "Enemy Bullets Disabled: " + str(enemyBullets_Disabled_Array.size())+"\n"
+	_s += "-------------------------------------------------------\n"
+	_s += "Enemy Enabled: " + str(enemy_Enabled_Array.size())+"\n"
+	_s += "Enemy Disabled: " + str(enemy_Disabled_Array.size())+"\n"
 	_s += "-------------------------------------------------------\n"
 	_s += "Player Bullets Enabled: " + str(playerBullets_Enabled_Array.size())+"\n"
 	_s += "Player Bullets Disabled: " + str(playerBullets_Disabled_Array.size())+"\n"
@@ -385,14 +400,13 @@ func Stage1():
 	#await Seconds(3)
 	#Create_Items(width*0.5, height*0.5, 200, 1000)
 	#-------------------------------------------------------------------------------
-	var _tween: Tween = create_tween()
-	main_tween = _tween
+	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
 	#-------------------------------------------------------------------------------
 	_tween.tween_interval(3.0)
 	_tween.tween_callback(func(): Create_SpellCard())
 	#-------------------------------------------------------------------------------
-	Boss_InstantDeath_inSeconds(15.0)
-	await TimeOut_Tween(30)
+	#Boss_InstantDeath_inSeconds(15.0)
+	await TimeOut_Tween(60)
 	await Nothing_and_Market()
 	await StageCommon("Stage 1 Completed",1,0)
 #-------------------------------------------------------------------------------
@@ -435,15 +449,20 @@ func Enter_GameState_InGameplay():
 	#PlayerShoot()
 #-------------------------------------------------------------------------------
 func Create_SpellCard():
-	var _tween_array: Array[Tween] = CreateTween_Array(1)
-	enemy_tween_array = _tween_array
+	var _enemy: Enemy = Create_Enemy(width*0.1, width*0.1, 100)
+	var _tween: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
+	_tween.tween_property(_enemy, "position",Vector2(width*0.5, height*0.2), 0.5)
+	_tween.tween_interval(0.5)
 	#-------------------------------------------------------------------------------
-	_tween_array[0].set_loops()
-	Create_SpellCard_Tween(_tween_array[0], 1)
-	Create_SpellCard_Tween(_tween_array[0], -1)
+	_tween.tween_callback(func():
+		var _tween2: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
+		_tween2.set_loops()
+		Create_SpellCard_Tween(_enemy, _tween2, 1)
+		Create_SpellCard_Tween(_enemy, _tween2, -1)
+	)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-func Create_SpellCard_Tween(_tween:Tween, _mirror: float):
+func Create_SpellCard_Tween(_enemy:Enemy, _tween:Tween, _mirror: float):
 	var _dir: float
 	var _dir2: float = 0.0
 	var _max1: float = 10.0*(difficulty+1)
@@ -455,7 +474,7 @@ func Create_SpellCard_Tween(_tween:Tween, _mirror: float):
 	for _j in _max2:
 		_dir = 0.0
 		for _i in _max1:
-			_tween.tween_callback(func():Create_SpellCard_bullet(_dir+_dir2*_mirror, _max1, _vel1, _mirror))
+			_tween.tween_callback(func():Create_SpellCard_bullet(_enemy, _dir+_dir2*_mirror, _max1, _vel1, _mirror))
 			_dir += 360/_max1
 		#-------------------------------------------------------------------------------
 		_tween.tween_interval(0.1)
@@ -465,19 +484,19 @@ func Create_SpellCard_Tween(_tween:Tween, _mirror: float):
 	_tween.set_parallel(false)
 	_tween.tween_interval(4.0)
 #-------------------------------------------------------------------------------
-func Create_SpellCard_bullet(_dir:float, _max1:float, _vel:float, _mirror: float):
-	var _bullet: Bullet = Create_EnemyBullet(width*0.5, height*0.15, 4.0, _dir)
+func Create_SpellCard_bullet(_enemy:Enemy, _dir:float, _max1:float, _vel:float, _mirror: float):
+	var _bullet: Bullet = Create_EnemyBullet(_enemy.position.x, _enemy.position.y, 4.0, _dir)
 	_bullet.isDestroyed_OutScreen = false
 	_dir += 360/_max1
 	#-------------------------------------------------------------------------------
-	_bullet.tween_Array = CreateTween_Array(1)
+	var _tween: Tween = CreateTween_ArrayAppend(_bullet.tween_Array)
 	#-------------------------------------------------------------------------------
-	_bullet.tween_Array[0].tween_property(_bullet, "vel",0.5, 1.0)
-	_bullet.tween_Array[0].parallel().tween_property(_bullet, "dir",_bullet.dir+30*_mirror, 1.0)
-	_bullet.tween_Array[0].tween_property(_bullet, "dir",_bullet.dir+165*_mirror, 0.25)
-	_bullet.tween_Array[0].tween_property(_bullet, "vel",_vel, 1.0)
-	_bullet.tween_Array[0].parallel().tween_property(_bullet, "dir",_bullet.dir+270*_mirror, 3.0)
-	_bullet.tween_Array[0].tween_callback(func(): _bullet.isDestroyed_OutScreen = true)
+	_tween.tween_property(_bullet, "vel",0.5, 1.0)
+	_tween.parallel().tween_property(_bullet, "dir",_bullet.dir+30*_mirror, 1.0)
+	_tween.tween_property(_bullet, "dir",_bullet.dir+165*_mirror, 0.25)
+	_tween.tween_property(_bullet, "vel",_vel, 1.0)
+	_tween.parallel().tween_property(_bullet, "dir",_bullet.dir+270*_mirror, 3.0)
+	_tween.tween_callback(func(): _bullet.isDestroyed_OutScreen = true)
 #-------------------------------------------------------------------------------
 func Create_EnemyBullets_Disabled(_iMax:int):
 	for _i in _iMax:
@@ -509,6 +528,27 @@ func Create_EnemyBullet(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
 	_bullet.vel = _v
 	#-------------------------------------------------------------------------------
 	return _bullet
+#-------------------------------------------------------------------------------
+func Create_Enemy(_x:float, _y:float, _hp: int) -> Enemy:
+	var _enemy: Enemy
+	#-------------------------------------------------------------------------------
+	if(enemy_Disabled_Array.size() > 0):
+		_enemy = enemy_Disabled_Array[0]
+		_enemy.show()
+		enemy_Disabled_Array.erase(_enemy)
+	#-------------------------------------------------------------------------------
+	else:
+		_enemy = enemy_Prefab.instantiate() as Enemy
+		_enemy.physics_Update = func(): Enemy_PhysicsUpdate(_enemy)
+		content.add_child(_enemy)
+	#-------------------------------------------------------------------------------
+	enemy_Enabled_Array.append(_enemy)
+	#-------------------------------------------------------------------------------
+	_enemy.position = Vector2(_x, _y)
+	_enemy.maxHp = _hp
+	_enemy.hp = _hp
+	#-------------------------------------------------------------------------------
+	return _enemy
 #-------------------------------------------------------------------------------
 func Create_PlayerBullets_Disabled(_iMax:int):
 	for _i in _iMax:
@@ -652,9 +692,8 @@ func Bullet_PhysicsUpdate2(_bullet: Bullet):
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Enemy_PhysicsUpdate(_enemy:Enemy):
-	if(_enemy.hp > 0):
-		KillTween_Array(_enemy.tween_Array)
-		_enemy.queue_free()
+	if(_enemy.hp <= 0):
+		DestroyEnemy(_enemy)
 		return
 	#-------------------------------------------------------------------------------
 	var _dir2: float = deg_to_rad(_enemy.dir)
@@ -662,6 +701,12 @@ func Enemy_PhysicsUpdate(_enemy:Enemy):
 	_enemy.velocity.y = _enemy.vel * sin(_dir2)
 	_enemy.position += _enemy.velocity * deltaTimeScale
 	#_enemy.rotation_degrees = _enemy.dir+90
+#-------------------------------------------------------------------------------
+func DestroyEnemy(_enemy: Enemy):
+	KillTween_Array(_enemy.tween_Array)
+	enemy_Enabled_Array.erase(_enemy)
+	enemy_Disabled_Array.append(_enemy)
+	_enemy.hide()
 #-------------------------------------------------------------------------------
 func DestroyBullet(_bullet: Bullet):
 	KillTween_Array(_bullet.tween_Array)
@@ -728,29 +773,20 @@ func StopEverithing():
 	timerLabel.text = ""
 	timerLabel.hide()
 	#-------------------------------------------------------------------------------
-	main_tween.kill()
-	main_tween.finished.emit()
+	KillTween_Array(main_tween_Array)
+	#-------------------------------------------------------------------------------
+	for _i in range(enemy_Enabled_Array.size()-1, -1, -1):
+		DestroyEnemy(enemy_Enabled_Array[_i])
 	#-------------------------------------------------------------------------------
 	for _i in range(enemyBullets_Enabled_Array.size()-1, -1, -1):
 		DestroyBullet(enemyBullets_Enabled_Array[_i])
 	#-------------------------------------------------------------------------------
-	KillTween_Array(enemy_tween_array)
 #region ARRAY[TWEEN] FUNCTIONS
-func CreateTween_Array(_size: int) ->Array[Tween]:
-	var _tween_Array: Array[Tween]
-	for _i in _size:
-		var _tween: Tween = create_tween()
-		_tween_Array.append(_tween)
-		_tween.finished.connect(func():_tween_Array.erase(_tween))
-	return _tween_Array
-#-------------------------------------------------------------------------------
-func PlayTween_Array(_tween_Array: Array[Tween]):
-	for _i in _tween_Array.size():
-		_tween_Array[_i].play()
-#-------------------------------------------------------------------------------
-func StopTween_Array(_tween_Array: Array[Tween]):
-	for _i in _tween_Array.size():
-		_tween_Array[_i].stop()
+func CreateTween_ArrayAppend(_tween_Array: Array[Tween]) -> Tween:
+	var _tween: Tween = create_tween()
+	_tween_Array.append(_tween)
+	_tween.finished.connect(func():_tween_Array.erase(_tween))
+	return _tween
 #-------------------------------------------------------------------------------
 func KillTween_Array(_tween_Array: Array[Tween]):
 	for _i in range(_tween_Array.size()-1, -1, -1):
