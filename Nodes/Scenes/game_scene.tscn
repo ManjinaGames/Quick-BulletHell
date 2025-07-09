@@ -393,6 +393,7 @@ text = "60s / 60s"
 horizontal_alignment = 1
 
 [node name="Banner" type="PanelContainer" parent="CanvasLayer/Window_MarginContainer"]
+visible = false
 z_index = 30
 layout_mode = 2
 size_flags_vertical = 4
@@ -523,6 +524,7 @@ theme_override_font_sizes/font_size = 30
 text = "Quit"
 
 [node name="Market_Menu" type="Panel" parent="CanvasLayer/Window_MarginContainer" node_paths=PackedStringArray("gameScene", "buyMenu", "scrollContainer", "cardContainer", "description", "confirmCard_Panel", "confirmCard_Artwork", "confirmCard_Hold", "confirmCard_Price", "confirmMenu", "confirmCard_Title", "yesButton", "noButton")]
+visible = false
 z_index = 30
 layout_mode = 2
 script = ExtResource("9_3u2qh")

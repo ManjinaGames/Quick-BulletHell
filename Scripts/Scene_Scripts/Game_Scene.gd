@@ -587,6 +587,7 @@ func Create_PlayerBullet(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
 	_bullet.isGrazed = false
 	_bullet.dir = _dir
 	_bullet.vel = _v
+	_bullet.frame = 7
 	#-------------------------------------------------------------------------------
 	return _bullet
 #-------------------------------------------------------------------------------
@@ -705,7 +706,7 @@ func EnemyBullet_PhysicsUpdate(_bullet: Bullet):
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func EnemyBullet_PhysicsUpdate2(_bullet: Bullet):
-	if(_bullet.position.distance_to(player.position)< 34.0 and !_bullet.isGrazed):
+	if(_bullet.position.distance_to(player.position)< 34.0 and !_bullet.isGrazed and player.myPLAYER_STATE == Player.PLAYER_STATE.ALIVE):
 		Create_Item(_bullet.position.x, _bullet.position.y, -5)
 		_bullet.isGrazed = true
 	#-------------------------------------------------------------------------------
@@ -787,11 +788,83 @@ func Destroy_EnemyBullet(_bullet: Bullet):
 	_bullet.hide()
 #-------------------------------------------------------------------------------
 func Player_Shooted():
-	lifePoints -= 1
-	if(lifePoints < 0):
-		SetInfoText_Death()
-	else:
+	if(player.myPLAYER_STATE == Player.PLAYER_STATE.ALIVE):
+		if(lifePoints > 0):
+			PlayerRespawn()
+		#-------------------------------------------------------------------------------
+		else:
+			PlayerGameOver()
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func PlayerRespawn():
+	var _player_alpha: float = player.sprite.self_modulate.a
+	var _hitBox_alpha: float = player.hitBox_Sprite.self_modulate.a
+	var _grazeBox_alpha: float = player.grazeBox_Sprite.self_modulate.a
+	var _magnetBox_alpha: float = player.magnetBox_Sprite.self_modulate.a
+	#-------------------------------------------------------------------------------
+	var _tween: Tween = create_tween()
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		lifePoints -= 1
 		SetInfoText_Life()
+		PlayerDeath()
+		player.position = Vector2(width*0.5, height*1.2)
+	)
+	#-------------------------------------------------------------------------------
+	_tween.tween_interval(0.5)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		player.show()
+		#-------------------------------------------------------------------------------
+		player.sprite.self_modulate.a = 0.25
+		player.hitBox_Sprite.self_modulate.a = 0.25
+		player.grazeBox_Sprite.self_modulate.a = 0.25
+		player.magnetBox_Sprite.self_modulate.a = 0.25
+	)
+	_tween.tween_property(player, "position", Vector2(width*0.5, height*0.8), 1.5)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		player.myPLAYER_STATE = Player.PLAYER_STATE.INVINCIBLE
+		player.magnetBox_Sprite.self_modulate.a = _magnetBox_alpha
+	)
+	#-------------------------------------------------------------------------------
+	_tween.tween_interval(2.0)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		player.sprite.self_modulate.a = _player_alpha
+		player.hitBox_Sprite.self_modulate.a = _hitBox_alpha
+		player.grazeBox_Sprite.self_modulate.a = _grazeBox_alpha
+		#-------------------------------------------------------------------------------
+		player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
+	)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func PlayerGameOver() -> void:
+	var _tween: Tween = create_tween()
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		myGAME_STATE = GAME_STATE.IN_GAMEOVER
+		SetInfoText_Death()
+		PlayerDeath()
+	)
+	#-------------------------------------------------------------------------------
+	_tween.tween_interval(2.0)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		StopTime()
+		gameoverMenu.show()
+		singleton.MoveToButton(gameoverMenu.retry)
+	)
+#-------------------------------------------------------------------------------
+func PlayerDeath() -> void:
+	player.myPLAYER_STATE = Player.PLAYER_STATE.DEATH
+	player.hide()
+	#-------------------------------------------------------------------------------
+	for _i in range(items_Enabled_Array.size()-1,-1,-1):
+		if(items_Enabled_Array[_i].myITEM_STATE == Item.ITEM_STATE.IMANTED):
+			items_Enabled_Array[_i].velocity.y = -4
+			items_Enabled_Array[_i].myITEM_STATE = Item.ITEM_STATE.SPIN
 #-------------------------------------------------------------------------------
 func DestroyItem(_item:Item) -> void:
 	items_Enabled_Array.erase(_item)
