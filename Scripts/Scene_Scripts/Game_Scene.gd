@@ -80,7 +80,9 @@ var deltaTimeScale: float = 1
 #-------------------------------------------------------------------------------
 var timer_tween: Tween
 var main_tween_Array: Array[Tween]
-var player_tween_Array: Array[Tween]
+#-------------------------------------------------------------------------------
+var player_invincible_counter: int = 0
+var player_shoot_counter: float = 0
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
@@ -97,6 +99,7 @@ func _ready():
 	singleton.PlayBGM(singleton.bgmStage1)
 	get_tree().set_deferred("paused", false)
 	currentLayer.show()
+	#-------------------------------------------------------------------------------
 	await BeginGame()
 #-------------------------------------------------------------------------------
 func _physics_process(_delta:float) -> void:
@@ -116,30 +119,42 @@ func _physics_process(_delta:float) -> void:
 	for _i in range(items_Enabled_Array.size()-1,-1,-1):
 		items_Enabled_Array[_i].physics_Update.call()
 	#-------------------------------------------------------------------------------
-	Player_StateMachine()
+	Game_StateMachine()
 #endregion
 #-------------------------------------------------------------------------------
 #region PLAYER FUNCTIONS
-func Player_StateMachine():
+func Game_StateMachine():
 	match(myGAME_STATE):
 		GAME_STATE.IN_GAMEPLAY:
-			PlayerMovement()
+			PlayerShoot()
+			Player_StateMachine()
 			PauseGame()
 			return
 		#-------------------------------------------------------------------------------
 		GAME_STATE.IN_CUTIN:
-			PlayerMovement()
+			PlayerShoot()
+			Player_StateMachine()
 			PauseGame()
 			return
 		#-------------------------------------------------------------------------------
 		GAME_STATE.IN_MARKET:
-			pass
+			match(player.myPLAYER_STATE):
+				Player.PLAYER_STATE.ALIVE:
+					pass
+				#-------------------------------------------------------------------------------
+				Player.PLAYER_STATE.DEATH:
+					Player_StateMachine_Death()
+				#-------------------------------------------------------------------------------
+				Player.PLAYER_STATE.INVINCIBLE:
+					Player_StateMachine_Invincible()
+				#-------------------------------------------------------------------------------
+			#-------------------------------------------------------------------------------
 		#-------------------------------------------------------------------------------
 		GAME_STATE.IN_OPTION_MENU:
 			pass
 		#-------------------------------------------------------------------------------
 		GAME_STATE.IN_DIALOGUE:
-			PlayerMovement()
+			Player_StateMachine()
 			if(Input.is_action_just_pressed("input_Shoot")):
 				dialogueMenu.isNextPress = true
 		#-------------------------------------------------------------------------------
@@ -148,7 +163,52 @@ func Player_StateMachine():
 		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-func PlayerMovement() -> void:
+func Player_StateMachine():
+	match(player.myPLAYER_STATE):
+		Player.PLAYER_STATE.ALIVE:
+			Player_Movement()
+		#-------------------------------------------------------------------------------
+		Player.PLAYER_STATE.DEATH:
+			Player_StateMachine_Death()
+			Player_Movement()
+		#-------------------------------------------------------------------------------
+		Player.PLAYER_STATE.INVINCIBLE:
+			Player_StateMachine_Invincible()
+			Player_Movement()
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Player_StateMachine_Death():
+	player_invincible_counter += 1
+	#-------------------------------------------------------------------------------
+	if(player_invincible_counter == 2):
+		player.sprite.hide()
+		player.magnetBox_Sprite.hide()
+		player.grazeBox_Sprite.hide()
+		player.hitBox_Sprite.hide()
+	#-------------------------------------------------------------------------------
+	elif(player_invincible_counter > 4):
+		player.sprite.show()
+		player.magnetBox_Sprite.show()
+		player.grazeBox_Sprite.show()
+		player.hitBox_Sprite.show()
+		player_invincible_counter = 0
+#-------------------------------------------------------------------------------
+func Player_StateMachine_Invincible():
+	player_invincible_counter += 1
+	#-------------------------------------------------------------------------------
+	if(player_invincible_counter == 2):
+		player.sprite.hide()
+		player.grazeBox_Sprite.hide()
+		player.hitBox_Sprite.hide()
+	#-------------------------------------------------------------------------------
+	elif(player_invincible_counter > 4):
+		player.sprite.show()
+		player.grazeBox_Sprite.show()
+		player.hitBox_Sprite.show()
+		player_invincible_counter = 0
+#-------------------------------------------------------------------------------
+func Player_Movement() -> void:
 	if(player.myPLAYER_STATE == Player.PLAYER_STATE.DEATH):
 		return
 	#-------------------------------------------------------------------------------
@@ -442,19 +502,16 @@ func OpenMarket():
 #-------------------------------------------------------------------------------
 func Enter_GameState_InGameplay():
 	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
-	PlayerShoot()
 #-------------------------------------------------------------------------------
 func PlayerShoot():
-	var _tween: Tween = CreateTween_ArrayAppend(player_tween_Array)
-	_tween.set_loops()
-	#-------------------------------------------------------------------------------
-	_tween.tween_callback(func():
-		if(Input.is_action_pressed("input_Shoot")):
+	if(Input.is_action_pressed("input_Shoot")):
+		player_shoot_counter += deltaTimeScale
+		#-------------------------------------------------------------------------------
+		if(player_shoot_counter > 5.0):
+			player_shoot_counter = 0.0
 			Create_PlayerBullet(player.position.x, player.position.y-50, 18.0, -90.0)
 		#-------------------------------------------------------------------------------
-	)
 	#-------------------------------------------------------------------------------
-	_tween.tween_interval(0.1)
 #-------------------------------------------------------------------------------
 func Create_SpellCard():
 	var _enemy: Enemy = Create_Enemy(width*0.1, width*0.1, 100)
@@ -493,7 +550,11 @@ func Create_SpellCard_Tween(_enemy:Enemy, _tween:Tween, _mirror: float):
 	_tween.tween_interval(4.0)
 #-------------------------------------------------------------------------------
 func Create_SpellCard_bullet(_enemy:Enemy, _dir:float, _max1:float, _vel:float, _mirror: float):
-	var _bullet: Bullet = Create_EnemyBullet(_enemy.position.x, _enemy.position.y, 4.0, _dir)
+	var _dir2: float = deg_to_rad(_dir)
+	var _x: float = _enemy.position.x + 48 * cos(_dir2)
+	var _y: float = _enemy.position.y + 48 * sin(_dir2)
+	#-------------------------------------------------------------------------------
+	var _bullet: Bullet = Create_EnemyBullet(_x, _y, 4.0, _dir)
 	_bullet.isDestroyed_OutScreen = false
 	_dir += 360/_max1
 	#-------------------------------------------------------------------------------
@@ -764,8 +825,8 @@ func Destroy_PlayerBullet(_bullet: Bullet):
 #-------------------------------------------------------------------------------
 func Enemy_PhysicsUpdate(_enemy:Enemy):
 	if(_enemy.hp <= 0):
-		Destroy_Enemy(_enemy)
-		Boss_InstantDeath()		#NOTA IMPORTANTE: Esta funcion hace que toda la fase de combate Termine antes del TimeOut
+		Boss_InstantDeath()		#NOTA IMPORTANTE: Esta funcion hace que toda la fase de combate Termine antes del TimeOut Y elimina todas las balas y enemigos
+		#Destroy_Enemy(_enemy)	#NOTA IMPORTANTE: Esta funcion solo elimina al enemigo
 		Create_Items(_enemy.position.x, _enemy.position.y, 50, 50, -3)
 		return
 	#-------------------------------------------------------------------------------
@@ -798,10 +859,6 @@ func Player_Shooted():
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func PlayerRespawn():
-	var _player_alpha: float = player.sprite.self_modulate.a
-	var _hitBox_alpha: float = player.hitBox_Sprite.self_modulate.a
-	var _grazeBox_alpha: float = player.grazeBox_Sprite.self_modulate.a
-	var _magnetBox_alpha: float = player.magnetBox_Sprite.self_modulate.a
 	#-------------------------------------------------------------------------------
 	var _tween: Tween = create_tween()
 	#-------------------------------------------------------------------------------
@@ -812,31 +869,25 @@ func PlayerRespawn():
 		player.position = Vector2(width*0.5, height*1.2)
 	)
 	#-------------------------------------------------------------------------------
-	_tween.tween_interval(0.5)
+	_tween.tween_interval(0.25)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
 		player.show()
-		#-------------------------------------------------------------------------------
-		player.sprite.self_modulate.a = 0.25
-		player.hitBox_Sprite.self_modulate.a = 0.25
-		player.grazeBox_Sprite.self_modulate.a = 0.25
-		player.magnetBox_Sprite.self_modulate.a = 0.25
 	)
-	_tween.tween_property(player, "position", Vector2(width*0.5, height*0.8), 1.5)
+	_tween.tween_property(player, "position", Vector2(width*0.5, height*0.8), 1.0)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
 		player.myPLAYER_STATE = Player.PLAYER_STATE.INVINCIBLE
-		player.magnetBox_Sprite.self_modulate.a = _magnetBox_alpha
+		player.magnetBox_Sprite.show()
 	)
 	#-------------------------------------------------------------------------------
 	_tween.tween_interval(2.0)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
-		player.sprite.self_modulate.a = _player_alpha
-		player.hitBox_Sprite.self_modulate.a = _hitBox_alpha
-		player.grazeBox_Sprite.self_modulate.a = _grazeBox_alpha
-		#-------------------------------------------------------------------------------
 		player.myPLAYER_STATE = Player.PLAYER_STATE.ALIVE
+		player.sprite.show()
+		player.grazeBox_Sprite.show()
+		player.hitBox_Sprite.show()
 	)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -918,7 +969,6 @@ func StopEverithing():
 	timerLabel.hide()
 	#-------------------------------------------------------------------------------
 	KillTween_Array(main_tween_Array)
-	KillTween_Array(player_tween_Array)
 	#-------------------------------------------------------------------------------
 	for _i in range(enemy_Enabled_Array.size()-1, -1, -1):
 		Destroy_Enemy(enemy_Enabled_Array[_i])
