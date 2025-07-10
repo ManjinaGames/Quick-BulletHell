@@ -6,7 +6,6 @@ var singleton: Singleton
 @export var titleMenu: Title_Menu
 @export var saveMenu: Save_Menu
 @export var saveMenu2: Save_Menu2
-#-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
 #region STATE MACHINE

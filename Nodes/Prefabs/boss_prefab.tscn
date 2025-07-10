@@ -1,16 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://c3ym6uahxyv5x"]
+[gd_scene load_steps=4 format=3 uid="uid://d04ils16lapv4"]
 
-[ext_resource type="Script" uid="uid://cb6frkhllxl6i" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Enemy_Script.gd" id="1_30lj2"]
-[ext_resource type="Texture2D" uid="uid://cycuo84xkdqc6" path="res://Assets/Sprites/Enemy.png" id="1_x48a8"]
-[ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="3_b7mhl"]
+[ext_resource type="Script" uid="uid://cfrrth5qp1vek" path="res://Scripts/Scene_Scripts/Game_Scene/Prefabs_Scripts/Boss_Script.gd" id="1_5s01m"]
+[ext_resource type="Texture2D" uid="uid://cycuo84xkdqc6" path="res://Assets/Sprites/Enemy.png" id="2_p3cr7"]
+[ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="3_56bkc"]
 
-[node name="Enemy" type="Node2D" node_paths=PackedStringArray("label")]
-script = ExtResource("1_30lj2")
+[node name="boss_prefab" type="Node2D" node_paths=PackedStringArray("label")]
+script = ExtResource("1_5s01m")
 label = NodePath("Label")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(2.5, 2.5)
-texture = ExtResource("1_x48a8")
+texture = ExtResource("2_p3cr7")
 hframes = 12
 
 [node name="Label" type="Label" parent="."]
@@ -20,14 +20,12 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -34.0
+offset_left = -46.0
 offset_top = -58.0
-offset_right = 34.0
-offset_bottom = -38.0
+offset_right = 46.0
+offset_bottom = -35.0
 grow_horizontal = 2
 grow_vertical = 0
-size_flags_horizontal = 4
-size_flags_vertical = 8
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 14
 text = "100 / 100 HP"
@@ -43,5 +41,5 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_b7mhl")
+texture = ExtResource("3_56bkc")
 expand_mode = 1

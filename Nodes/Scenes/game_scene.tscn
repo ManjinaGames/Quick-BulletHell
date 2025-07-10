@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=22 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" uid="uid://b471unj5j3evn" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
 [ext_resource type="PackedScene" uid="uid://cspvg8uimw0jt" path="res://Nodes/Prefabs/bullet_prefab.tscn" id="3_5om1x"]
+[ext_resource type="PackedScene" uid="uid://d04ils16lapv4" path="res://Nodes/Prefabs/boss_prefab.tscn" id="3_xrh8u"]
 [ext_resource type="PackedScene" uid="uid://b2r2t7rrfwiys" path="res://Nodes/Prefabs/item_prefab.tscn" id="4_7dwg7"]
 [ext_resource type="Texture2D" uid="uid://cqyeeer0mksgx" path="res://Assets/Sprites/Magnet.png" id="5_0qyn6"]
 [ext_resource type="Texture2D" uid="uid://dfxnixm6kp712" path="res://Assets/Images/Background_TitleMenu.jpg" id="6_hxoxt"]
@@ -48,6 +49,7 @@ timerLabel = NodePath("CanvasLayer/Window_MarginContainer/Timer_Label")
 content = NodePath("CanvasLayer/Window_MarginContainer/Content")
 player = NodePath("CanvasLayer/Window_MarginContainer/Content/Player")
 enemy_Prefab = ExtResource("2_acyb6")
+boss_Prefab = ExtResource("3_xrh8u")
 bullet_Prefab = ExtResource("3_5om1x")
 item_Prefab = ExtResource("4_7dwg7")
 difficultyLabel = NodePath("CanvasLayer/LeftUI_MarginContainer/LeftUI_VBoxContainer/Label")
