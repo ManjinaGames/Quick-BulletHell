@@ -179,7 +179,6 @@ func Player_StateMachine():
 		#-------------------------------------------------------------------------------
 		Player.PLAYER_STATE.DEATH:
 			Player_StateMachine_Death()
-			Player_Movement()
 		#-------------------------------------------------------------------------------
 		Player.PLAYER_STATE.INVINCIBLE:
 			Player_StateMachine_Invincible()
@@ -948,7 +947,7 @@ func PlayerRespawn():
 		player.position = Vector2(width*0.5, height*1.2)
 	)
 	#-------------------------------------------------------------------------------
-	_tween.tween_interval(0.25)
+	#_tween.tween_interval(0.1)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
 		player.show()
