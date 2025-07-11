@@ -85,7 +85,8 @@ var deltaTimeScale: float = 1
 var timer_tween: Tween
 var main_tween_Array: Array[Tween]
 #-------------------------------------------------------------------------------
-var player_invincible_counter: int = 0
+var player_invincible_counter: float = 0
+var player_invincible_bool: bool
 var player_shoot_counter: float = 0
 #endregion
 #-------------------------------------------------------------------------------
@@ -187,34 +188,44 @@ func Player_StateMachine():
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Player_StateMachine_Death():
-	player_invincible_counter += 1
+	player_invincible_counter += deltaTimeScale
 	#-------------------------------------------------------------------------------
-	if(player_invincible_counter == 2):
-		player.sprite.hide()
-		player.magnetBox_Sprite.hide()
-		player.grazeBox_Sprite.hide()
-		player.hitBox_Sprite.hide()
+	if(player_invincible_counter > 2.0):
+		if(player_invincible_bool):
+			player.sprite.hide()
+			player.magnetBox_Sprite.hide()
+			player.grazeBox_Sprite.hide()
+			player.hitBox_Sprite.hide()
+			player_invincible_bool = false
+		#-------------------------------------------------------------------------------
+		else:
+			player.sprite.show()
+			player.magnetBox_Sprite.show()
+			player.grazeBox_Sprite.show()
+			player.hitBox_Sprite.show()
+			player_invincible_bool = true
+		#-------------------------------------------------------------------------------
+		player_invincible_counter = 0.0
 	#-------------------------------------------------------------------------------
-	elif(player_invincible_counter > 4):
-		player.sprite.show()
-		player.magnetBox_Sprite.show()
-		player.grazeBox_Sprite.show()
-		player.hitBox_Sprite.show()
-		player_invincible_counter = 0
 #-------------------------------------------------------------------------------
 func Player_StateMachine_Invincible():
-	player_invincible_counter += 1
+	player_invincible_counter += deltaTimeScale
 	#-------------------------------------------------------------------------------
-	if(player_invincible_counter == 2):
-		player.sprite.hide()
-		player.grazeBox_Sprite.hide()
-		player.hitBox_Sprite.hide()
+	if(player_invincible_counter > 2.0):
+		if(player_invincible_bool):
+			player.sprite.hide()
+			player.grazeBox_Sprite.hide()
+			player.hitBox_Sprite.hide()
+			player_invincible_bool = false
+		#-------------------------------------------------------------------------------
+		else:
+			player.sprite.show()
+			player.grazeBox_Sprite.show()
+			player.hitBox_Sprite.show()
+			player_invincible_bool = true
+		#-------------------------------------------------------------------------------
+		player_invincible_counter = 0.0
 	#-------------------------------------------------------------------------------
-	elif(player_invincible_counter > 4):
-		player.sprite.show()
-		player.grazeBox_Sprite.show()
-		player.hitBox_Sprite.show()
-		player_invincible_counter = 0
 #-------------------------------------------------------------------------------
 func Player_Movement() -> void:
 	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
