@@ -4,6 +4,7 @@ class_name Bullet
 var velocity: Vector2
 var dir: float
 var vel: float
+var radius: float = 2
 #-------------------------------------------------------------------------------
 var isGrazed: bool = false
 var isDestroyed_OutScreen: bool = true

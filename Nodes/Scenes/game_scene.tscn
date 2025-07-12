@@ -381,7 +381,7 @@ scale = Vector2(2.5, 2.5)
 texture = ExtResource("13_6lohc")
 
 [node name="Marker2D" type="Marker2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
-position = Vector2(6, 0)
+position = Vector2(96, 0)
 gizmo_extents = 50.0
 
 [node name="Timer_Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]

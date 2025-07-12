@@ -6,6 +6,7 @@ class_name Enemy
 var velocity: Vector2 = Vector2.ZERO
 var dir: float = 0
 var vel: float = 0
+var radius: float = 24
 #-------------------------------------------------------------------------------
 var hp: int
 var maxHp: int

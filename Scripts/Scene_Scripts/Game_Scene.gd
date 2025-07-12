@@ -88,6 +88,10 @@ var main_tween_Array: Array[Tween]
 var player_invincible_counter: float = 0
 var player_invincible_bool: bool
 var player_shoot_counter: float = 0
+#-------------------------------------------------------------------------------
+var hitBox_radius: float = 8.0
+var grazeBox_radius: float = 34.0
+var magnetBox_radius: float = 98.0
 #endregion
 #-------------------------------------------------------------------------------
 #region MONOVEHAVIOUR
@@ -478,6 +482,8 @@ func Choreography():
 func Stage1():
 	await EnemyWave_and_Market(func():Stage1_EnemyWave1(), 10)
 	await EnemyWave_and_Market(func():InfiniteEnemyTest(), 10)
+	var _boss: Boss = Create_Boss(0,0, 100)
+	await EnemyWave_and_Market(func():Create_SpellCard(_boss), 10)
 	await StageCommon("Stage 1 Completed",1,0)
 #-------------------------------------------------------------------------------
 func EnemyWave_and_Market(_callable:Callable, _timer: int):
@@ -585,6 +591,7 @@ func Stage1_EnemyWave1_Tween(_tween:Tween, _mirror: float):
 			_tween.tween_callback(func():
 				Stage1_EnemyWave1_Enemy1(_x, _y, _mirror)
 			)
+		#-------------------------------------------------------------------------------
 		_tween.tween_interval(0.8)
 		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
@@ -620,7 +627,21 @@ func Stage1_EnemyWave1_Enemy1_Fire1(_tween:Tween, _node2D: Node2D):
 			var _y:float = _node2D.position.y
 			Create_EnemyBullet(_x, _y, 6, _dir)
 		)
+		#-------------------------------------------------------------------------------
 		_tween.tween_interval(0.1)
+#-------------------------------------------------------------------------------
+func Create_SpellCard(_boss: Boss):
+	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
+	_tween.tween_property(_boss, "position", Vector2(width*0.5, height*0.2), 1.0)
+	_tween.tween_interval(0.5)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		var _tween2: Tween = CreateTween_ArrayAppend(main_tween_Array)
+		_tween2.set_loops()
+		Create_SpellCard_Tween(_boss, _tween2, 1)
+		Create_SpellCard_Tween(_boss, _tween2, -1)
+	)
+	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Create_SpellCard_Tween(_node2d:Node2D, _tween:Tween, _mirror: float):
 	var _dir: float
@@ -754,6 +775,8 @@ func Create_Boss(_x:float, _y:float, _hp: int) -> Boss:
 	_boss.position = Vector2(_x, _y)
 	_boss.maxHp = _hp
 	_boss.hp = _hp
+	_boss.vel = 0
+	_boss.dir = 90
 	Set_BossLife_Label(_boss)
 	#-------------------------------------------------------------------------------
 	return _boss
@@ -852,7 +875,7 @@ func Items_PhysicsUpdate(_item:Item):
 				#-------------------------------------------------------------------------------
 				_item.position.y += _item.velocity.y * deltaTimeScale
 				#-------------------------------------------------------------------------------
-				if(_item.position.distance_to(player.position)< 98.0 and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
+				if(_item.position.distance_to(player.position)< magnetBox_radius and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
 					_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
 					return
 				#-------------------------------------------------------------------------------
@@ -905,21 +928,21 @@ func EnemyBullet_PhysicsUpdate(_bullet: Bullet):
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func EnemyBullet_PhysicsUpdate2(_bullet: Bullet):
-	if(_bullet.position.distance_to(player.position)< 34.0 and !_bullet.isGrazed and player.myPLAYER_STATE == Player.PLAYER_STATE.ALIVE):
+	if(_bullet.position.distance_to(player.position)< grazeBox_radius and !_bullet.isGrazed and player.myPLAYER_STATE == Player.PLAYER_STATE.ALIVE):
 		Create_Item(_bullet.position.x, _bullet.position.y, -5)
 		_bullet.isGrazed = true
 	#-------------------------------------------------------------------------------
-	if(_bullet.position.distance_to(player.position)> 10.0):
+	if(_bullet.position.distance_to(player.position) < hitBox_radius+_bullet.radius and player.canBeHit):
+		Player_Shooted()
+		Destroy_EnemyBullet(_bullet)
+		return
+	#-------------------------------------------------------------------------------
+	else:
 		var _dir2: float = deg_to_rad(_bullet.dir)
 		_bullet.velocity.x = _bullet.vel * cos(_dir2)
 		_bullet.velocity.y = _bullet.vel * sin(_dir2)
 		_bullet.position += _bullet.velocity * deltaTimeScale
 		_bullet.rotation_degrees = _bullet.dir+90
-		return
-	#-------------------------------------------------------------------------------
-	else:
-		Player_Shooted()
-		Destroy_EnemyBullet(_bullet)
 		return
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
@@ -980,6 +1003,9 @@ func Enemy_PhysicsUpdate(_enemy:Enemy):
 		Create_Items(_enemy.position.x, _enemy.position.y, 50, 50, -3)
 		return
 	#-------------------------------------------------------------------------------
+	if(_enemy.position.distance_to(player.position) < hitBox_radius+_enemy.radius):
+		Player_Shooted()
+	#-------------------------------------------------------------------------------
 	var _dir2: float = deg_to_rad(_enemy.dir)
 	_enemy.velocity.x = _enemy.vel * cos(_dir2)
 	_enemy.velocity.y = _enemy.vel * sin(_dir2)
@@ -992,6 +1018,9 @@ func Boss_PhysicsUpdate(_boss:Boss):
 		Boss_InstantDeath()
 		Create_Items(_boss.position.x, _boss.position.y, 50, 50, -3)
 		return
+	#-------------------------------------------------------------------------------
+	if(_boss.position.distance_to(player.position) < hitBox_radius+_boss.radius):
+		Player_Shooted()
 	#-------------------------------------------------------------------------------
 	var _dir2: float = deg_to_rad(_boss.dir)
 	_boss.velocity.x = _boss.vel * cos(_dir2)
@@ -1019,6 +1048,7 @@ func Destroy_EnemyBullet(_bullet: Bullet):
 	_bullet.hide()
 #-------------------------------------------------------------------------------
 func Player_Shooted():
+	player.canBeHit = false
 	if(player.myPLAYER_STATE == Player.PLAYER_STATE.ALIVE):
 		if(lifePoints > 0):
 			PlayerRespawn()
@@ -1058,11 +1088,14 @@ func PlayerRespawn():
 		player.sprite.show()
 		player.grazeBox_Sprite.show()
 		player.hitBox_Sprite.show()
+		player.canBeHit = true
 	)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func PlayerGameOver() -> void:
 	var _tween: Tween = create_tween()
+	#-------------------------------------------------------------------------------
+	timer_tween.pause()
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
 		myGAME_STATE = GAME_STATE.IN_GAMEOVER
