@@ -13,5 +13,9 @@ var canBeHit: bool = true
 #-------------------------------------------------------------------------------
 var physics_Update: Callable = func(): pass
 var tween_Array: Array[Tween] = []
+signal death_signal
 #endregion
+#-------------------------------------------------------------------------------
+func Death_Signal():
+	death_signal.emit()
 #-------------------------------------------------------------------------------

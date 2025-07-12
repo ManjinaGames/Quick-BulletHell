@@ -379,7 +379,7 @@ func BeginGame() -> void:
 	cardInventory = {}
 	#-------------------------------------------------------------------------------
 	Create_Boss_Disabled(1)
-	Create_Enemy_Disabled(50)
+	Create_Enemy_Disabled(1)
 	Create_EnemyBullets_Disabled(2400)
 	Create_Items_Disabled(1000)
 	Create_PlayerBullets_Disabled(50)
@@ -476,14 +476,14 @@ func Choreography():
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Stage1():
-	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
-	#-------------------------------------------------------------------------------
-	_tween.tween_interval(3.0)
-	_tween.tween_callback(func(): Create_SpellCard())
-	#-------------------------------------------------------------------------------
-	await TimeOut_Tween(20)
-	await Nothing_and_Market()
+	await EnemyWave_and_Market(func():Stage1_EnemyWave1(), 10)
+	await EnemyWave_and_Market(func():InfiniteEnemyTest(), 10)
 	await StageCommon("Stage 1 Completed",1,0)
+#-------------------------------------------------------------------------------
+func EnemyWave_and_Market(_callable:Callable, _timer: int):
+	_callable.call()
+	await TimeOut_Tween(_timer)
+	await Nothing_and_Market()
 #-------------------------------------------------------------------------------
 func Stage2():
 	await StageCommon("Stage 2 Completed",2,1)
@@ -532,19 +532,95 @@ func PlayerShoot():
 		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-func Create_SpellCard():
-	var _enemy: Enemy = Create_Enemy(width*0.1, width*0.1, 100)
-	var _tween: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
-	_tween.tween_property(_enemy, "position",Vector2(width*0.5, height*0.2), 0.5)
+func InfiniteEnemyTest():
+	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
 	_tween.tween_interval(0.5)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
-		var _tween2: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
+		var _tween2: Tween = CreateTween_ArrayAppend(main_tween_Array)
 		_tween2.set_loops()
-		Create_SpellCard_Tween(_enemy, _tween2, 1)
-		Create_SpellCard_Tween(_enemy, _tween2, -1)
+		InfiniteEnemyTest_Tween(_tween2, 1)
+		InfiniteEnemyTest_Tween(_tween2, -1)
+	)
+#-------------------------------------------------------------------------------
+func InfiniteEnemyTest_Tween(_tween:Tween, _mirror:float):
+	_tween.tween_callback(func():
+		InfiniteEnemyTest_Enemy(_tween, _mirror)
+		_tween.pause()
+	)
+#-------------------------------------------------------------------------------
+func InfiniteEnemyTest_Enemy(_tween:Tween, _mirror:float):
+	var _x: float = width*0.5+width*0.25*_mirror
+	var _enemy: Enemy = Create_Enemy(_x, 0, 10)
+	#-------------------------------------------------------------------------------
+	_enemy.death_signal.connect(
+		func(): _tween.play()
 	)
 	#-------------------------------------------------------------------------------
+	var _tween2: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
+	_tween2.tween_property(_enemy, "position", Vector2(_x, height*0.7), 1.0)
+#-------------------------------------------------------------------------------
+func Stage1_EnemyWave1():
+	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
+	_tween.tween_interval(0.5)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		Stage1_EnemyWave1_Loop1()
+	)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Stage1_EnemyWave1_Loop1():
+	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
+	_tween.set_loops()
+	Stage1_EnemyWave1_Tween(_tween, 1)
+	_tween.tween_interval(1)
+	Stage1_EnemyWave1_Tween(_tween, -1)
+	_tween.tween_interval(1)
+#-------------------------------------------------------------------------------
+func Stage1_EnemyWave1_Tween(_tween:Tween, _mirror: float):
+	for _i in 8:
+		for _j in 1:
+			var _x: float = width * 0.5 - width*(0.6 + 0.1 * _j) *_mirror
+			var _y: float = -height * (0.2 - 0.1 * _j)
+			_tween.tween_callback(func():
+				Stage1_EnemyWave1_Enemy1(_x, _y, _mirror)
+			)
+		_tween.tween_interval(0.8)
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Stage1_EnemyWave1_Enemy1(_x:float, _y:float, _mirror:float):
+	var _enemy: Enemy = Create_Enemy(_x, _y, 10)
+	var _tween: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
+	#-------------------------------------------------------------------------------
+	_tween.tween_property(_enemy,"dir",90-20*_mirror, 0.1)
+	_tween.parallel().tween_property(_enemy,"vel",4.0, 0.1)
+	_tween.tween_interval(1)
+	_tween.tween_property(_enemy,"vel",1.0, 1.0)
+	_tween.parallel().tween_property(_enemy,"dir",90-90*_mirror, 2.0)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		var _tween2: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
+		Stage1_EnemyWave1_Enemy1_Fire1(_tween2, _enemy)
+	)
+	#-------------------------------------------------------------------------------
+	_tween.tween_property(_enemy,"vel",4.0, 1.0)
+	_tween.tween_interval(2.0)
+	#-------------------------------------------------------------------------------
+	_tween.tween_callback(func():
+		Destroy_Enemy(_enemy)
+	)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Stage1_EnemyWave1_Enemy1_Fire1(_tween:Tween, _node2D: Node2D):
+	for _i in 10:
+		_tween.tween_callback(func():
+			var _dir: float = AngleToPlayer(_node2D)
+			var _x:float = _node2D.position.x
+			var _y:float = _node2D.position.y
+			Create_EnemyBullet(_x, _y, 6, _dir)
+		)
+		_tween.tween_interval(0.1)
 #-------------------------------------------------------------------------------
 func Create_SpellCard_Tween(_node2d:Node2D, _tween:Tween, _mirror: float):
 	var _dir: float
@@ -637,6 +713,7 @@ func Create_Enemy(_x:float, _y:float, _hp: int) -> Enemy:
 	else:
 		_enemy = enemy_Prefab.instantiate() as Enemy
 		_enemy.physics_Update = func(): Enemy_PhysicsUpdate(_enemy)
+		singleton.DisconnectAll(_enemy.death_signal)
 		content.add_child(_enemy)
 	#-------------------------------------------------------------------------------
 	enemy_Enabled_Array.append(_enemy)
@@ -644,6 +721,8 @@ func Create_Enemy(_x:float, _y:float, _hp: int) -> Enemy:
 	_enemy.position = Vector2(_x, _y)
 	_enemy.maxHp = _hp
 	_enemy.hp = _hp
+	_enemy.vel = 0
+	_enemy.dir = 90
 	Set_EnemyLife_Label(_enemy)
 	#-------------------------------------------------------------------------------
 	return _enemy
@@ -896,6 +975,7 @@ func Destroy_PlayerBullet(_bullet: Bullet):
 #-------------------------------------------------------------------------------
 func Enemy_PhysicsUpdate(_enemy:Enemy):
 	if(_enemy.hp <= 0):
+		_enemy.death_signal.emit()
 		Destroy_Enemy(_enemy)
 		Create_Items(_enemy.position.x, _enemy.position.y, 50, 50, -3)
 		return
@@ -929,6 +1009,7 @@ func Destroy_Enemy(_enemy: Enemy):
 	KillTween_Array(_enemy.tween_Array)
 	enemy_Enabled_Array.erase(_enemy)
 	enemy_Disabled_Array.append(_enemy)
+	singleton.DisconnectAll(_enemy.death_signal)
 	_enemy.hide()
 #-------------------------------------------------------------------------------
 func Destroy_EnemyBullet(_bullet: Bullet):
@@ -1068,6 +1149,18 @@ func StopEverithing():
 	for _i in range(enemyBullets_Enabled_Array.size()-1, -1, -1):
 		Destroy_EnemyBullet(enemyBullets_Enabled_Array[_i])
 	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func AngleToPlayer(_obj: Node2D) -> float:
+	var _f: float = rad_to_deg(atan2(player.position.y-_obj.position.y, player.position.x-_obj.position.x))
+	return _f
+#-------------------------------------------------------------------------------
+func GetAngleFromTo(_obj1: Node2D, _obj2: Node2D) -> float:
+	var _f: float = rad_to_deg(atan2(_obj2.position.y-_obj1.position.y, _obj2.position.x-_obj1.position.x))
+	return _f
+#-------------------------------------------------------------------------------
+func GetAngleXY(_dx: float, _dy: float) -> float:
+	var _f: float = rad_to_deg(atan2(_dy, _dx))
+	return _f
 #region ARRAY[TWEEN] FUNCTIONS
 func CreateTween_ArrayAppend(_tween_Array: Array[Tween]) -> Tween:
 	var _tween: Tween = create_tween()
