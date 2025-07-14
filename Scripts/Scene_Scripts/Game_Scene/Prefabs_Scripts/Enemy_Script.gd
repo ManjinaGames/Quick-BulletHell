@@ -2,6 +2,7 @@ extends Node2D
 class_name Enemy
 #region VARIABLES
 @export var label: Label
+@export var animationTree: AnimationTree
 #-------------------------------------------------------------------------------
 var velocity: Vector2 = Vector2.ZERO
 var dir: float = 0

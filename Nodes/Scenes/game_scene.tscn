@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://qpw70cvfh5bf"]
+[gd_scene load_steps=26 format=3 uid="uid://qpw70cvfh5bf"]
 
 [ext_resource type="Script" uid="uid://b471unj5j3evn" path="res://Scripts/Scene_Scripts/Game_Scene.gd" id="1_143dr"]
 [ext_resource type="PackedScene" uid="uid://c3ym6uahxyv5x" path="res://Nodes/Prefabs/enemy_prefab.tscn" id="2_acyb6"]
@@ -25,6 +25,48 @@ color = Color(1, 1, 1, 1)
 grow_begin = -25.0
 grow_end = -25.0
 thickness = 3
+
+[sub_resource type="Animation" id="Animation_xrh8u"]
+resource_name = "Idle"
+length = 0.70001
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 4, 5, 6, 7]
+}
+
+[sub_resource type="Animation" id="Animation_ik87f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hxoxt"]
+_data = {
+&"Idle": SubResource("Animation_xrh8u"),
+&"RESET": SubResource("Animation_ik87f")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_igypo"]
+animation = &"Idle"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xrh8u"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -364,9 +406,9 @@ scale = Vector2(0.75, 0.75)
 texture = ExtResource("5_0qyn6")
 
 [node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
-position = Vector2(-2, -3.5)
 scale = Vector2(2.5, 2.5)
 texture = ExtResource("10_v4ix3")
+offset = Vector2(-1.2, 0.400009)
 hframes = 8
 vframes = 3
 
@@ -383,6 +425,15 @@ texture = ExtResource("13_6lohc")
 [node name="Marker2D" type="Marker2D" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
 position = Vector2(96, 0)
 gizmo_extents = 50.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
+libraries = {
+&"": SubResource("AnimationLibrary_hxoxt")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="CanvasLayer/Window_MarginContainer/Content/Player"]
+tree_root = SubResource("AnimationNodeAnimation_igypo")
+anim_player = NodePath("../AnimationPlayer")
 
 [node name="Timer_Label" type="Label" parent="CanvasLayer/Window_MarginContainer"]
 z_index = 30

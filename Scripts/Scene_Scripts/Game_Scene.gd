@@ -421,7 +421,7 @@ func ShowBanner(_s:String, _timer:float = 1.0):
 #-------------------------------------------------------------------------------
 func ShowBanner2(_s:String):
 	Banner_Open(_s)
-	await Seconds(3)
+	await Seconds(2.0)
 	Banner_Close()
 #-------------------------------------------------------------------------------
 func Banner_Open(_s:String):
@@ -480,13 +480,14 @@ func Choreography():
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Stage1():
-	await EnemyWave_and_Market(func():Stage1_EnemyWave1(), 10)
-	await EnemyWave_and_Market(func():InfiniteEnemyTest(), 10)
+	await EnemyWave_and_Market("Enemy Wave 1", func():Stage1_EnemyWave1(), 20)
+	await EnemyWave_and_Market("Enemy Wave 1", func():InfiniteEnemyTest(), 10)
 	var _boss: Boss = Create_Boss(0,0, 100)
-	await EnemyWave_and_Market(func():Create_SpellCard(_boss), 10)
+	await EnemyWave_and_Market("Boss Battle", func():Create_SpellCard(_boss), 10)
 	await StageCommon("Stage 1 Completed",1,0)
 #-------------------------------------------------------------------------------
-func EnemyWave_and_Market(_callable:Callable, _timer: int):
+func EnemyWave_and_Market(_s:String, _callable:Callable, _timer: int):
+	await ShowBanner(_s)
 	_callable.call()
 	await TimeOut_Tween(_timer)
 	await Nothing_and_Market()
@@ -557,14 +558,14 @@ func InfiniteEnemyTest_Tween(_tween:Tween, _mirror:float):
 #-------------------------------------------------------------------------------
 func InfiniteEnemyTest_Enemy(_tween:Tween, _mirror:float):
 	var _x: float = width*0.5+width*0.25*_mirror
-	var _enemy: Enemy = Create_Enemy(_x, 0, 10)
+	var _enemy: Enemy = Create_Enemy(_x, 0, 0, 0, 10)
 	#-------------------------------------------------------------------------------
 	_enemy.death_signal.connect(
 		func(): _tween.play()
 	)
 	#-------------------------------------------------------------------------------
 	var _tween2: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
-	_tween2.tween_property(_enemy, "position", Vector2(_x, height*0.7), 1.0)
+	_tween2.tween_property(_enemy, "position", Vector2(_x, height*0.3), 1.0)
 #-------------------------------------------------------------------------------
 func Stage1_EnemyWave1():
 	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
@@ -597,21 +598,17 @@ func Stage1_EnemyWave1_Tween(_tween:Tween, _mirror: float):
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Stage1_EnemyWave1_Enemy1(_x:float, _y:float, _mirror:float):
-	var _enemy: Enemy = Create_Enemy(_x, _y, 10)
+	var _enemy: Enemy = Create_Enemy(_x, _y, 4.0, 90-20*_mirror, 10)
 	var _tween: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
-	#-------------------------------------------------------------------------------
-	_tween.tween_property(_enemy,"dir",90-20*_mirror, 0.1)
-	_tween.parallel().tween_property(_enemy,"vel",4.0, 0.1)
-	_tween.tween_interval(1)
-	_tween.tween_property(_enemy,"vel",1.0, 1.0)
-	_tween.parallel().tween_property(_enemy,"dir",90-90*_mirror, 2.0)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
 		var _tween2: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
+		_tween2.tween_interval(1.5)
 		Stage1_EnemyWave1_Enemy1_Fire1(_tween2, _enemy)
 	)
 	#-------------------------------------------------------------------------------
-	_tween.tween_property(_enemy,"vel",4.0, 1.0)
+	_tween.tween_interval(0.5)
+	_tween.tween_property(_enemy,"dir",90-90*_mirror, 2.0)
 	_tween.tween_interval(2.0)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
@@ -625,7 +622,7 @@ func Stage1_EnemyWave1_Enemy1_Fire1(_tween:Tween, _node2D: Node2D):
 			var _dir: float = AngleToPlayer(_node2D)
 			var _x:float = _node2D.position.x
 			var _y:float = _node2D.position.y
-			Create_EnemyBullet(_x, _y, 6, _dir)
+			var _bullet: Bullet = Create_EnemyBullet(_x, _y, 8, _dir)
 		)
 		#-------------------------------------------------------------------------------
 		_tween.tween_interval(0.1)
@@ -723,7 +720,7 @@ func Create_Enemy_Disabled(_iMax:int):
 		content.add_child(_enemy)
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
-func Create_Enemy(_x:float, _y:float, _hp: int) -> Enemy:
+func Create_Enemy(_x:float, _y:float, _v:float, _dir: float, _hp: int) -> Enemy:
 	var _enemy: Enemy
 	#-------------------------------------------------------------------------------
 	if(enemy_Disabled_Array.size() > 0):
@@ -742,8 +739,8 @@ func Create_Enemy(_x:float, _y:float, _hp: int) -> Enemy:
 	_enemy.position = Vector2(_x, _y)
 	_enemy.maxHp = _hp
 	_enemy.hp = _hp
-	_enemy.vel = 0
-	_enemy.dir = 90
+	_enemy.vel = _v
+	_enemy.dir = _dir
 	Set_EnemyLife_Label(_enemy)
 	#-------------------------------------------------------------------------------
 	return _enemy
@@ -1003,7 +1000,7 @@ func Enemy_PhysicsUpdate(_enemy:Enemy):
 		Create_Items(_enemy.position.x, _enemy.position.y, 50, 50, -3)
 		return
 	#-------------------------------------------------------------------------------
-	if(_enemy.position.distance_to(player.position) < hitBox_radius+_enemy.radius):
+	if(_enemy.position.distance_to(player.position) < hitBox_radius+_enemy.radius and player.canBeHit):
 		Player_Shooted()
 	#-------------------------------------------------------------------------------
 	var _dir2: float = deg_to_rad(_enemy.dir)
@@ -1019,7 +1016,7 @@ func Boss_PhysicsUpdate(_boss:Boss):
 		Create_Items(_boss.position.x, _boss.position.y, 50, 50, -3)
 		return
 	#-------------------------------------------------------------------------------
-	if(_boss.position.distance_to(player.position) < hitBox_radius+_boss.radius):
+	if(_boss.position.distance_to(player.position) < hitBox_radius+_boss.radius and player.canBeHit):
 		Player_Shooted()
 	#-------------------------------------------------------------------------------
 	var _dir2: float = deg_to_rad(_boss.dir)
