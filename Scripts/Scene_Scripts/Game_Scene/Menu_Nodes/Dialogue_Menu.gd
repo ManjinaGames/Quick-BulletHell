@@ -6,7 +6,7 @@ var singleton: Singleton
 @export var gameScene: Game_Scene
 @export var dialogueLabel: RichTextLabel
 #-------------------------------------------------------------------------------
-var isNextPress: bool = false
+signal dialogueNext_signal
 #endregion
 #-------------------------------------------------------------------------------
 func Start():
@@ -20,9 +20,7 @@ func OpenDialogue():
 func ReadDialogue(_s:String, _start:int, _end:int):
 	for _i in range(_start, _end):
 		dialogueLabel.text = tr(_s+str(_i))
-		isNextPress = false
-		while(!isNextPress):
-			await gameScene.frame
+		await dialogueNext_signal
 #-------------------------------------------------------------------------------
 func GetSubBossDialogueID(_i:int) -> String:
 	var _s: String = "sub_boss_"+str(_i)+"_dialogue_line_"

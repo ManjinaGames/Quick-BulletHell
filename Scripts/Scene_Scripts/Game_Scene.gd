@@ -170,7 +170,7 @@ func Game_StateMachine():
 		GAME_STATE.IN_DIALOGUE:
 			Player_StateMachine()
 			if(Input.is_action_just_pressed("input_Shoot")):
-				dialogueMenu.isNextPress = true
+				dialogueMenu.dialogueNext_signal.emit()
 		#-------------------------------------------------------------------------------
 		GAME_STATE.IN_GAMEOVER:
 			pass
@@ -405,7 +405,60 @@ func LoadBulletDatabase():
 	#-------------------------------------------------------------------------------
 #endregion
 #-------------------------------------------------------------------------------
-#region STAGE FUNCTIONS COMMON
+#region COMMON STAGE FUNCTIONS 
+func Choreography():
+	match(singleton.currentSaveData_Json["stageIndex"]):
+		singleton.STAGE.STAGE_1:
+			await Stage1()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_2:
+			await Stage2()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_3:
+			await Stage3()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_4:
+			await Stage4()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_5:
+			await Stage5()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_6:
+			await Stage6()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.STAGE_7:
+			await Stage7()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.ROGUELIKE_MODE:
+			await Stage_RougeLike()
+		#-------------------------------------------------------------------------------
+		singleton.STAGE.BOSSRUSH_MODE:
+			await Stage_BossRish()
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func EnemyWave_and_Market(_s:String, _callable:Callable, _timer: int):
+	await ShowBanner(_s)
+	_callable.call()
+	await TimeOut_Tween(_timer)
+	await Nothing_and_Market()
+#-------------------------------------------------------------------------------
+func Nothing_and_Market():
+	await OpenMarket()
+	Enter_GameState_InGameplay()
+#-------------------------------------------------------------------------------
+func OpenMarket():
+	myGAME_STATE = GAME_STATE.IN_CUTIN
+	await ShowBanner2("Flea Market has being Open")
+	myGAME_STATE = GAME_STATE.IN_MARKET
+	await marketMenu.OpenMarket()
+#-------------------------------------------------------------------------------
+func Dialogue(_bossID:int, _from:int, _to:int):
+	var _bossDialogueID: String = dialogueMenu.GetSubBossDialogueID(_bossID)
+	await dialogueMenu.ReadDialogue(_bossDialogueID, _from, _to)
+#-------------------------------------------------------------------------------
+func Enter_GameState_InGameplay():
+	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
 #-------------------------------------------------------------------------------
 func StageCommon(_s:String, _enabled:int, _completed:int):
 	await ShowBanner(_s)
@@ -448,96 +501,30 @@ func GoToMainScene():
 	get_tree().set_deferred("paused", false)
 	get_tree().change_scene_to_file(singleton.mainScene_Path)
 #endregion
-func Choreography():
-	match(singleton.currentSaveData_Json["stageIndex"]):
-		singleton.STAGE.STAGE_1:
-			await Stage1()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.STAGE_2:
-			await Stage2()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.STAGE_3:
-			await Stage3()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.STAGE_4:
-			await Stage4()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.STAGE_5:
-			await Stage5()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.STAGE_6:
-			await Stage6()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.STAGE_7:
-			await Stage7()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.ROGUELIKE_MODE:
-			await Stage_RougeLike()
-		#-------------------------------------------------------------------------------
-		singleton.STAGE.BOSSRUSH_MODE:
-			await Stage_BossRish()
-		#-------------------------------------------------------------------------------
-	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
+#region STAGE 1 FUNCTIONS
 func Stage1():
 	await EnemyWave_and_Market("Enemy Wave 1", func():Stage1_EnemyWave1(), 20)
 	await EnemyWave_and_Market("Enemy Wave 1", func():InfiniteEnemyTest(), 10)
-	var _boss: Boss = Create_Boss(0,0, 100)
-	await EnemyWave_and_Market("Boss Battle", func():Create_SpellCard(_boss), 10)
-	await StageCommon("Stage 1 Completed",1,0)
-#-------------------------------------------------------------------------------
-func EnemyWave_and_Market(_s:String, _callable:Callable, _timer: int):
-	await ShowBanner(_s)
-	_callable.call()
-	await TimeOut_Tween(_timer)
-	await Nothing_and_Market()
-#-------------------------------------------------------------------------------
-func Stage2():
-	await StageCommon("Stage 2 Completed",2,1)
-#-------------------------------------------------------------------------------
-func Stage3():
-	await StageCommon("Stage 3 Completed",3,2)
-#-------------------------------------------------------------------------------
-func Stage4():
-	await StageCommon("Stage 4 Completed",4,3)
-#-------------------------------------------------------------------------------
-func Stage5():
-	await StageCommon("Stage 5 Completed",5,4)
-#-------------------------------------------------------------------------------
-func Stage6():
-	await StageCommon("Stage 6 Completed",6,5)
-#-------------------------------------------------------------------------------
-func Stage7():
-	await StageCommon("Stage 7 Completed",7,6)
-#-------------------------------------------------------------------------------
-func Stage_RougeLike():
-	await StageCommon("Stage Rogue-Like Completed",8,7)
-#-------------------------------------------------------------------------------
-func Stage_BossRish():
-	await StageCommon("Stage Boss-Rish Completed",8,8)
-#-------------------------------------------------------------------------------
-func Nothing_and_Market():
-	await OpenMarket()
-	Enter_GameState_InGameplay()
-#-------------------------------------------------------------------------------
-func OpenMarket():
-	myGAME_STATE = GAME_STATE.IN_CUTIN
-	await ShowBanner2("Flea Market has being Open")
-	myGAME_STATE = GAME_STATE.IN_MARKET
-	await marketMenu.OpenMarket()
-#-------------------------------------------------------------------------------
-func Enter_GameState_InGameplay():
-	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
-#-------------------------------------------------------------------------------
-func PlayerShoot():
-	if(Input.is_action_pressed("input_Shoot")):
-		player_shoot_counter += deltaTimeScale
-		#-------------------------------------------------------------------------------
-		if(player_shoot_counter > 5.0):
-			player_shoot_counter = 0.0
-			Create_PlayerBullet(player.position.x, player.position.y-50, 18.0, -90.0)
-		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
+	await Nothing_and_Market()
+	myGAME_STATE = GAME_STATE.IN_DIALOGUE
+	dialogueMenu.OpenDialogue()
+	#-------------------------------------------------------------------------------
+	await Dialogue(0, 0, 4)
+	#-------------------------------------------------------------------------------
+	var _boss: Boss = Create_Boss_A0(0,0, 100)
+	var _tween: Tween = create_tween()
+	_tween.tween_property(_boss, "position", Vector2(width*0.5, height*0.2), 0.5)
+	await _tween.finished
+	#-------------------------------------------------------------------------------
+	await Dialogue(0, 4, 8)
+	#-------------------------------------------------------------------------------
+	dialogueMenu.CloseDialogue()
+	myGAME_STATE = GAME_STATE.IN_GAMEPLAY
+	#-------------------------------------------------------------------------------
+	await EnemyWave_and_Market("Boss Battle", func():Create_SpellCard(_boss), 60)
+	await StageCommon("Stage 1 Completed",1,0)
 #-------------------------------------------------------------------------------
 func InfiniteEnemyTest():
 	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
@@ -558,7 +545,7 @@ func InfiniteEnemyTest_Tween(_tween:Tween, _mirror:float):
 #-------------------------------------------------------------------------------
 func InfiniteEnemyTest_Enemy(_tween:Tween, _mirror:float):
 	var _x: float = width*0.5+width*0.25*_mirror
-	var _enemy: Enemy = Create_Enemy(_x, 0, 0, 0, 10)
+	var _enemy: Enemy = Create_Enemy_A0(_x, 0, 0, 0, 10)
 	#-------------------------------------------------------------------------------
 	_enemy.death_signal.connect(
 		func(): _tween.play()
@@ -598,7 +585,7 @@ func Stage1_EnemyWave1_Tween(_tween:Tween, _mirror: float):
 	#-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 func Stage1_EnemyWave1_Enemy1(_x:float, _y:float, _mirror:float):
-	var _enemy: Enemy = Create_Enemy(_x, _y, 4.0, 90-20*_mirror, 10)
+	var _enemy: Enemy = Create_Enemy_A1(_x, _y, 4.0, 90-20*_mirror, 10)
 	var _tween: Tween = CreateTween_ArrayAppend(_enemy.tween_Array)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
@@ -622,17 +609,19 @@ func Stage1_EnemyWave1_Enemy1_Fire1(_tween:Tween, _node2D: Node2D):
 			var _dir: float = AngleToPlayer(_node2D)
 			var _x:float = _node2D.position.x
 			var _y:float = _node2D.position.y
-			var _bullet: Bullet = Create_EnemyBullet(_x, _y, 8, _dir)
+			var _bullet: Bullet = Create_EnemyBullet_A0(_x, _y, 8, _dir)
 		)
 		#-------------------------------------------------------------------------------
 		_tween.tween_interval(0.1)
 #-------------------------------------------------------------------------------
 func Create_SpellCard(_boss: Boss):
 	var _tween: Tween = CreateTween_ArrayAppend(main_tween_Array)
-	_tween.tween_property(_boss, "position", Vector2(width*0.5, height*0.2), 1.0)
-	_tween.tween_interval(0.5)
+	_tween.tween_interval(2)
 	#-------------------------------------------------------------------------------
 	_tween.tween_callback(func():
+		#_boss.physics_Update = func(): Boss_PhysicsUpdate(_boss, func(): Boss_Move(_boss))
+		_boss.physics_Update = func(): Boss_PhysicsUpdate(_boss, func(): Boss_SetVDir_Move(_boss))
+		#-------------------------------------------------------------------------------
 		var _tween2: Tween = CreateTween_ArrayAppend(main_tween_Array)
 		_tween2.set_loops()
 		Create_SpellCard_Tween(_boss, _tween2, 1)
@@ -667,8 +656,8 @@ func Create_SpellCard_bullet(_node2d:Node2D, _dir:float, _max1:float, _vel:float
 	var _x: float = _node2d.position.x + 48 * cos(_dir2)
 	var _y: float = _node2d.position.y + 48 * sin(_dir2)
 	#-------------------------------------------------------------------------------
-	var _bullet: Bullet = Create_EnemyBullet(_x, _y, 4.0, _dir)
-	_bullet.isDestroyed_OutScreen = false
+	var _bullet: Bullet = Create_EnemyBullet_Empty(_x, _y, 4.0, _dir)
+	_bullet.physics_Update = func():EnemyBullet_PhysicsUpdate_Limitless(_bullet, func():EnemyBullet_SetVDir_Move(_bullet))
 	_dir += 360/_max1
 	#-------------------------------------------------------------------------------
 	var _tween: Tween = CreateTween_ArrayAppend(_bullet.tween_Array)
@@ -678,371 +667,61 @@ func Create_SpellCard_bullet(_node2d:Node2D, _dir:float, _max1:float, _vel:float
 	_tween.tween_property(_bullet, "dir",_bullet.dir+165*_mirror, 0.25)
 	_tween.tween_property(_bullet, "vel",_vel, 1.0)
 	_tween.parallel().tween_property(_bullet, "dir",_bullet.dir+270*_mirror, 3.0)
-	_tween.tween_callback(func(): _bullet.isDestroyed_OutScreen = true)
+	_tween.tween_callback(func():
+		_bullet.physics_Update = func(): EnemyBullet_PhysicsUpdate(_bullet, func():EnemyBullet_Move(_bullet))
+	)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_EnemyBullets_Disabled(_iMax:int):
-	for _i in _iMax:
-		var _bullet: Bullet = bullet_Prefab.instantiate() as Bullet
-		enemyBullets_Disabled_Array.append(_bullet)
-		_bullet.hide()
-		_bullet.physics_Update = func(): EnemyBullet_PhysicsUpdate(_bullet)
-		content.add_child(_bullet)
-	#-------------------------------------------------------------------------------
+#region STAGE 2 FUNCTIONS
+func Stage2():
+	await StageCommon("Stage 2 Completed",2,1)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_EnemyBullet(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
-	var _bullet: Bullet
-	#-------------------------------------------------------------------------------
-	if(enemyBullets_Disabled_Array.size() > 0):
-		_bullet = enemyBullets_Disabled_Array[0]
-		_bullet.show()
-		enemyBullets_Disabled_Array.erase(_bullet)
-	#-------------------------------------------------------------------------------
-	else:
-		_bullet = bullet_Prefab.instantiate() as Bullet
-		_bullet.physics_Update = func(): EnemyBullet_PhysicsUpdate(_bullet)
-		content.add_child(_bullet)
-	#-------------------------------------------------------------------------------
-	enemyBullets_Enabled_Array.append(_bullet)
-	#-------------------------------------------------------------------------------
-	_bullet.position = Vector2(_x, _y)
-	_bullet.isGrazed = false
-	_bullet.dir = _dir
-	_bullet.vel = _v
-	#-------------------------------------------------------------------------------
-	return _bullet
+#region STAGE 3 FUNCTIONS
+func Stage3():
+	await StageCommon("Stage 3 Completed",3,2)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_Enemy_Disabled(_iMax:int):
-	for _i in _iMax:
-		var _enemy: Enemy = enemy_Prefab.instantiate() as Enemy
-		enemy_Disabled_Array.append(_enemy)
-		_enemy.hide()
-		_enemy.physics_Update = func(): Enemy_PhysicsUpdate(_enemy)
-		content.add_child(_enemy)
-	#-------------------------------------------------------------------------------
+#region STAGE 4 FUNCTIONS
+func Stage4():
+	await StageCommon("Stage 4 Completed",4,3)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_Enemy(_x:float, _y:float, _v:float, _dir: float, _hp: int) -> Enemy:
-	var _enemy: Enemy
-	#-------------------------------------------------------------------------------
-	if(enemy_Disabled_Array.size() > 0):
-		_enemy = enemy_Disabled_Array[0]
-		_enemy.show()
-		enemy_Disabled_Array.erase(_enemy)
-	#-------------------------------------------------------------------------------
-	else:
-		_enemy = enemy_Prefab.instantiate() as Enemy
-		_enemy.physics_Update = func(): Enemy_PhysicsUpdate(_enemy)
-		singleton.DisconnectAll(_enemy.death_signal)
-		content.add_child(_enemy)
-	#-------------------------------------------------------------------------------
-	enemy_Enabled_Array.append(_enemy)
-	#-------------------------------------------------------------------------------
-	_enemy.position = Vector2(_x, _y)
-	_enemy.maxHp = _hp
-	_enemy.hp = _hp
-	_enemy.vel = _v
-	_enemy.dir = _dir
-	Set_EnemyLife_Label(_enemy)
-	#-------------------------------------------------------------------------------
-	return _enemy
+#region STAGE 5 FUNCTIONS
+func Stage5():
+	await StageCommon("Stage 5 Completed",5,4)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_Boss_Disabled(_iMax:int):
-	for _i in _iMax:
-		var _boss: Boss = boss_Prefab.instantiate() as Boss
-		boss_Disabled_Array.append(_boss)
-		_boss.hide()
-		_boss.physics_Update = func(): Boss_PhysicsUpdate(_boss)
-		content.add_child(_boss)
-	#-------------------------------------------------------------------------------
+#region STAGE 6 FUNCTIONS
+func Stage6():
+	await StageCommon("Stage 6 Completed",6,5)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_Boss(_x:float, _y:float, _hp: int) -> Boss:
-	var _boss: Boss
-	#-------------------------------------------------------------------------------
-	if(enemy_Disabled_Array.size() > 0):
-		_boss = boss_Disabled_Array[0]
-		_boss.show()
-		boss_Disabled_Array.erase(_boss)
-	#-------------------------------------------------------------------------------
-	else:
-		_boss = boss_Prefab.instantiate() as Boss
-		_boss.physics_Update = func(): Boss_PhysicsUpdate(_boss)
-		content.add_child(_boss)
-	#-------------------------------------------------------------------------------
-	boss_Enabled_Array.append(_boss)
-	#-------------------------------------------------------------------------------
-	_boss.position = Vector2(_x, _y)
-	_boss.maxHp = _hp
-	_boss.hp = _hp
-	_boss.vel = 0
-	_boss.dir = 90
-	Set_BossLife_Label(_boss)
-	#-------------------------------------------------------------------------------
-	return _boss
+#region STAGE 7 FUNCTIONS
+func Stage7():
+	await StageCommon("Stage 7 Completed",7,6)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_PlayerBullets_Disabled(_iMax:int):
-	for _i in _iMax:
-		var _bullet: Bullet = bullet_Prefab.instantiate() as Bullet
-		_bullet.physics_Update = func(): PlayerBullet_PhysicsUpdate(_bullet)
-		playerBullets_Disabled_Array.append(_bullet)
-		_bullet.hide()
-		content.add_child(_bullet)
-	#-------------------------------------------------------------------------------
+#region STAGE 8 FUNCTIONS
+func Stage_RougeLike():
+	await StageCommon("Stage Rogue-Like Completed",8,7)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_PlayerBullet(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
-	var _bullet: Bullet
-	#-------------------------------------------------------------------------------
-	if(playerBullets_Disabled_Array.size() > 0):
-		_bullet = playerBullets_Disabled_Array[0]
-		_bullet.show()
-		playerBullets_Disabled_Array.erase(_bullet)
-	#-------------------------------------------------------------------------------
-	else:
-		_bullet = bullet_Prefab.instantiate() as Bullet
-		_bullet.physics_Update = func(): PlayerBullet_PhysicsUpdate(_bullet)
-		content.add_child(_bullet)
-	#-------------------------------------------------------------------------------
-	playerBullets_Enabled_Array.append(_bullet)
-	#-------------------------------------------------------------------------------
-	_bullet.position = Vector2(_x, _y)
-	_bullet.isGrazed = false
-	_bullet.dir = _dir
-	_bullet.vel = _v
-	_bullet.frame = 7
-	#-------------------------------------------------------------------------------
-	return _bullet
+#region STAGE 9 FUNCTIONS
+func Stage_BossRish():
+	await StageCommon("Stage Boss-Rish Completed",8,8)
+#endregion
 #-------------------------------------------------------------------------------
-func Create_Items_Disabled(_iMax:int):
-	for _i in _iMax:
-		var _item: Item = item_Prefab.instantiate() as Item
-		items_Disabled_Array.append(_item)
-		_item.physics_Update = func(): Items_PhysicsUpdate(_item)
-		_item.hide()
-		content.add_child(_item)
-	#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-func Create_Items(_x:float, _y:float, _rad: float, _num:int, _vel_y:float = -5):
-	for _i in _num:
-		Create_Item(_x+randf_range(-_rad,_rad), _y+randf_range(-_rad,_rad), _vel_y)
-#-------------------------------------------------------------------------------
-func Create_Item(_x:float, _y:float, _vel_y:float):
-	var _item: Item
-	#-------------------------------------------------------------------------------
-	if(items_Disabled_Array.size()>0):
-		_item = items_Disabled_Array[0]
-		items_Disabled_Array.erase(_item)
-		_item.show()
-	#-------------------------------------------------------------------------------
-	else:
-		_item = item_Prefab.instantiate() as Item
-		_item.physics_Update = func(): Items_PhysicsUpdate(_item)
-		content.add_child(_item)
-	#-------------------------------------------------------------------------------
-	items_Enabled_Array.append(_item)
-	#-------------------------------------------------------------------------------
-	_item.myITEM_STATE = Item.ITEM_STATE.SPIN
-	_item.velocity = Vector2(0, _vel_y)
-	_x = clamp(_x, playerLimitsX.x, playerLimitsX.y)
-	_y = clamp(_y, playerLimitsY.x, playerLimitsY.y)
-	_item.position = Vector2(_x, _y)
-#-------------------------------------------------------------------------------
-func Items_PhysicsUpdate(_item:Item):
-	var _velY_Max: float = 3.0
-	var _velY_Accel: float = 0.05
-	var _magnetVel: float = 8.0
-	match(_item.myITEM_STATE):
-		Item.ITEM_STATE.SPIN:
-			if(_item.velocity.y <= 0):
-				_item.velocity.y += _velY_Accel * deltaTimeScale
-				_item.position.y += _item.velocity.y * deltaTimeScale
-				_item.rotation += 0.5 * deltaTimeScale
-				return
-			#-------------------------------------------------------------------------------
-			else:
-				_item.rotation = 0
-				_item.myITEM_STATE = Item.ITEM_STATE.FALL
-				return
-			#-------------------------------------------------------------------------------
+#region PLAYER FUNCTIONS
+func PlayerShoot():
+	if(Input.is_action_pressed("input_Shoot")):
+		player_shoot_counter += deltaTimeScale
 		#-------------------------------------------------------------------------------
-		Item.ITEM_STATE.FALL:
-			if(_item.position.y <= height):
-				if(_item.velocity.y > _velY_Max):
-					_item.velocity.y = _velY_Max
-				#-------------------------------------------------------------------------------
-				elif(_item.velocity.y < _velY_Max):
-					_item.velocity.y += _velY_Accel * deltaTimeScale
-				#-------------------------------------------------------------------------------
-				_item.position.y += _item.velocity.y * deltaTimeScale
-				#-------------------------------------------------------------------------------
-				if(_item.position.distance_to(player.position)< magnetBox_radius and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
-					_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
-					return
-				#-------------------------------------------------------------------------------
-				elif(!CanPlayerShoot() and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
-					_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
-					return
-				#-------------------------------------------------------------------------------
-			#-------------------------------------------------------------------------------
-			else:
-				DestroyItem(_item)
-				return
-			#-------------------------------------------------------------------------------
-		#-------------------------------------------------------------------------------
-		Item.ITEM_STATE.IMANTED:
-			var _vel: Vector2 = (player.position - _item.position)
-			if(_vel.length_squared() > 144.0):
-				var _dir = atan2(_vel.y, _vel.x)
-				var _vel2 = Vector2(cos(_dir), sin(_dir))
-				_item.position += _vel2 * _magnetVel * deltaTimeScale
-			#-------------------------------------------------------------------------------
-			else:
-				scorePoints += 10
-				moneyPoints += 1
-				SetScore()
-				SetMoney()
-				DestroyItem(_item)
-				return
-			#-------------------------------------------------------------------------------
+		if(player_shoot_counter > 5.0):
+			player_shoot_counter = 0.0
+			Create_PlayerBullet_A0(player.position.x, player.position.y-50, 18.0, -90.0)
 		#-------------------------------------------------------------------------------
 	#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-func EnemyBullet_PhysicsUpdate(_bullet: Bullet):
-	if(!_bullet.isDestroyed_OutScreen):
-		EnemyBullet_PhysicsUpdate2(_bullet)
-	#-------------------------------------------------------------------------------
-	else:
-		if(_bullet.position.x > enemyLimitsX.x and _bullet.position.x < enemyLimitsX.y):
-			if(_bullet.position.y > enemyLimitsY.x and _bullet.position.y < enemyLimitsY.y):
-				EnemyBullet_PhysicsUpdate2(_bullet)
-			#-------------------------------------------------------------------------------
-			else:
-				Destroy_EnemyBullet(_bullet)
-				return
-			#-------------------------------------------------------------------------------
-		#-------------------------------------------------------------------------------
-		else:
-			Destroy_EnemyBullet(_bullet)
-			return
-		#-------------------------------------------------------------------------------
-	#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-func EnemyBullet_PhysicsUpdate2(_bullet: Bullet):
-	if(_bullet.position.distance_to(player.position)< grazeBox_radius and !_bullet.isGrazed and player.myPLAYER_STATE == Player.PLAYER_STATE.ALIVE):
-		Create_Item(_bullet.position.x, _bullet.position.y, -5)
-		_bullet.isGrazed = true
-	#-------------------------------------------------------------------------------
-	if(_bullet.position.distance_to(player.position) < hitBox_radius+_bullet.radius and player.canBeHit):
-		Player_Shooted()
-		Destroy_EnemyBullet(_bullet)
-		return
-	#-------------------------------------------------------------------------------
-	else:
-		var _dir2: float = deg_to_rad(_bullet.dir)
-		_bullet.velocity.x = _bullet.vel * cos(_dir2)
-		_bullet.velocity.y = _bullet.vel * sin(_dir2)
-		_bullet.position += _bullet.velocity * deltaTimeScale
-		_bullet.rotation_degrees = _bullet.dir+90
-		return
-	#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-func PlayerBullet_PhysicsUpdate(_bullet: Bullet):
-	if(_bullet.position.x > enemyLimitsX.x and _bullet.position.x < enemyLimitsX.y):
-		if(_bullet.position.y > enemyLimitsY.x and _bullet.position.y < enemyLimitsY.y):
-			for _i in range(enemy_Enabled_Array.size()-1,-1,-1):
-				#-------------------------------------------------------------------------------
-				if(_bullet.position.distance_to(enemy_Enabled_Array[_i].position)< 48.0):
-					var _enemy: Enemy = enemy_Enabled_Array[_i]
-					_enemy.hp -=1
-					Set_EnemyLife_Label(_enemy)
-					Destroy_PlayerBullet(_bullet)
-					return
-				#-------------------------------------------------------------------------------
-			#-------------------------------------------------------------------------------
-			for _i in range(boss_Enabled_Array.size()-1,-1,-1):
-				if(_bullet.position.distance_to(boss_Enabled_Array[_i].position)< 48.0):
-					var _boss: Boss = boss_Enabled_Array[_i]
-					_boss.hp -=1
-					Set_BossLife_Label(_boss)
-					Destroy_PlayerBullet(_bullet)
-					return
-				#-------------------------------------------------------------------------------
-			#-------------------------------------------------------------------------------
-			var _dir2: float = deg_to_rad(_bullet.dir)
-			_bullet.velocity.x = _bullet.vel * cos(_dir2)
-			_bullet.velocity.y = _bullet.vel * sin(_dir2)
-			_bullet.position += _bullet.velocity * deltaTimeScale
-			_bullet.rotation_degrees = _bullet.dir+90
-		#-------------------------------------------------------------------------------
-		else:
-			Destroy_PlayerBullet(_bullet)
-			return
-		#-------------------------------------------------------------------------------
-	#-------------------------------------------------------------------------------
-	else:
-		Destroy_PlayerBullet(_bullet)
-		return
-	#-------------------------------------------------------------------------------
-#-------------------------------------------------------------------------------
-func Set_EnemyLife_Label(_enemy: Enemy):
-	_enemy.label.text = str(_enemy.hp)+" / "+str(_enemy.maxHp)
-#-------------------------------------------------------------------------------
-func Set_BossLife_Label(_boss: Boss):
-	_boss.label.text = str(_boss.hp)+" / "+str(_boss.maxHp)
-#-------------------------------------------------------------------------------
-func Destroy_PlayerBullet(_bullet: Bullet):
-	KillTween_Array(_bullet.tween_Array)
-	playerBullets_Enabled_Array.erase(_bullet)
-	playerBullets_Disabled_Array.append(_bullet)
-	_bullet.hide()
-#-------------------------------------------------------------------------------
-func Enemy_PhysicsUpdate(_enemy:Enemy):
-	if(_enemy.hp <= 0):
-		_enemy.death_signal.emit()
-		Destroy_Enemy(_enemy)
-		Create_Items(_enemy.position.x, _enemy.position.y, 50, 50, -3)
-		return
-	#-------------------------------------------------------------------------------
-	if(_enemy.position.distance_to(player.position) < hitBox_radius+_enemy.radius and player.canBeHit):
-		Player_Shooted()
-	#-------------------------------------------------------------------------------
-	var _dir2: float = deg_to_rad(_enemy.dir)
-	_enemy.velocity.x = _enemy.vel * cos(_dir2)
-	_enemy.velocity.y = _enemy.vel * sin(_dir2)
-	_enemy.position += _enemy.velocity * deltaTimeScale
-	#_enemy.rotation_degrees = _enemy.dir+90
-#-------------------------------------------------------------------------------
-func Boss_PhysicsUpdate(_boss:Boss):
-	if(_boss.hp <= 0):
-		Disable_Boss(_boss)
-		Boss_InstantDeath()
-		Create_Items(_boss.position.x, _boss.position.y, 50, 50, -3)
-		return
-	#-------------------------------------------------------------------------------
-	if(_boss.position.distance_to(player.position) < hitBox_radius+_boss.radius and player.canBeHit):
-		Player_Shooted()
-	#-------------------------------------------------------------------------------
-	var _dir2: float = deg_to_rad(_boss.dir)
-	_boss.velocity.x = _boss.vel * cos(_dir2)
-	_boss.velocity.y = _boss.vel * sin(_dir2)
-	_boss.position += _boss.velocity * deltaTimeScale
-	#_boss.rotation_degrees = _boss.dir+90
-#-------------------------------------------------------------------------------
-func Disable_Boss(_boss: Boss):
-	KillTween_Array(_boss.tween_Array)
-	boss_Enabled_Array.erase(_boss)
-	boss_Disabled_Array.append(_boss)
-	_boss.label.hide()
-#-------------------------------------------------------------------------------
-func Destroy_Enemy(_enemy: Enemy):
-	KillTween_Array(_enemy.tween_Array)
-	enemy_Enabled_Array.erase(_enemy)
-	enemy_Disabled_Array.append(_enemy)
-	singleton.DisconnectAll(_enemy.death_signal)
-	_enemy.hide()
-#-------------------------------------------------------------------------------
-func Destroy_EnemyBullet(_bullet: Bullet):
-	KillTween_Array(_bullet.tween_Array)
-	enemyBullets_Enabled_Array.erase(_bullet)
-	enemyBullets_Disabled_Array.append(_bullet)
-	_bullet.hide()
 #-------------------------------------------------------------------------------
 func Player_Shooted():
 	player.canBeHit = false
@@ -1117,11 +796,6 @@ func PlayerDeath() -> void:
 			items_Enabled_Array[_i].velocity.y = -4
 			items_Enabled_Array[_i].myITEM_STATE = Item.ITEM_STATE.SPIN
 #-------------------------------------------------------------------------------
-func DestroyItem(_item:Item) -> void:
-	items_Enabled_Array.erase(_item)
-	items_Disabled_Array.append(_item)
-	_item.hide()
-#-------------------------------------------------------------------------------
 func CanPlayerShoot() -> bool:
 	if(myGAME_STATE == GAME_STATE.IN_GAMEPLAY or myGAME_STATE == GAME_STATE.IN_CUTIN):
 		return true
@@ -1129,12 +803,464 @@ func CanPlayerShoot() -> bool:
 	else:
 		return false
 	#-------------------------------------------------------------------------------
+#endregion
+#-------------------------------------------------------------------------------
+#region PLAYER BULLET FUNCTIONS
+func Create_PlayerBullets_Disabled(_iMax:int):
+	for _i in _iMax:
+		var _bullet: Bullet = bullet_Prefab.instantiate() as Bullet
+		playerBullets_Disabled_Array.append(_bullet)
+		_bullet.hide()
+		content.add_child(_bullet)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Create_PlayerBullet_A0(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
+	var _bullet: Bullet = Create_PlayerBullet_Empty(_x, _y, _v, _dir)
+	_bullet.physics_Update = func(): PlayerBullet_PhysicsUpdate(_bullet, func():PlayerBullet_Move(_bullet))
+	PlayerBullet_SetVDir(_bullet)
+	return _bullet
+#-------------------------------------------------------------------------------
+func Create_PlayerBullet_A1(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
+	var _bullet: Bullet = Create_PlayerBullet_Empty(_x, _y, _v, _dir)
+	_bullet.physics_Update = func(): PlayerBullet_PhysicsUpdate(_bullet, func():PlayerBullet_SetVDir_Move(_bullet))
+	return _bullet
+#-------------------------------------------------------------------------------
+func Create_PlayerBullet_Empty(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
+	var _bullet: Bullet
+	#-------------------------------------------------------------------------------
+	if(playerBullets_Disabled_Array.size() > 0):
+		_bullet = playerBullets_Disabled_Array[0]
+		_bullet.show()
+		playerBullets_Disabled_Array.erase(_bullet)
+	#-------------------------------------------------------------------------------
+	else:
+		_bullet = bullet_Prefab.instantiate() as Bullet
+		content.add_child(_bullet)
+	#-------------------------------------------------------------------------------
+	playerBullets_Enabled_Array.append(_bullet)
+	#-------------------------------------------------------------------------------
+	_bullet.position = Vector2(_x, _y)
+	_bullet.isGrazed = false
+	_bullet.dir = _dir
+	_bullet.vel = _v
+	_bullet.frame = 7
+	#-------------------------------------------------------------------------------
+	return _bullet
+#-------------------------------------------------------------------------------
+func PlayerBullet_PhysicsUpdate(_bullet: Bullet, _callable:Callable):
+	if(_bullet.position.x > enemyLimitsX.x and _bullet.position.x < enemyLimitsX.y):
+		if(_bullet.position.y > enemyLimitsY.x and _bullet.position.y < enemyLimitsY.y):
+			PlayerBullet_PhysicsUpdate_Limitless(_bullet, _callable)
+		#-------------------------------------------------------------------------------
+		else:
+			Destroy_PlayerBullet(_bullet)
+			return
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+	else:
+		Destroy_PlayerBullet(_bullet)
+		return
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func PlayerBullet_PhysicsUpdate_Limitless(_bullet: Bullet, _callable:Callable):
+	for _i in range(enemy_Enabled_Array.size()-1,-1,-1):
+		#-------------------------------------------------------------------------------
+		if(_bullet.position.distance_squared_to(enemy_Enabled_Array[_i].position) < pow(_bullet.radius+enemy_Enabled_Array[_i].radius, 2)):
+			var _enemy: Enemy = enemy_Enabled_Array[_i]
+			_enemy.hp -=1
+			Set_EnemyLife_Label(_enemy)
+			Destroy_PlayerBullet(_bullet)
+			return
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+	for _i in range(boss_Enabled_Array.size()-1,-1,-1):
+		if(_bullet.position.distance_squared_to(boss_Enabled_Array[_i].position)< pow(_bullet.radius+boss_Enabled_Array[_i].radius, 2)):
+			var _boss: Boss = boss_Enabled_Array[_i]
+			_boss.hp -=1
+			Set_BossLife_Label(_boss)
+			Destroy_PlayerBullet(_bullet)
+			return
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+	_callable.call()
+#-------------------------------------------------------------------------------
+func PlayerBullet_SetVDir_Move(_bullet: Bullet):
+	PlayerBullet_SetVDir(_bullet)
+	PlayerBullet_Move(_bullet)
+#-------------------------------------------------------------------------------
+func PlayerBullet_SetVDir(_bullet: Bullet):
+	var _dir2: float = deg_to_rad(_bullet.dir)
+	_bullet.velocity.x = _bullet.vel * cos(_dir2)
+	_bullet.velocity.y = _bullet.vel * sin(_dir2)
+	_bullet.rotation_degrees = _bullet.dir+90
+#-------------------------------------------------------------------------------
+func PlayerBullet_Move(_bullet: Bullet):
+	_bullet.position += _bullet.velocity * deltaTimeScale
+#-------------------------------------------------------------------------------
+func Destroy_PlayerBullet(_bullet: Bullet):
+	KillTween_Array(_bullet.tween_Array)
+	playerBullets_Enabled_Array.erase(_bullet)
+	playerBullets_Disabled_Array.append(_bullet)
+	_bullet.hide()
+#endregion
+#-------------------------------------------------------------------------------
+#region ITEM FUNCTIONS
+func Create_Items_Disabled(_iMax:int):
+	for _i in _iMax:
+		var _item: Item = item_Prefab.instantiate() as Item
+		items_Disabled_Array.append(_item)
+		_item.physics_Update = func(): Items_PhysicsUpdate(_item)
+		_item.hide()
+		content.add_child(_item)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Create_Items(_x:float, _y:float, _rad: float, _num:int, _vel_y:float):
+	for _i in _num:
+		Create_Item(_x+randf_range(-_rad,_rad), _y+randf_range(-_rad,_rad), _vel_y)
+#-------------------------------------------------------------------------------
+func Create_Item(_x:float, _y:float, _vel_y:float):
+	var _item: Item
+	#-------------------------------------------------------------------------------
+	if(items_Disabled_Array.size()>0):
+		_item = items_Disabled_Array[0]
+		items_Disabled_Array.erase(_item)
+		_item.show()
+	#-------------------------------------------------------------------------------
+	else:
+		_item = item_Prefab.instantiate() as Item
+		_item.physics_Update = func(): Items_PhysicsUpdate(_item)
+		content.add_child(_item)
+	#-------------------------------------------------------------------------------
+	items_Enabled_Array.append(_item)
+	#-------------------------------------------------------------------------------
+	_item.myITEM_STATE = Item.ITEM_STATE.SPIN
+	_item.velocity = Vector2(0, _vel_y)
+	_x = clamp(_x, playerLimitsX.x, playerLimitsX.y)
+	_y = clamp(_y, playerLimitsY.x, playerLimitsY.y)
+	_item.position = Vector2(_x, _y)
+#-------------------------------------------------------------------------------
+func Items_PhysicsUpdate(_item:Item):
+	var _velY_Max: float = 3.0
+	var _velY_Accel: float = 0.05
+	var _magnetVel: float = 8.0
+	match(_item.myITEM_STATE):
+		Item.ITEM_STATE.SPIN:
+			if(_item.velocity.y <= 0):
+				_item.velocity.y += _velY_Accel * deltaTimeScale
+				_item.position.y += _item.velocity.y * deltaTimeScale
+				_item.rotation += 0.5 * deltaTimeScale
+				return
+			#-------------------------------------------------------------------------------
+			else:
+				_item.rotation = 0
+				_item.myITEM_STATE = Item.ITEM_STATE.FALL
+				return
+			#-------------------------------------------------------------------------------
+		#-------------------------------------------------------------------------------
+		Item.ITEM_STATE.FALL:
+			if(_item.position.y <= height):
+				if(_item.velocity.y > _velY_Max):
+					_item.velocity.y = _velY_Max
+				#-------------------------------------------------------------------------------
+				elif(_item.velocity.y < _velY_Max):
+					_item.velocity.y += _velY_Accel * deltaTimeScale
+				#-------------------------------------------------------------------------------
+				_item.position.y += _item.velocity.y * deltaTimeScale
+				#-------------------------------------------------------------------------------
+				if(_item.position.distance_squared_to(player.position)< pow(_item.radius+magnetBox_radius, 2) and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
+					_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
+					return
+				#-------------------------------------------------------------------------------
+				elif(!CanPlayerShoot() and player.myPLAYER_STATE != Player.PLAYER_STATE.DEATH):
+					_item.myITEM_STATE = Item.ITEM_STATE.IMANTED
+					return
+				#-------------------------------------------------------------------------------
+			#-------------------------------------------------------------------------------
+			else:
+				DestroyItem(_item)
+				return
+			#-------------------------------------------------------------------------------
+		#-------------------------------------------------------------------------------
+		Item.ITEM_STATE.IMANTED:
+			var _vel: Vector2 = (player.position - _item.position)
+			if(_vel.length_squared() > 144.0):
+				var _dir = atan2(_vel.y, _vel.x)
+				var _vel2 = Vector2(cos(_dir), sin(_dir))
+				_item.position += _vel2 * _magnetVel * deltaTimeScale
+			#-------------------------------------------------------------------------------
+			else:
+				scorePoints += 10
+				moneyPoints += 1
+				SetScore()
+				SetMoney()
+				DestroyItem(_item)
+				return
+			#-------------------------------------------------------------------------------
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func DestroyItem(_item:Item) -> void:
+	items_Enabled_Array.erase(_item)
+	items_Disabled_Array.append(_item)
+	_item.hide()
+#endregion
+#-------------------------------------------------------------------------------
+#region BOSS FUNTIONS
+func Create_Boss_Disabled(_iMax:int):
+	for _i in _iMax:
+		var _boss: Boss = boss_Prefab.instantiate() as Boss
+		boss_Disabled_Array.append(_boss)
+		_boss.hide()
+		content.add_child(_boss)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Create_Boss_A0(_x:float, _y:float, _hp: int) -> Boss:
+	var _boss: Boss = Create_Boss_Empty(_x, _y, _hp)
+	_boss.physics_Update = func(): pass
+	return _boss
+#-------------------------------------------------------------------------------
+func Create_Boss_Empty(_x:float, _y:float, _hp: int) -> Boss:
+	var _boss: Boss
+	#-------------------------------------------------------------------------------
+	if(enemy_Disabled_Array.size() > 0):
+		_boss = boss_Disabled_Array[0]
+		_boss.show()
+		boss_Disabled_Array.erase(_boss)
+	#-------------------------------------------------------------------------------
+	else:
+		_boss = boss_Prefab.instantiate() as Boss
+		content.add_child(_boss)
+	#-------------------------------------------------------------------------------
+	boss_Enabled_Array.append(_boss)
+	#-------------------------------------------------------------------------------
+	_boss.position = Vector2(_x, _y)
+	_boss.maxHp = _hp
+	_boss.hp = _hp
+	_boss.vel = 0
+	_boss.dir = 90
+	Set_BossLife_Label(_boss)
+	#-------------------------------------------------------------------------------
+	return _boss
+#-------------------------------------------------------------------------------
+func Boss_PhysicsUpdate(_boss:Boss, _callable:Callable):
+	if(_boss.hp <= 0):
+		Disable_Boss(_boss)
+		Boss_InstantDeath()
+		Create_Items(_boss.position.x, _boss.position.y, 50, 50, -3)
+		return
+	#-------------------------------------------------------------------------------
+	if(_boss.position.distance_squared_to(player.position) < pow(_boss.radius+hitBox_radius, 2) and player.canBeHit):
+		Player_Shooted()
+	#-------------------------------------------------------------------------------
+	Boss_PhysicsUpdate_Intangible(_boss, _callable)
+	_boss.position += _boss.velocity * deltaTimeScale
+#-------------------------------------------------------------------------------
+func Boss_PhysicsUpdate_Intangible(_boss:Boss, _callable:Callable):
+	_callable.call()
+#-------------------------------------------------------------------------------
+func Boss_SetVDir_Move(_boss:Boss):
+	Boss_SetVDir(_boss)
+	Boss_Move(_boss)
+#-------------------------------------------------------------------------------
+func Boss_SetVDir(_boss:Boss):
+	var _dir2: float = deg_to_rad(_boss.dir)
+	_boss.velocity.x = _boss.vel * cos(_dir2)
+	_boss.velocity.y = _boss.vel * sin(_dir2)
+	#_boss.rotation_degrees = _boss.dir+90
+#-------------------------------------------------------------------------------
+func Boss_Move(_boss:Boss):
+	_boss.position += _boss.velocity * deltaTimeScale
+#-------------------------------------------------------------------------------
+func Disable_Boss(_boss: Boss):
+	KillTween_Array(_boss.tween_Array)
+	boss_Enabled_Array.erase(_boss)
+	boss_Disabled_Array.append(_boss)
+	_boss.label.hide()
 #-------------------------------------------------------------------------------
 func Boss_InstantDeath():
 	StopEverithing()
 	timer_tween.kill()
 	timer_tween.finished.emit()
 #-------------------------------------------------------------------------------
+func Set_BossLife_Label(_boss: Boss):
+	_boss.label.text = str(_boss.hp)+" / "+str(_boss.maxHp)
+#endregion
+#-------------------------------------------------------------------------------
+#region ENEMY FUNCTIONS
+func Create_Enemy_Disabled(_iMax:int):
+	for _i in _iMax:
+		var _enemy: Enemy = enemy_Prefab.instantiate() as Enemy
+		enemy_Disabled_Array.append(_enemy)
+		_enemy.hide()
+		content.add_child(_enemy)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Create_Enemy_A0(_x:float, _y:float, _v:float, _dir: float, _hp: int) -> Enemy:
+	var _enemy: Enemy = Create_Enemy_Empty(_x, _y, _v, _dir, _hp)
+	_enemy.physics_Update = func(): Enemy_PhysicsUpdate(_enemy, func():Enemy_Move(_enemy))
+	Enemy_SetVDir(_enemy)
+	return _enemy
+#-------------------------------------------------------------------------------
+func Create_Enemy_A1(_x:float, _y:float, _v:float, _dir: float, _hp: int) -> Enemy:
+	var _enemy: Enemy = Create_Enemy_Empty(_x, _y, _v, _dir, _hp)
+	_enemy.physics_Update = func(): Enemy_PhysicsUpdate(_enemy, func():Enemy_SetVDir_Move(_enemy))
+	return _enemy
+#-------------------------------------------------------------------------------
+func Create_Enemy_Empty(_x:float, _y:float, _v:float, _dir: float, _hp: int) -> Enemy:
+	var _enemy: Enemy
+	#-------------------------------------------------------------------------------
+	if(enemy_Disabled_Array.size() > 0):
+		_enemy = enemy_Disabled_Array[0]
+		_enemy.show()
+		enemy_Disabled_Array.erase(_enemy)
+	#-------------------------------------------------------------------------------
+	else:
+		_enemy = enemy_Prefab.instantiate() as Enemy
+		singleton.DisconnectAll(_enemy.death_signal)
+		content.add_child(_enemy)
+	#-------------------------------------------------------------------------------
+	enemy_Enabled_Array.append(_enemy)
+	#-------------------------------------------------------------------------------
+	_enemy.position = Vector2(_x, _y)
+	_enemy.maxHp = _hp
+	_enemy.hp = _hp
+	_enemy.vel = _v
+	_enemy.dir = _dir
+	Set_EnemyLife_Label(_enemy)
+	#-------------------------------------------------------------------------------
+	return _enemy
+#-------------------------------------------------------------------------------
+func Enemy_PhysicsUpdate(_enemy:Enemy, _callable:Callable):
+	if(_enemy.hp <= 0):
+		_enemy.death_signal.emit()
+		Destroy_Enemy(_enemy)
+		Create_Items(_enemy.position.x, _enemy.position.y, 50, 50, -3)
+		return
+	#-------------------------------------------------------------------------------
+	if(_enemy.position.distance_squared_to(player.position) < pow(_enemy.radius+hitBox_radius, 2) and player.canBeHit):
+		Player_Shooted()
+	#-------------------------------------------------------------------------------
+	Enemy_PhysicsUpdate_Intangible(_enemy, _callable)
+#-------------------------------------------------------------------------------
+func Enemy_PhysicsUpdate_Intangible(_enemy:Enemy, _callable:Callable):
+	_callable.call()
+#-------------------------------------------------------------------------------
+func Enemy_SetVDir_Move(_enemy:Enemy):
+	Enemy_SetVDir(_enemy)
+	Enemy_Move(_enemy)
+#-------------------------------------------------------------------------------
+func Enemy_SetVDir(_enemy:Enemy):
+	var _dir2: float = deg_to_rad(_enemy.dir)
+	_enemy.velocity.x = _enemy.vel * cos(_dir2)
+	_enemy.velocity.y = _enemy.vel * sin(_dir2)
+	#_enemy.rotation_degrees = _enemy.dir+90
+#-------------------------------------------------------------------------------
+func Enemy_Move(_enemy:Enemy):
+	_enemy.position += _enemy.velocity * deltaTimeScale
+#-------------------------------------------------------------------------------
+func Destroy_Enemy(_enemy: Enemy):
+	KillTween_Array(_enemy.tween_Array)
+	enemy_Enabled_Array.erase(_enemy)
+	enemy_Disabled_Array.append(_enemy)
+	singleton.DisconnectAll(_enemy.death_signal)
+	_enemy.hide()
+#-------------------------------------------------------------------------------
+func Set_EnemyLife_Label(_enemy: Enemy):
+	_enemy.label.text = str(_enemy.hp)+" / "+str(_enemy.maxHp)
+#endregion
+#-------------------------------------------------------------------------------
+#region ENEMY BULLET FUNCTIONS
+func Create_EnemyBullets_Disabled(_iMax:int):
+	for _i in _iMax:
+		var _bullet: Bullet = bullet_Prefab.instantiate() as Bullet
+		enemyBullets_Disabled_Array.append(_bullet)
+		_bullet.hide()
+		content.add_child(_bullet)
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func Create_EnemyBullet_A0(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
+	var _bullet: Bullet = Create_EnemyBullet_Empty(_x, _y, _v, _dir)
+	_bullet.physics_Update = func(): EnemyBullet_PhysicsUpdate(_bullet, func():EnemyBullet_Move(_bullet))
+	EnemyBullet_SetVDir(_bullet)
+	return _bullet
+#-------------------------------------------------------------------------------
+func Create_EnemyBullet_A1(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
+	var _bullet: Bullet = Create_EnemyBullet_Empty(_x, _y, _v, _dir)
+	_bullet.physics_Update = func(): EnemyBullet_PhysicsUpdate(_bullet, func():EnemyBullet_SetVDir_Move(_bullet))
+	return _bullet
+#-------------------------------------------------------------------------------
+func Create_EnemyBullet_Empty(_x:float, _y:float, _v:float, _dir:float) ->Bullet:
+	var _bullet: Bullet
+	#-------------------------------------------------------------------------------
+	if(enemyBullets_Disabled_Array.size() > 0):
+		_bullet = enemyBullets_Disabled_Array[0]
+		_bullet.show()
+		enemyBullets_Disabled_Array.erase(_bullet)
+	#-------------------------------------------------------------------------------
+	else:
+		_bullet = bullet_Prefab.instantiate() as Bullet
+		content.add_child(_bullet)
+	#-------------------------------------------------------------------------------
+	enemyBullets_Enabled_Array.append(_bullet)
+	#-------------------------------------------------------------------------------
+	_bullet.position = Vector2(_x, _y)
+	_bullet.isGrazed = false
+	_bullet.dir = _dir
+	_bullet.vel = _v
+	#-------------------------------------------------------------------------------
+	return _bullet
+#-------------------------------------------------------------------------------
+func EnemyBullet_PhysicsUpdate(_bullet: Bullet, _callable:Callable):
+	if(_bullet.position.x > enemyLimitsX.x and _bullet.position.x < enemyLimitsX.y):
+		if(_bullet.position.y > enemyLimitsY.x and _bullet.position.y < enemyLimitsY.y):
+			EnemyBullet_PhysicsUpdate_Limitless(_bullet, _callable)
+		#-------------------------------------------------------------------------------
+		else:
+			Destroy_EnemyBullet(_bullet)
+			return
+		#-------------------------------------------------------------------------------
+	#-------------------------------------------------------------------------------
+	else:
+		Destroy_EnemyBullet(_bullet)
+		return
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func EnemyBullet_PhysicsUpdate_Limitless(_bullet: Bullet, _callable:Callable):
+	if(_bullet.position.distance_squared_to(player.position) < pow(_bullet.radius+grazeBox_radius, 2) and !_bullet.isGrazed and player.myPLAYER_STATE == Player.PLAYER_STATE.ALIVE):
+		Create_Item(_bullet.position.x, _bullet.position.y, -5)
+		_bullet.isGrazed = true
+	#-------------------------------------------------------------------------------
+	if(_bullet.position.distance_squared_to(player.position) < pow(_bullet.radius+hitBox_radius, 2) and player.canBeHit):
+		Player_Shooted()
+		Destroy_EnemyBullet(_bullet)
+		return
+	#-------------------------------------------------------------------------------
+	else:
+		_callable.call()
+		return
+	#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+func EnemyBullet_SetVDir_Move(_bullet: Bullet):
+	EnemyBullet_SetVDir(_bullet)
+	EnemyBullet_Move(_bullet)
+#-------------------------------------------------------------------------------
+func EnemyBullet_Move(_bullet: Bullet):
+	_bullet.position += _bullet.velocity * deltaTimeScale
+#-------------------------------------------------------------------------------
+func EnemyBullet_SetVDir(_bullet: Bullet):
+	var _dir2: float = deg_to_rad(_bullet.dir)
+	_bullet.velocity.x = _bullet.vel * cos(_dir2)
+	_bullet.velocity.y = _bullet.vel * sin(_dir2)
+	_bullet.rotation_degrees = _bullet.dir+90
+#-------------------------------------------------------------------------------
+func Destroy_EnemyBullet(_bullet: Bullet):
+	KillTween_Array(_bullet.tween_Array)
+	enemyBullets_Enabled_Array.erase(_bullet)
+	enemyBullets_Disabled_Array.append(_bullet)
+	_bullet.hide()
+#endregion
+#-------------------------------------------------------------------------------
+#region TIMER FUNCTIONS
 func Seconds(_f:float):
 	await get_tree().create_timer(_f, false).timeout
 #-------------------------------------------------------------------------------
@@ -1179,7 +1305,9 @@ func StopEverithing():
 	for _i in range(enemyBullets_Enabled_Array.size()-1, -1, -1):
 		Destroy_EnemyBullet(enemyBullets_Enabled_Array[_i])
 	#-------------------------------------------------------------------------------
+#endregion
 #-------------------------------------------------------------------------------
+#region MATH FUNCTIONS
 func AngleToPlayer(_obj: Node2D) -> float:
 	var _f: float = rad_to_deg(atan2(player.position.y-_obj.position.y, player.position.x-_obj.position.x))
 	return _f
@@ -1191,6 +1319,8 @@ func GetAngleFromTo(_obj1: Node2D, _obj2: Node2D) -> float:
 func GetAngleXY(_dx: float, _dy: float) -> float:
 	var _f: float = rad_to_deg(atan2(_dy, _dx))
 	return _f
+#endregion
+#-------------------------------------------------------------------------------
 #region ARRAY[TWEEN] FUNCTIONS
 func CreateTween_ArrayAppend(_tween_Array: Array[Tween]) -> Tween:
 	var _tween: Tween = create_tween()
